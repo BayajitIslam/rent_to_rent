@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         theme: MyAppThemes.lightThemes,
         themeMode: ThemeMode.system,
-        initialRoute: RoutesName.onboarding,
+        initialRoute: RoutesName.splash,
         getPages: AppRoutes.pages,
       ),
       child: SizedBox(),

@@ -44,6 +44,19 @@ class AppTextStyle {
     );
   }
 
+    static TextStyle s16w4p({
+    Color? color = AppColors.white,
+    double fontSize = 16,
+    FontWeight fontWeight = FontWeight.w400,
+  }) {
+    return GoogleFonts.poppins(
+      color: color,
+      fontSize: fontSize.sp,
+      fontWeight: fontWeight,
+      height: 1.3,
+    );
+  }
+
   static TextStyle s24w5({
     Color? color = AppColors.neutralS,
     double fontSize = 24,

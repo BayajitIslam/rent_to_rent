@@ -16,7 +16,12 @@ class SignUpContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 32.h),
+      padding: EdgeInsets.only(
+        left: 24.w,
+        right: 24.w,
+        top: 30.h,
+        bottom: 43.h,
+      ),
       decoration: BoxDecoration(
         color: AppColors.white,
         borderRadius: BorderRadius.circular(12),
@@ -54,14 +59,14 @@ class SignUpContainer extends StatelessWidget {
             controller: controller.fullNameController,
             hintText: AppString.fullName,
           ),
-          SizedBox(height: 12.h),
+          SizedBox(height: 20.h),
 
           // Email/Phone Field
           CustomeTextfield(
             controller: controller.emailPhoneController,
             hintText: AppString.emailPhoneNumber,
           ),
-          SizedBox(height: 12.h),
+          SizedBox(height: 20.h),
 
           // Password Field
           Obx(
@@ -76,10 +81,12 @@ class SignUpContainer extends StatelessWidget {
           SizedBox(height: 24.h),
 
           // Sign Up Button
-          CustomButton(
-            buttonName: AppString.signup,
-            isloading: controller.isLoading.value,
-            onTap: () => controller.signUp(),
+          Obx(
+            () => CustomButton(
+              buttonName: AppString.signup,
+              isloading: controller.isLoading.value,
+              onTap: () => controller.signUp(),
+            ),
           ),
         ],
       ),

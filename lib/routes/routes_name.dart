@@ -7,4 +7,9 @@ class RoutesName {
   //<=============================== Auth Screen ==================================>
   static const String login = "/login";
   static const String signUp = "/signUp";
+  static const String forgotPassword = "/forgotPassword";
+  static const String verifyCodeScreen = "/verifyCodeScreen";
+  static const String resetPasswordScreen = "/resetPasswordScreen";
+  static const String resetSuccessfullScreen = "/resetSuccessfullScreen";
+  static const String getPremiumScreen = "/subscriptionBinding";
 }

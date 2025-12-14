@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:template/core/utils/log.dart';
 import 'package:template/features/auth/models/user_model.dart';
 import 'package:template/routes/routes_name.dart';
 
 class AuthController extends GetxController {
   // Sign Up Form Controllers
-
   final TextEditingController fullNameController = TextEditingController();
   final TextEditingController emailPhoneController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
@@ -14,6 +14,8 @@ class AuthController extends GetxController {
   // Sign In Form Controllers
   final loginEmailController = TextEditingController();
   final loginPasswordController = TextEditingController();
+  // Variables
+  final RxBool rememberMe = false.obs;
 
   // Forgot Password Controller
   final forgotPasswordEmailController = TextEditingController();
@@ -62,7 +64,8 @@ class AuthController extends GetxController {
 
   // Sign Up
   Future<void> signUp() async {
-    if (!_validateSignUpForm()) return;
+    //TODO  uncomment This Line After Api Ready
+    // if (!_validateSignUpForm()) return;
 
     try {
       isLoading.value = true;
@@ -92,25 +95,35 @@ class AuthController extends GetxController {
       // Save to SharedPreferences
       await _saveUserData(user);
 
-      Get.snackbar(
-        'Success',
-        'Account created successfully!',
-        backgroundColor: Colors.green,
-        colorText: Colors.white,
-        snackPosition: SnackPosition.BOTTOM,
-      );
-      //TODO Forgot password
+      // Get.snackbar(
+      //   'Success',
+      //   'Account created successfully!',
+      //   backgroundColor: Colors.green,
+      //   colorText: Colors.white,
+      //   snackPosition: SnackPosition.BOTTOM,
+      // );
+      Console.green("Success: Account created successfully!");
       // Navigate to veryfy
-      Get.offAllNamed(RoutesName.login);
-      isIndividual.value ? debugPrint("individual") : debugPrint("Company");
-    } catch (e) {
-      Get.snackbar(
-        'Error',
-        e.toString(),
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-        snackPosition: SnackPosition.BOTTOM,
+      Get.toNamed(
+        RoutesName.verifyCodeScreen,
+        arguments: {
+          'verificationType': 'signup',
+          'email': emailPhoneController.text.trim(),
+        },
       );
+
+      Console.magenta(
+        "User Type : ${isIndividual.value ? "individual" : "Company"}",
+      );
+    } catch (e) {
+      // Get.snackbar(
+      //   'Error',
+      //   e.toString(),
+      //   backgroundColor: Colors.red,
+      //   colorText: Colors.white,
+      //   snackPosition: SnackPosition.BOTTOM,
+      // );
+      Console.red("Error: ${e.toString()}");
     } finally {
       isLoading.value = false;
     }
@@ -118,7 +131,8 @@ class AuthController extends GetxController {
 
   // Sign In
   Future<void> signIn() async {
-    if (!_validateSignInForm()) return;
+    //TODO uncomment this line after api intregation
+    // if (!_validateSignInForm()) return;
 
     try {
       isLoading.value = true;
@@ -149,28 +163,32 @@ class AuthController extends GetxController {
 
       bool? isplanActive = prefs.getBool('plan_active') ?? false;
 
-      Get.snackbar(
-        'Success',
-        'Welcome back!',
-        backgroundColor: Colors.green,
-        colorText: Colors.white,
-        snackPosition: SnackPosition.BOTTOM,
-      );
+      prefs.setBool('login_completed', true);
+
+      // Get.snackbar(
+      //   'Success',
+      //   'Welcome back!',
+      //   backgroundColor: Colors.green,
+      //   colorText: Colors.white,
+      //   snackPosition: SnackPosition.BOTTOM,
+      // );
+      Console.green("Success: Wellcome back!");
+      Console.green("Success: $isplanActive");
       // Navigate to Home
-      if (isplanActive) {
-        // First time user → Show onboarding
-        Get.offAllNamed(RoutesName.home);
+      if (!isplanActive) {
+        Get.offAllNamed(RoutesName.getPremiumScreen);
       } else {
         Get.offAllNamed(RoutesName.home);
       }
     } catch (e) {
-      Get.snackbar(
-        'Error',
-        e.toString(),
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-        snackPosition: SnackPosition.BOTTOM,
-      );
+      // Get.snackbar(
+      //   'Error',
+      //   e.toString(),
+      //   backgroundColor: Colors.red,
+      //   colorText: Colors.white,
+      //   snackPosition: SnackPosition.BOTTOM,
+      // );
+      Console.red("Error: ${e.toString()}");
     } finally {
       isLoading.value = false;
     }
@@ -183,11 +201,13 @@ class AuthController extends GetxController {
     // Validation
     if (forgotPasswordEmailController.text.trim().isEmpty) {
       errorMessageForgotPassword.value = 'Please enter your email';
+      Console.red(errorMessageForgotPassword.value);
       return;
     }
 
     if (!GetUtils.isEmail(forgotPasswordEmailController.text.trim())) {
       errorMessageForgotPassword.value = 'Please enter a valid email';
+      Console.red(errorMessageForgotPassword.value);
       return;
     }
 
@@ -203,22 +223,34 @@ class AuthController extends GetxController {
       await Future.delayed(Duration(seconds: 2));
 
       // Success
-      Get.snackbar(
-        'Success',
-        'Otp has been sent to your email',
-        backgroundColor: Colors.green,
-        colorText: Colors.white,
-        snackPosition: SnackPosition.BOTTOM,
-        duration: Duration(seconds: 3),
+      // Get.snackbar(
+      //   'Success',
+      //   'Otp has been sent to your email',
+      //   backgroundColor: Colors.green,
+      //   colorText: Colors.white,
+      //   snackPosition: SnackPosition.BOTTOM,
+      //   duration: Duration(seconds: 3),
+      // );
+      Console.yellow(
+        "Otp has been sent to your email ${forgotPasswordEmailController.text.toLowerCase()}",
       );
-
       // Navigate back to login after 2 seconds
       //TODO Forgot password
       await Future.delayed(Duration(seconds: 2));
-      Get.toNamed(RoutesName.home);
+      // Navigate to VerifyCode with arguments
+      Get.toNamed(
+        RoutesName.verifyCodeScreen,
+        arguments: {
+          'verificationType': 'forgot_password',
+          'email': forgotPasswordEmailController.text.trim(),
+        },
+      );
     } catch (e) {
       errorMessageForgotPassword.value =
           'Failed to send reset link. Please try again.';
+      Console.red(
+        "Error: ${e.toString()} - ${errorMessageForgotPassword.value}",
+      );
     } finally {
       isLoading.value = false;
     }
@@ -231,22 +263,26 @@ class AuthController extends GetxController {
     // Validation
     if (newPasswordController.text.isEmpty) {
       errorMessageResetPassword.value = 'Please enter your new password';
+      Console.red("Error: Please enter your new password");
       return;
     }
 
     if (newPasswordController.text.length < 6) {
       errorMessageResetPassword.value =
           'Password must be at least 6 characters';
+      Console.red("Error: Password must be at least 6 characters");
       return;
     }
 
     if (confirmNewPasswordController.text.isEmpty) {
       errorMessageResetPassword.value = 'Please confirm your password';
+      Console.red("Please confirm your password");
       return;
     }
 
     if (newPasswordController.text != confirmNewPasswordController.text) {
       errorMessageResetPassword.value = 'Passwords do not match';
+      Console.red("Error: Passwords do not match");
       return;
     }
 
@@ -262,13 +298,14 @@ class AuthController extends GetxController {
       await Future.delayed(Duration(seconds: 2));
 
       // Success
-      Get.snackbar(
-        'Success',
-        'Password has been reset successfully!',
-        backgroundColor: Colors.green,
-        colorText: Colors.white,
-        snackPosition: SnackPosition.BOTTOM,
-      );
+      // Get.snackbar(
+      //   'Success',
+      //   'Password has been reset successfully!',
+      //   backgroundColor: Colors.green,
+      //   colorText: Colors.white,
+      //   snackPosition: SnackPosition.BOTTOM,
+      // );
+      Console.green("Success: Password has been reset successfully!");
 
       // Clear fields
       newPasswordController.clear();
@@ -276,10 +313,13 @@ class AuthController extends GetxController {
 
       // Navigate to login
       await Future.delayed(Duration(seconds: 1));
-      Get.offAllNamed(RoutesName.login);
+      Get.offAllNamed(RoutesName.resetSuccessfullScreen);
     } catch (e) {
       errorMessageResetPassword.value =
           'Failed to reset password. Please try again.';
+      Console.red(
+        "Error: ${e.toString()} - ${errorMessageForgotPassword.value}",
+      );
     } finally {
       isLoading.value = false;
     }
@@ -330,6 +370,9 @@ class AuthController extends GetxController {
       errorMessageSignIn.value = 'Please enter your password';
       debugPrint(errorMessageSignIn.value);
       return false;
+    }
+    if (rememberMe.value) {
+      debugPrint('Remember Me ${rememberMe.value}');
     }
     return true;
   }

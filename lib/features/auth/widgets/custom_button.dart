@@ -14,7 +14,7 @@ class CustomButton extends StatelessWidget {
     this.onTap,
     required this.buttonName,
     this.textColors = AppColors.white,
-    this.bgColor = AppColors.primary,
+    this.bgColor = AppColors.deepBlue,
     this.isloading = false,
   });
 
@@ -34,7 +34,9 @@ class CustomButton extends StatelessWidget {
           ),
         ),
         child: isloading
-            ? CircularProgressIndicator.adaptive()
+            ? CircularProgressIndicator.adaptive(
+                backgroundColor: AppColors.loadingProgress,
+              )
             : Text(
                 buttonName,
                 style: AppTextStyle.s16w4(

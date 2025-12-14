@@ -1,7 +1,14 @@
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:template/features/auth/bindings/auth_binding.dart';
+import 'package:template/features/auth/bindings/otp_binding.dart';
+import 'package:template/features/auth/bindings/subscription_binding.dart';
+import 'package:template/features/auth/screens/forgot_password_screen.dart';
+import 'package:template/features/auth/screens/get_premium_screen.dart';
+import 'package:template/features/auth/screens/reset_password_screen.dart';
+import 'package:template/features/auth/screens/reset_succesfull_screen.dart';
 import 'package:template/features/auth/screens/sign_in_screen.dart';
 import 'package:template/features/auth/screens/sign_up_screen.dart';
+import 'package:template/features/auth/screens/verify_code_screen.dart';
 import 'package:template/features/home/bindings/home_binding.dart';
 import 'package:template/features/home/screens/home_screens.dart';
 import 'package:template/features/splash_screen/bindings/onboarding_binding.dart';
@@ -45,6 +52,36 @@ class AppRoutes {
       page: () => SignUpScreen(),
       transition: Transition.rightToLeft,
       binding: AuthBinding(),
+    ),
+    GetPage(
+      name: RoutesName.forgotPassword,
+      page: () => ForgotPasswordScreen(),
+      transition: Transition.rightToLeft,
+      binding: AuthBinding(),
+    ),
+    GetPage(
+      name: RoutesName.verifyCodeScreen,
+      page: () => VerifyCodeScreen(),
+      transition: Transition.rightToLeft,
+      binding: OTPBinding(),
+    ),
+    GetPage(
+      name: RoutesName.resetPasswordScreen,
+      page: () => ResetPasswordScreen(),
+      transition: Transition.rightToLeft,
+      binding: AuthBinding(),
+    ),
+    GetPage(
+      name: RoutesName.resetSuccessfullScreen,
+      page: () => ResetSuccesfullScreen(),
+      transition: Transition.rightToLeft,
+      // binding: AuthBinding(),
+    ),
+    GetPage(
+      name: RoutesName.getPremiumScreen,
+      page: () => GetPremiumScreen(),
+      transition: Transition.rightToLeft,
+      binding: SubscriptionBinding(),
     ),
   ];
 }
