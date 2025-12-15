@@ -16,4 +16,10 @@ class AppImage {
   static const String contractCheck = "assets/icons/contractCheck.png";
   static const String location = "assets/icons/location.png";
   static const String profile = "assets/icons/profile.svg";
+  static const String profilePlaceholder = "assets/images/profile.jpg";
+  static const String contractCreation = "assets/icons/contractCreation.svg";
+  static const String checkIncoming = "assets/icons/checkIncoming.svg";
+  static const String locationSuitability =
+      "assets/icons/locationSuitability.svg";
+  static const String fieldAgent = "assets/icons/fieldAgent.svg";
 }

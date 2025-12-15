@@ -8,6 +8,8 @@ class RoutesName {
   static const String profile = "/profile";
   static const String locationSuitabilityScreen = "/LocationSuitabilityScreen";
   static const String contractAnalysisScreen = "/ContractAnalysisScreen";
+  static const String fieldAgentScreen = "/fieldAgentScreen";
+    static const String agentReplyScreen = "/agentReplyScreen";
 
   //<=============================== Auth Screen ==================================>
   static const String login = "/login";

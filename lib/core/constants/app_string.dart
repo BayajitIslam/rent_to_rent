@@ -66,4 +66,55 @@ class AppString {
   static const String contractsCheck = 'Contract Check';
   static const String locationanalysis = 'Location Analysis';
   static const String profile = 'Profile';
+
+  //<============================== Home Screen  ====================================>
+
+  static const String welcomeBack = 'Welcome Back,';
+  static const String contractCreation = 'Contract\nCreation';
+  static const String contractCreationDesc =
+      'Generate professional\nrental contracts.';
+  static const String checkIncomingContract = 'Check Incoming\nContract';
+  static const String checkIncomingContractDesc =
+      'Analyze your landlord contract';
+  static const String locationSuitability = 'Location Suitability';
+  static const String locationSuitabilityDesc = 'AI analysis of unit location';
+  static const String fieldAgentCommunication = 'Field Agent\nCommunication';
+  static const String fieldAgentCommunicationDesc =
+      'Generate replies to agents';
+  static const String recentActivity = 'Recent Activity';
+
+  // Field Agent Communication Screen
+  static const String fieldAgentCommunicationTitle =
+      'Field Agent Communication';
+  static const String createAgentInquiry = 'Create Agent Inquiry';
+  static const String propertyLink = 'Property Link';
+  static const String typeHere = 'Type here';
+  static const String copiedFromOnlineAd =
+      'Copied from the online advertisement';
+  static const String notes = 'Notes';
+  static const String askAI = 'Ask AI';
+
+  static const String agentReplyAssistant = 'Agent Reply Assistant';
+  static const String aiCreatesInitialOutreach =
+      'AI Creates Initial Outreach Message';
+  static const String pasteAgentMessage = 'Paste Agent Message';
+  static const String pasteMessageHere = 'Paste Message Here';
+  static const String generateFriendlyFirstMessage =
+      'Generate Friendly First Message';
+
+  static const String replyToTenant = 'Reply to a Tenant';
+  static const String incomingEmail = 'Incoming Email';
+  static const String pasteEmailHere = 'Paste the email you received here...';
+  static const String generateReply = 'Generate Reply';
+
+  static const String adminRecommendations = 'ADMIN RECOMMENDATIONS';
+
+  // Agent Reply Screen
+  static const String agentReply = 'Agent Reply';
+  static const String agentInquiry = 'Agent Inquiry';
+  static const String agentInquiryDesc =
+      'A clear and concise breakdown of the listing based on the provided title and notes.';
+  static const String aiSays = 'AI Says';
+  static const String keyHighlights = 'Key Highlights';
+  static const String regenerate = 'Regenerate';
 }

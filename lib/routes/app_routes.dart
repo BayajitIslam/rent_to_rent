@@ -1,6 +1,10 @@
 import 'package:get/get_navigation/get_navigation.dart';
 import 'package:template/features/Contract%20Analysis/screens/contract_analysis_screen.dart';
 import 'package:template/features/Create%20Contract/screens/create_contract_screen.dart';
+import 'package:template/features/Field%20Agent%20Communication/bindings/agent_reply_binding.dart';
+import 'package:template/features/Field%20Agent%20Communication/bindings/field_agent_binding.dart';
+import 'package:template/features/Field%20Agent%20Communication/screens/agent_reply_screen.dart';
+import 'package:template/features/Field%20Agent%20Communication/screens/field_agent_communication_screen.dart';
 import 'package:template/features/Location%20Suitability/screens/location_suitability_screen.dart';
 import 'package:template/features/Profile/screens/profile_screen.dart';
 import 'package:template/features/auth/bindings/auth_binding.dart';
@@ -41,7 +45,7 @@ class AppRoutes {
     //<=============================== Main Screen ==================================>
     GetPage(
       name: RoutesName.home,
-      page: () => HomeScreen(),
+      page: () => DashboardScreen(),
       transition: Transition.noTransition,
       bindings: [HomeBinding(), NavigationBinding()],
     ),
@@ -70,6 +74,18 @@ class AppRoutes {
       page: () => ContractAnalysisScreen(),
       transition: Transition.noTransition,
       bindings: [NavigationBinding()],
+    ),
+    GetPage(
+      name: RoutesName.fieldAgentScreen,
+      page: () => FieldAgentCommunicationScreen(),
+      transition: Transition.noTransition,
+      bindings: [NavigationBinding(), FieldAgentBinding()],
+    ),
+    GetPage(
+      name: RoutesName.agentReplyScreen,
+      page: () => AgentReplyScreen(),
+      transition: Transition.noTransition,
+      bindings: [NavigationBinding(), AgentReplyBinding()],
     ),
 
     //<=============================== Auth Screen ==================================>
