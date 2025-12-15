@@ -1,4 +1,8 @@
 import 'package:get/get_navigation/get_navigation.dart';
+import 'package:template/features/Contract%20Analysis/screens/contract_analysis_screen.dart';
+import 'package:template/features/Create%20Contract/screens/create_contract_screen.dart';
+import 'package:template/features/Location%20Suitability/screens/location_suitability_screen.dart';
+import 'package:template/features/Profile/screens/profile_screen.dart';
 import 'package:template/features/auth/bindings/auth_binding.dart';
 import 'package:template/features/auth/bindings/otp_binding.dart';
 import 'package:template/features/auth/bindings/subscription_binding.dart';
@@ -10,6 +14,7 @@ import 'package:template/features/auth/screens/sign_in_screen.dart';
 import 'package:template/features/auth/screens/sign_up_screen.dart';
 import 'package:template/features/auth/screens/verify_code_screen.dart';
 import 'package:template/features/home/bindings/home_binding.dart';
+import 'package:template/features/home/bindings/navigation_binding.dart';
 import 'package:template/features/home/screens/home_screens.dart';
 import 'package:template/features/splash_screen/bindings/onboarding_binding.dart';
 import 'package:template/features/splash_screen/bindings/splash_binding.dart';
@@ -37,9 +42,36 @@ class AppRoutes {
     GetPage(
       name: RoutesName.home,
       page: () => HomeScreen(),
-      transition: Transition.rightToLeft,
-      binding: HomeBinding(),
+      transition: Transition.noTransition,
+      bindings: [HomeBinding(), NavigationBinding()],
     ),
+    GetPage(
+      name: RoutesName.profile,
+      page: () => ProfileScreen(),
+      transition: Transition.noTransition,
+      bindings: [NavigationBinding()],
+    ),
+
+    GetPage(
+      name: RoutesName.createContractScreen,
+      page: () => CreateContractScreen(),
+      transition: Transition.noTransition,
+      bindings: [NavigationBinding()],
+    ),
+
+    GetPage(
+      name: RoutesName.locationSuitabilityScreen,
+      page: () => LocationSuitabilityScreen(),
+      transition: Transition.noTransition,
+      bindings: [NavigationBinding()],
+    ),
+    GetPage(
+      name: RoutesName.contractAnalysisScreen,
+      page: () => ContractAnalysisScreen(),
+      transition: Transition.noTransition,
+      bindings: [NavigationBinding()],
+    ),
+
     //<=============================== Auth Screen ==================================>
     GetPage(
       name: RoutesName.login,

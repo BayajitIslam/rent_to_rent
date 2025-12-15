@@ -9,4 +9,11 @@ class AppImage {
 
   //<============================== Get Premium Screen ====================================>
   static const String premiumBox = "assets/images/premium_box.png";
+
+  //<============================== Navbar Icon ====================================>
+  static const String home = "assets/icons/home.svg";
+  static const String contract = "assets/icons/contract.svg";
+  static const String contractCheck = "assets/icons/contractCheck.png";
+  static const String location = "assets/icons/location.png";
+  static const String profile = "assets/icons/profile.svg";
 }

@@ -46,7 +46,6 @@ class AppString {
   static const String passwordResetSuccessSubtitle =
       'Your password has been successfully reset. You can now log in with your new password.';
 
-
   //<============================== Subscription Screen ====================================>
   static const String getPremium = 'Get Premium';
   static const String getPremiumSubtitle =
@@ -60,4 +59,11 @@ class AppString {
   static const String startFreeTrial = 'Start 30-day free trial';
   static const String subscriptionTerms =
       'By placing this order, you agree to the Terms of Service and Privacy Policy. Subscription automatically renews unless auto-renew is turned off at least 24-hours before the end of the current period.';
+
+  //<============================== Navbar  ====================================>
+  static const String home = 'Best';
+  static const String contracts = 'Contracts';
+  static const String contractsCheck = 'Contract Check';
+  static const String locationanalysis = 'Location Analysis';
+  static const String profile = 'Profile';
 }

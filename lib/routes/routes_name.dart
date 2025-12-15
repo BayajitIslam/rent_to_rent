@@ -4,6 +4,11 @@ class RoutesName {
   static const String onboarding = "/onboarding";
   //<=============================== Main Screen ==================================>
   static const String home = "/home";
+  static const String createContractScreen = "/createContractScreen";
+  static const String profile = "/profile";
+  static const String locationSuitabilityScreen = "/LocationSuitabilityScreen";
+  static const String contractAnalysisScreen = "/ContractAnalysisScreen";
+
   //<=============================== Auth Screen ==================================>
   static const String login = "/login";
   static const String signUp = "/signUp";
