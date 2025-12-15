@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:template/features/auth/controllers/auth_controller..dart';
-import 'package:template/features/auth/screens/auth_background_screen.dart';
-import 'package:template/features/auth/widgets/forgot_password_container.dart';
+import 'package:rent2rent/features/auth/controllers/auth_controller..dart';
+import 'package:rent2rent/features/auth/screens/auth_background_screen.dart';
+import 'package:rent2rent/features/auth/widgets/forgot_password_container.dart';
 
 class ForgotPasswordScreen extends GetView<AuthController> {
   const ForgotPasswordScreen({super.key});

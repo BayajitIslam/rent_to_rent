@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:rent2rent/core/utils/log.dart';
+import 'package:rent2rent/features/auth/models/user_model.dart';
+import 'package:rent2rent/routes/routes_name.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:template/core/utils/log.dart';
-import 'package:template/features/auth/models/user_model.dart';
-import 'package:template/routes/routes_name.dart';
 
 class AuthController extends GetxController {
   // Sign Up Form Controllers

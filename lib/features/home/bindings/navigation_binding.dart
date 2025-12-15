@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:template/features/home/controllers/navigation_controller.dart';
+import 'package:rent2rent/features/home/controllers/navigation_controller.dart';
 
 class NavigationBinding extends Bindings {
   @override

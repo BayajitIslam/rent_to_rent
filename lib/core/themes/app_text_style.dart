@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:template/core/constants/app_colors.dart';
+import 'package:rent2rent/core/constants/app_colors.dart';
 
 class AppTextStyle {
   //<============================== App Text ====================================>
@@ -44,7 +44,7 @@ class AppTextStyle {
     );
   }
 
-    static TextStyle s16w4p({
+  static TextStyle s16w4p({
     Color? color = AppColors.white,
     double fontSize = 16,
     FontWeight fontWeight = FontWeight.w400,

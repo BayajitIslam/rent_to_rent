@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:template/features/home/widgets/custom_bottom_nav_bar.dart';
+import 'package:rent2rent/features/home/widgets/custom_bottom_nav_bar.dart';
 
 class MainLayout extends StatelessWidget {
   final Widget child;

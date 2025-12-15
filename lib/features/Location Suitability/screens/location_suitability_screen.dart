@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:template/features/home/screens/main_layout.dart';
+import 'package:rent2rent/features/home/screens/main_layout.dart';
 
 class LocationSuitabilityScreen extends StatelessWidget {
   const LocationSuitabilityScreen({super.key});

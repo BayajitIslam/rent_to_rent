@@ -1,6 +1,6 @@
 // controllers/navigation_controller.dart
 import 'package:get/get.dart';
-import 'package:template/routes/routes_name.dart';
+import 'package:rent2rent/routes/routes_name.dart';
 
 class NavigationController extends GetxController {
   final RxInt currentIndex = 0.obs; // Default to 0 instead of -1

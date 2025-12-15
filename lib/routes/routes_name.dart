@@ -9,7 +9,7 @@ class RoutesName {
   static const String locationSuitabilityScreen = "/LocationSuitabilityScreen";
   static const String contractAnalysisScreen = "/ContractAnalysisScreen";
   static const String fieldAgentScreen = "/fieldAgentScreen";
-    static const String agentReplyScreen = "/agentReplyScreen";
+  static const String agentReplyScreen = "/agentReplyScreen";
 
   //<=============================== Auth Screen ==================================>
   static const String login = "/login";
@@ -19,4 +19,9 @@ class RoutesName {
   static const String resetPasswordScreen = "/resetPasswordScreen";
   static const String resetSuccessfullScreen = "/resetSuccessfullScreen";
   static const String getPremiumScreen = "/subscriptionBinding";
+
+  //<=============================== Contract Screen ==================================>
+  static const String selectContractTypeScreen = '/select-contract-type';
+  static const String fillContractDetailsScreen = '/fill-contract-details';
+  static const String generateContractScreen = '/generate-contract';
 }

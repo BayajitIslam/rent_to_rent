@@ -117,4 +117,73 @@ class AppString {
   static const String aiSays = 'AI Says';
   static const String keyHighlights = 'Key Highlights';
   static const String regenerate = 'Regenerate';
+
+  // Create Contract Screen - General
+  static const String createContract = 'Create Contract';
+  static const String step = 'STEP';
+  static const String saveAndNext = 'Save & Next';
+  static const String saveAndGenerateContract = 'Save & Generate Contract';
+
+  // Step 1 - Select Contract Type
+  static const String selectContractType = 'Select Contract Type';
+  static const String chooseContractTemplate = 'Choose Contract\nTemplate';
+
+  // Step 2 - Fill Contract Details
+  static const String fillContractDetails = 'Fill Contract\nDetails';
+  static const String entireApartment = 'Entire Apartment';
+  static const String singleRoom = 'Single Room';
+
+  // Landlord Info
+  static const String landlordInfo = 'Landlord Info';
+  static const String enterLandlordFullName =
+      'Enter landlord\'s full legal name';
+  static const String enterLandlordAddress = 'Enter landlord\'s address';
+
+  // Tenant Info
+  static const String tenantInfo = 'Tenant Info';
+  static const String enterTenantFullName = 'Enter tenant\'s full legal name';
+  static const String enterTenantAddress = 'Enter landlord\'s address';
+
+  // Property Details
+  static const String propertyDetails = 'Property Details';
+  static const String propertyAddress = 'Property Address';
+  static const String enterPropertyAddress = 'Enter full property address';
+  static const String roomCount = 'Room Count';
+  static const String furnished = 'Furnished?';
+  static const String yes = 'Yes';
+  static const String no = 'No';
+
+  // Rent Terms
+  static const String rentTerms = 'Rent Terms';
+  static const String numberOfBeds = 'Number of beds';
+  static const String monthlyRent = 'Monthly Rent';
+  static const String egRent = 'e.g. \$1200';
+  static const String deposit = 'Deposit';
+  static const String egDeposit = 'e.g. \$800';
+  static const String contractDuration = 'Contract Duration';
+  static const String startDate = 'Start Date';
+  static const String selectStartDate = 'Select start date';
+  static const String confirmContractDetails =
+      'I confirm that all contract details are correct.';
+
+  // Step 3 - Generate Contract
+  static const String generateContract = 'Generate\nContract';
+  static const String landPurchaseAgreement = 'LAND PURCHASE AGREEMENT';
+  static const String theParties = 'THE PARTIES';
+  static const String descriptionOfProperty = 'DESCRIPTION OF THE PROPERTY';
+  static const String saleAndPurchase = 'SALE AND PURCHASE';
+  static const String purchasePrice = 'PURCHASE PRICE';
+  static const String lawyer = 'Lawyer';
+  static const String analyzeThis = 'Analyze this contract';
+  static const String downloadPdf = 'Download PDF';
+  static const String downloadWord = 'Download Word';
+  static const String sendForESignature = 'Send for E-Signature';
+  static const String markdownNotes = 'Markdown notes';
+  static const String typeYourNote = 'Type your note...';
+  static const String addAnotherNote = 'Add another note...';
+
+  // Common
+  static const String address = 'Address';
+  static const String contactEmail = 'Contact Email';
+  static const String exampleEmail = "example@gmail.com";
 }

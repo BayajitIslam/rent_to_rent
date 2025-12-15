@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:template/core/constants/app_colors.dart';
-import 'package:template/core/constants/app_string.dart';
-import 'package:template/core/themes/app_text_style.dart';
-import 'package:template/features/Field%20Agent%20Communication/controllers/field_agent_controller.dart';
-import 'package:template/features/auth/widgets/custom_button.dart';
-import 'package:template/features/auth/widgets/custome_textfield.dart';
-import 'package:template/features/home/screens/main_layout.dart';
-import 'package:template/features/home/widgets/custome_appbar.dart';
+import 'package:rent2rent/core/constants/app_colors.dart';
+import 'package:rent2rent/core/constants/app_string.dart';
+import 'package:rent2rent/core/themes/app_text_style.dart';
+import 'package:rent2rent/features/Field%20Agent%20Communication/controllers/field_agent_controller.dart';
+import 'package:rent2rent/features/auth/widgets/custom_button.dart';
+import 'package:rent2rent/features/auth/widgets/custome_textfield.dart';
+import 'package:rent2rent/features/home/screens/main_layout.dart';
+import 'package:rent2rent/features/home/widgets/admin_recommendation.dart';
+import 'package:rent2rent/features/home/widgets/custome_appbar.dart';
 
 class FieldAgentCommunicationScreen extends StatelessWidget {
   FieldAgentCommunicationScreen({super.key});
@@ -45,7 +46,7 @@ class FieldAgentCommunicationScreen extends StatelessWidget {
                   SizedBox(height: 16.h),
 
                   // Admin Recommendations Section
-                  _buildAdminRecommendations(),
+                  AdminRecommendation(controller: controller),
                   SizedBox(height: 100.h), // Bottom padding for navbar
                 ],
               ),
@@ -209,81 +210,6 @@ class FieldAgentCommunicationScreen extends StatelessWidget {
               buttonName: AppString.generateReply,
               isloading: controller.isGenerateReplyLoading.value,
               onTap: () => controller.generateReply(),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  // ==================== Admin Recommendations ====================
-  Widget _buildAdminRecommendations() {
-    return Container(
-      padding: EdgeInsets.all(16.r),
-      decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadius.circular(16.r),
-        boxShadow: [BoxShadow(color: const Color(0XffE4E4E4), blurRadius: 10)],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Section Title with Icon
-          Row(
-            children: [
-              Container(
-                width: 16.w,
-                height: 16.h,
-                decoration: BoxDecoration(
-                  color: AppColors.primary,
-                  shape: BoxShape.rectangle,
-                  border: Border.all(width: 1, color: AppColors.primary),
-                ),
-                child: Text("🟦", style: AppTextStyle.s24w7(fontSize: 16)),
-              ),
-              SizedBox(width: 8.w),
-              Text(
-                AppString.adminRecommendations,
-                style: AppTextStyle.s16w4(
-                  color: AppColors.neutralS,
-
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 12.h),
-
-          // Recommendations List
-          Obx(
-            () => Column(
-              children: controller.recommendations
-                  .map((rec) => _buildRecommendationItem(rec))
-                  .toList(),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildRecommendationItem(String text) {
-    return Padding(
-      padding: EdgeInsets.only(bottom: 8.h),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            '•  ',
-            style: AppTextStyle.s16w4(color: AppColors.neutralS, fontSize: 14),
-          ),
-          Expanded(
-            child: Text(
-              text,
-              style: AppTextStyle.s16w4(
-                color: AppColors.neutralS,
-                fontSize: 14,
-              ),
             ),
           ),
         ],

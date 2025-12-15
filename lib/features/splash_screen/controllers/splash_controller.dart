@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import 'package:get/get.dart';
+import 'package:rent2rent/core/utils/log.dart';
+import 'package:rent2rent/routes/routes_name.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:template/core/utils/log.dart';
-import 'package:template/routes/routes_name.dart';
 
 class SplashController extends GetxController {
   Timer? timer;

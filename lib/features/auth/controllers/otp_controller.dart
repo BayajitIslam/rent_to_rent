@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:template/core/utils/log.dart';
-import 'package:template/routes/routes_name.dart';
+import 'package:rent2rent/core/utils/log.dart';
+import 'package:rent2rent/routes/routes_name.dart';
 
 class OTPController extends GetxController {
   final String verificationType; // 'signup' or 'forgot_password'

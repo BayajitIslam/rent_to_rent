@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:template/features/home/controllers/navigation_controller.dart';
-import 'package:template/routes/routes_name.dart';
+import 'package:rent2rent/features/home/controllers/navigation_controller.dart';
+import 'package:rent2rent/routes/routes_name.dart';
 
 class HomeController extends GetxController {
   // User Info

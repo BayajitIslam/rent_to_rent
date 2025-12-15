@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:template/core/utils/log.dart';
-import 'package:template/routes/routes_name.dart';
-
+import 'package:rent2rent/core/utils/log.dart';
+import 'package:rent2rent/routes/routes_name.dart';
 class FieldAgentController extends GetxController {
   // Text Controllers
   final TextEditingController propertyLinkController = TextEditingController();

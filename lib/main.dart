@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:template/core/themes/themes.dart';
-import 'package:template/routes/app_routes.dart';
-import 'package:template/routes/routes_name.dart';
+import 'package:rent2rent/core/themes/themes.dart';
+import 'package:rent2rent/routes/app_routes.dart';
+import 'package:rent2rent/routes/routes_name.dart';
+
 
 void main() {
   runApp(const MyApp());

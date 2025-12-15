@@ -1,30 +1,33 @@
 import 'package:get/get_navigation/get_navigation.dart';
-import 'package:template/features/Contract%20Analysis/screens/contract_analysis_screen.dart';
-import 'package:template/features/Create%20Contract/screens/create_contract_screen.dart';
-import 'package:template/features/Field%20Agent%20Communication/bindings/agent_reply_binding.dart';
-import 'package:template/features/Field%20Agent%20Communication/bindings/field_agent_binding.dart';
-import 'package:template/features/Field%20Agent%20Communication/screens/agent_reply_screen.dart';
-import 'package:template/features/Field%20Agent%20Communication/screens/field_agent_communication_screen.dart';
-import 'package:template/features/Location%20Suitability/screens/location_suitability_screen.dart';
-import 'package:template/features/Profile/screens/profile_screen.dart';
-import 'package:template/features/auth/bindings/auth_binding.dart';
-import 'package:template/features/auth/bindings/otp_binding.dart';
-import 'package:template/features/auth/bindings/subscription_binding.dart';
-import 'package:template/features/auth/screens/forgot_password_screen.dart';
-import 'package:template/features/auth/screens/get_premium_screen.dart';
-import 'package:template/features/auth/screens/reset_password_screen.dart';
-import 'package:template/features/auth/screens/reset_succesfull_screen.dart';
-import 'package:template/features/auth/screens/sign_in_screen.dart';
-import 'package:template/features/auth/screens/sign_up_screen.dart';
-import 'package:template/features/auth/screens/verify_code_screen.dart';
-import 'package:template/features/home/bindings/home_binding.dart';
-import 'package:template/features/home/bindings/navigation_binding.dart';
-import 'package:template/features/home/screens/home_screens.dart';
-import 'package:template/features/splash_screen/bindings/onboarding_binding.dart';
-import 'package:template/features/splash_screen/bindings/splash_binding.dart';
-import 'package:template/features/splash_screen/screens/onboarding_screen.dart';
-import 'package:template/features/splash_screen/screens/splash_screen.dart';
-import 'package:template/routes/routes_name.dart';
+import 'package:rent2rent/features/Contract%20Analysis/screens/contract_analysis_screen.dart';
+import 'package:rent2rent/features/Create%20Contract/bindings/contract_bindings.dart';
+import 'package:rent2rent/features/Create%20Contract/screens/fill_contract_details_screen.dart';
+import 'package:rent2rent/features/Create%20Contract/screens/generate_contract_screen.dart';
+import 'package:rent2rent/features/Create%20Contract/screens/select_contract_type_screen.dart';
+import 'package:rent2rent/features/Field%20Agent%20Communication/bindings/agent_reply_binding.dart';
+import 'package:rent2rent/features/Field%20Agent%20Communication/bindings/field_agent_binding.dart';
+import 'package:rent2rent/features/Field%20Agent%20Communication/screens/agent_reply_screen.dart';
+import 'package:rent2rent/features/Field%20Agent%20Communication/screens/field_agent_communication_screen.dart';
+import 'package:rent2rent/features/Location%20Suitability/screens/location_suitability_screen.dart';
+import 'package:rent2rent/features/Profile/screens/profile_screen.dart';
+import 'package:rent2rent/features/auth/bindings/auth_binding.dart';
+import 'package:rent2rent/features/auth/bindings/otp_binding.dart';
+import 'package:rent2rent/features/auth/bindings/subscription_binding.dart';
+import 'package:rent2rent/features/auth/screens/forgot_password_screen.dart';
+import 'package:rent2rent/features/auth/screens/get_premium_screen.dart';
+import 'package:rent2rent/features/auth/screens/reset_password_screen.dart';
+import 'package:rent2rent/features/auth/screens/reset_succesfull_screen.dart';
+import 'package:rent2rent/features/auth/screens/sign_in_screen.dart';
+import 'package:rent2rent/features/auth/screens/sign_up_screen.dart';
+import 'package:rent2rent/features/auth/screens/verify_code_screen.dart';
+import 'package:rent2rent/features/home/bindings/home_binding.dart';
+import 'package:rent2rent/features/home/bindings/navigation_binding.dart';
+import 'package:rent2rent/features/home/screens/home_screens.dart';
+import 'package:rent2rent/features/splash_screen/bindings/onboarding_binding.dart';
+import 'package:rent2rent/features/splash_screen/bindings/splash_binding.dart';
+import 'package:rent2rent/features/splash_screen/screens/onboarding_screen.dart';
+import 'package:rent2rent/features/splash_screen/screens/splash_screen.dart';
+import 'package:rent2rent/routes/routes_name.dart';
 
 class AppRoutes {
   static List<GetPage> pages = [
@@ -58,9 +61,9 @@ class AppRoutes {
 
     GetPage(
       name: RoutesName.createContractScreen,
-      page: () => CreateContractScreen(),
+      page: () => SelectContractTypeScreen(),
       transition: Transition.noTransition,
-      bindings: [NavigationBinding()],
+      bindings: [NavigationBinding(), SelectContractTypeBinding()],
     ),
 
     GetPage(
@@ -130,6 +133,22 @@ class AppRoutes {
       page: () => GetPremiumScreen(),
       transition: Transition.rightToLeft,
       binding: SubscriptionBinding(),
+    ),
+
+    // Step 2 - Fill Contract Details
+    GetPage(
+      name: RoutesName.fillContractDetailsScreen,
+      page: () => FillContractDetailsScreen(),
+      transition: Transition.rightToLeft,
+      binding: FillContractDetailsBinding(),
+    ),
+
+    // Step 3 - Generate Contract
+    GetPage(
+      name: RoutesName.generateContractScreen,
+      page: () => GenerateContractScreen(),
+      transition: Transition.rightToLeft,
+      binding: GenerateContractBinding(),
     ),
   ];
 }

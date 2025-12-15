@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:template/core/utils/log.dart';
+import 'package:rent2rent/core/utils/log.dart';
 
 class AgentReplyController extends GetxController {
   // Loading State

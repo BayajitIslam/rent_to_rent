@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:template/features/auth/controllers/subscription_controller.dart';
+import 'package:rent2rent/features/auth/controllers/subscription_controller.dart';
 
 class SubscriptionBinding extends Bindings {
   @override

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:template/core/constants/app_colors.dart';
-import 'package:template/core/themes/app_text_style.dart';
+import 'package:rent2rent/core/constants/app_colors.dart';
+import 'package:rent2rent/core/themes/app_text_style.dart';
 
 enum AppBarType {
   simple, // Only back + title (Field Agent Communication)

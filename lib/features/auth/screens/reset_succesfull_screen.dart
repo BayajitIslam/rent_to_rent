@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
-import 'package:template/core/constants/app_colors.dart';
-import 'package:template/core/constants/app_string.dart';
-import 'package:template/core/themes/app_text_style.dart';
-import 'package:template/features/auth/screens/auth_background_screen.dart';
-import 'package:template/features/auth/widgets/custom_button.dart';
-import 'package:template/routes/routes_name.dart';
+import 'package:rent2rent/core/constants/app_colors.dart';
+import 'package:rent2rent/core/constants/app_string.dart';
+import 'package:rent2rent/core/themes/app_text_style.dart';
+import 'package:rent2rent/features/auth/screens/auth_background_screen.dart';
+import 'package:rent2rent/features/auth/widgets/custom_button.dart';
+import 'package:rent2rent/routes/routes_name.dart';
 
 class ResetSuccesfullScreen extends StatelessWidget {
   const ResetSuccesfullScreen({super.key});

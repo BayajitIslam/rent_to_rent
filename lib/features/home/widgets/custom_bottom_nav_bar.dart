@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:template/core/constants/app_colors.dart';
-import 'package:template/core/constants/image_const.dart';
-import 'package:template/core/themes/app_text_style.dart';
-import 'package:template/features/home/controllers/navigation_controller.dart';
+import 'package:rent2rent/core/constants/app_colors.dart';
+import 'package:rent2rent/core/constants/image_const.dart';
+import 'package:rent2rent/core/themes/app_text_style.dart';
+import 'package:rent2rent/features/home/controllers/navigation_controller.dart';
 
 class CustomBottomNavBar extends StatelessWidget {
   const CustomBottomNavBar({super.key});

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
+import 'package:rent2rent/core/constants/app_colors.dart';
+import 'package:rent2rent/core/constants/app_string.dart';
+import 'package:rent2rent/core/themes/app_text_style.dart';
+import 'package:rent2rent/features/splash_screen/controllers/onboarding_controller.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import 'package:template/core/constants/app_colors.dart';
-import 'package:template/core/constants/app_string.dart';
-import 'package:template/core/themes/app_text_style.dart';
-import 'package:template/features/splash_screen/controllers/onboarding_controller.dart';
 
 class OnboardingScreen extends StatelessWidget {
   const OnboardingScreen({super.key});

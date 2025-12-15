@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:rent2rent/core/constants/app_string.dart';
+import 'package:rent2rent/core/constants/image_const.dart';
+import 'package:rent2rent/routes/routes_name.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:template/core/constants/app_string.dart';
-import 'package:template/core/constants/image_const.dart';
-import 'package:template/routes/routes_name.dart';
 
 class OnboardingController extends GetxController {
   final PageController pageController = PageController();

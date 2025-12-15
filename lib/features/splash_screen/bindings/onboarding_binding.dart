@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:template/features/splash_screen/controllers/onboarding_controller.dart';
+import 'package:rent2rent/features/splash_screen/controllers/onboarding_controller.dart';
 
 
 class OnboardingBinding extends Bindings {
