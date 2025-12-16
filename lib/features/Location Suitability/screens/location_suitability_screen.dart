@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:rent2rent/core/constants/app_colors.dart';
 import 'package:rent2rent/core/constants/app_string.dart';
+import 'package:rent2rent/core/constants/image_const.dart';
 import 'package:rent2rent/core/themes/app_text_style.dart';
 import 'package:rent2rent/features/Location%20Suitability/controllers/location_suitability_controller.dart';
 import 'package:rent2rent/features/Create%20Contract/widgets/step_indicator.dart';
@@ -135,7 +136,9 @@ class LocationSuitabilityScreen extends StatelessWidget {
             ClipRRect(
               borderRadius: BorderRadius.circular(8.r),
               child: Image.asset(
-                controller.backgroundImages[index],
+                isSelected
+                    ? AppImage.locationBackround
+                    : controller.backgroundImages[index],
                 width: double.infinity,
                 height: double.infinity,
                 fit: BoxFit.cover,
@@ -241,7 +244,7 @@ class LocationSuitabilityScreen extends StatelessWidget {
                 borderRadius: BorderRadius.circular(3.r),
                 border: Border.all(
                   color: value.value ? AppColors.primary : AppColors.neutralS,
-                  width: 3,
+                  width: 2,
                 ),
               ),
               child: value.value

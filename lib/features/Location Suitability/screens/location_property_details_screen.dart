@@ -377,7 +377,7 @@ class LocationPropertyDetailsScreen extends StatelessWidget {
                 borderRadius: BorderRadius.circular(3.r),
                 border: Border.all(
                   color: value.value ? AppColors.primary : AppColors.neutralS,
-                  width: 3,
+                  width: 2,
                 ),
               ),
               child: value.value

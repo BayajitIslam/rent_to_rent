@@ -26,30 +26,33 @@ class CustomeTextfield extends StatelessWidget {
         border: Border.all(color: AppColors.border, width: 0.5),
         borderRadius: BorderRadius.circular(48.r),
       ),
-      child: TextField(
-        controller: controller,
-        obscureText: isPassword && obscureText,
-        style: AppTextStyle.s16w4(color: AppColors.ash),
-        decoration: InputDecoration(
-          hintText: hintText,
-          hintStyle: AppTextStyle.s16w4(color: AppColors.ash),
-          border: InputBorder.none,
-          contentPadding: EdgeInsets.symmetric(
-            horizontal: 16.w,
-            vertical: 14.h,
+
+      child: Center(
+        child: TextField(
+          controller: controller,
+          obscureText: isPassword && obscureText,
+          style: AppTextStyle.s16w4(color: AppColors.ash),
+          decoration: InputDecoration(
+            hintText: hintText,
+            hintStyle: AppTextStyle.s16w4(color: AppColors.ash),
+            border: InputBorder.none,
+            contentPadding: EdgeInsets.symmetric(
+              horizontal: 16.w,
+              vertical: 15,
+            ),
+            suffixIcon: isPassword
+                ? IconButton(
+                    onPressed: onToggleVisibility,
+                    icon: Icon(
+                      obscureText
+                          ? Icons.visibility_off_outlined
+                          : Icons.visibility_outlined,
+                      color: obscureText ? AppColors.primary : AppColors.ash,
+                      size: 20.sp,
+                    ),
+                  )
+                : null,
           ),
-          suffixIcon: isPassword
-              ? IconButton(
-                  onPressed: onToggleVisibility,
-                  icon: Icon(
-                    obscureText
-                        ? Icons.visibility_off_outlined
-                        : Icons.visibility_outlined,
-                    color: obscureText ? AppColors.primary : AppColors.ash,
-                    size: 20.sp,
-                  ),
-                )
-              : null,
         ),
       ),
     );

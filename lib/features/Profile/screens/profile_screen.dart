@@ -21,18 +21,18 @@ class ProfileScreen extends GetView<ProfileController> {
           children: [
             // AppBar
             CustomAppBar(title: AppString.theBrain),
-
+        
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.w),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(height: 20.h),
-
+        
                   // Profile Avatar & Info
                   _buildProfileHeader(ctrl),
                   SizedBox(height: 30.h),
-
+        
                   // Files Section
                   _buildSectionTitle(AppString.files),
                   SizedBox(height: 12.h),
@@ -43,54 +43,86 @@ class ProfileScreen extends GetView<ProfileController> {
                     onTap: () => ctrl.goToSavedFiles(),
                   ),
                   SizedBox(height: 20.h),
-
+        
                   // Settings and Privacy Section
                   _buildSectionTitle(AppString.settingsAndPrivacy),
                   SizedBox(height: 12.h),
-                  _buildMenuItem(
-                    icon: Icons.person_outline,
-                    title: AppString.personalInformation,
-                    onTap: () => ctrl.goToPersonalInfo(),
-                  ),
-                  _buildMenuItem(
-                    icon: Icons.business_outlined,
-                    title: AppString.companyInformation,
-                    onTap: () => ctrl.goToCompanyInfo(),
-                  ),
-                  _buildMenuItem(
-                    icon: Icons.tune_outlined,
-                    title: AppString.defaultPreferences,
-                    onTap: () => ctrl.goToDefaultPreferences(),
-                  ),
-                  _buildMenuItem(
-                    icon: Icons.help_outline,
-                    title: AppString.helpAndFeedback,
-                    onTap: () => ctrl.goToHelpFeedback(),
-                  ),
-                  _buildMenuItem(
-                    icon: Icons.settings_outlined,
-                    title: AppString.settings,
-                    onTap: () => ctrl.goToSettings(),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: AppColors.white,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border(
+                        bottom: BorderSide(
+                          color: AppColors.whiteBorder,
+                          width: 0.5,
+                        ),
+                      ),
+                    ),
+                    child: Column(
+                      children: [
+                        _buildMenuItem(
+                          icon: Icons.person_outline,
+                          title: AppString.personalInformation,
+                          onTap: () => ctrl.goToPersonalInfo(),
+                        ),
+                        _buildMenuItem(
+                          icon: Icons.business_outlined,
+                          title: AppString.companyInformation,
+                          onTap: () => ctrl.goToCompanyInfo(),
+                        ),
+                        _buildMenuItem(
+                          icon: Icons.tune_outlined,
+                          title: AppString.defaultPreferences,
+                          onTap: () => ctrl.goToDefaultPreferences(),
+                        ),
+                        _buildMenuItem(
+                          icon: Icons.help_outline,
+                          title: AppString.helpAndFeedback,
+                          onTap: () => ctrl.goToHelpFeedback(),
+                        ),
+                        _buildMenuItem(
+                          icon: Icons.settings_outlined,
+                          title: AppString.settings,
+                          onTap: () => ctrl.goToSettings(),
+                        ),
+                      ],
+                    ),
                   ),
                   SizedBox(height: 20.h),
-
+        
                   // More Section
                   _buildSectionTitle(AppString.more),
                   SizedBox(height: 12.h),
-                  _buildMenuItem(
-                    icon: Icons.description_outlined,
-                    title: AppString.termsAndCondition,
-                    onTap: () => ctrl.goToTermsCondition(),
-                  ),
-                  _buildMenuItem(
-                    icon: Icons.privacy_tip_outlined,
-                    title: AppString.privacyPolicy,
-                    onTap: () => ctrl.goToPrivacyPolicy(),
-                  ),
-                  _buildMenuItem(
-                    icon: Icons.logout,
-                    title: AppString.logOut,
-                    onTap: () => ctrl.logout(),
+                  Container(
+                    decoration: BoxDecoration(
+                      color: AppColors.white,
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border(
+                        bottom: BorderSide(
+                          color: AppColors.whiteBorder,
+                          width: 0.5,
+                        ),
+                      ),
+                    ),
+                    child: Column(
+                      children: [
+                        _buildMenuItem(
+                          icon: Icons.description_outlined,
+                          title: AppString.termsAndCondition,
+                          onTap: () => ctrl.goToTermsCondition(),
+                        ),
+                        _buildMenuItem(
+                          icon: Icons.privacy_tip_outlined,
+                          title: AppString.privacyPolicy,
+                          onTap: () => ctrl.goToPrivacyPolicy(),
+                        ),
+                        _buildMenuItem(
+                          icon: Icons.logout,
+                          title: AppString.logOut,
+                          onTap: () => ctrl.logout(),
+                        ),
+                      ],
+                    ),
                   ),
                   SizedBox(height: 100.h),
                 ],

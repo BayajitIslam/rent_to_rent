@@ -45,7 +45,7 @@ class AuthBackgroundScreen extends StatelessWidget {
             ),
           ),
           Positioned(
-            top: 32.h,
+            top: 62.h,
             left: 25.w,
             child: Align(
               alignment: AlignmentGeometry.centerLeft,

@@ -8,6 +8,7 @@ import 'package:rent2rent/core/constants/image_const.dart';
 import 'package:rent2rent/core/themes/app_text_style.dart';
 import 'package:rent2rent/features/home/controllers/home_controller.dart';
 import 'package:rent2rent/features/home/screens/main_layout.dart';
+
 class DashboardScreen extends StatelessWidget {
   DashboardScreen({super.key});
 

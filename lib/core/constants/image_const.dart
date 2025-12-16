@@ -10,6 +10,7 @@ class AppImage {
   //<============================== Get Premium Screen ====================================>
   static const String premiumBox = "assets/images/premium_box.png";
 
+
   //<============================== Navbar Icon ====================================>
   static const String home = "assets/icons/home.svg";
   static const String contract = "assets/icons/contract.svg";
@@ -27,4 +28,6 @@ class AppImage {
   static const String uploadIcon = "assets/icons/upload_icon.svg";
   static const String pdf = "assets/icons/pdf.svg";
   static const String customerSupport = "assets/icons/customer support.svg";
+
+    static const String locationBackround = "assets/images/location_Backgorund_image.png";
 }

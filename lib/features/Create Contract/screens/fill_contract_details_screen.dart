@@ -27,8 +27,8 @@ class FillContractDetailsScreen extends StatelessWidget {
             // AppBar
             CustomAppBar(
               title: AppString.createContract,
-              type: AppBarType.withSave,
-              onSaveTap: () => controller.saveAsDraft(),
+              // type: AppBarType.withSave,
+              // onSaveTap: () => controller.saveAsDraft(),
             ),
 
             Padding(
