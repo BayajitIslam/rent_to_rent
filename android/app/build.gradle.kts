@@ -39,6 +39,14 @@ android {
     }
 }
 
+// ✅ ADD THIS BLOCK - Force downgrade activity dependencies
+configurations.all {
+    resolutionStrategy {
+        force("androidx.activity:activity:1.8.2")
+        force("androidx.activity:activity-ktx:1.8.2")
+    }
+}
+
 flutter {
     source = "../.."
 }

@@ -14,4 +14,5 @@ class AppColors {
   static const Color lighmode = Color(0xFF676767);
   static const Color primaryLight = Color(0xFFE8F4FD);
   static const Color deepblue = Color(0xFF1A4F8B);
+  static const Color whiteBorder = Color(0xFFEBEBEB);
 }

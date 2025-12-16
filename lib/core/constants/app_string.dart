@@ -269,4 +269,59 @@ class AppString {
   static const String locationInsights = 'LOCATION INSIGHTS';
   static const String saveAnalysis = 'Save Analysis';
   static const String startNewAnalysis = 'Start New Analysis';
+
+  // Profile Screen
+  static const String theBrain = 'The Brain';
+  static const String files = 'Files';
+  static const String savedFiles = 'Saved Files';
+  static const String settingsAndPrivacy = 'Settings and Privacy';
+  static const String personalInformation = 'Personal Information';
+  static const String companyInformation = 'Company Information';
+  static const String defaultPreferences = 'Default Preferences';
+  static const String helpAndFeedback = 'Help & Feedback';
+  static const String settings = 'Settings';
+  static const String more = 'More';
+  static const String termsAndCondition = 'Terms & Condition';
+  static const String privacyPolicy = 'Privacy Policy';
+  static const String logOut = 'Log Out';
+
+  // Settings Screen
+  static const String changePassword = 'Change Password';
+  static const String deleteAccount = 'Delete Account';
+
+  // Change Password Screen
+  static const String setYourNewPassword = 'Set your new password';
+  static const String retypePassword = 'Retype Password';
+
+  // Personal Info Screen
+  static const String phoneNumber = 'Phone Number';
+  static const String photo = 'Photo';
+  static const String upload = 'Upload';
+  static const String agreeToTerms =
+      'I agree to Rento\'s Agent Terms and verify that the above information is true.';
+  static const String enterHere = 'Enter here';
+
+  // Company Info Screen
+  static const String companyName = 'Company Name';
+  static const String companyAddress = 'Company Address';
+  static const String vatNumber = 'VAT Number';
+  static const String enterVatNumber = 'Enter here VAT Number';
+
+  // Help & Feedback Screen
+  static const String submitATicket = 'Submit a Ticket';
+  static const String describeYourIssue = 'Describe Your Issue';
+  static const String submit = 'Submit';
+  static const String needMoreHelp = 'Need More Help?';
+  static const String callUs = 'Call Us (+1-212-456-7890)';
+  static const String helpLineActive = 'Our help line service is active: 24/7';
+
+  // Saved Files Screen
+  static const String inquiries = 'Inquiries';
+  static const String uploadedDocuments = 'Uploaded Documents';
+  static const String download = 'Download';
+
+  // Other Screens
+  static const String save = 'Save';
+  static const String guides = 'Guides';
+  static const String aboutUs = 'About us';
 }

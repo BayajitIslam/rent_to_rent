@@ -34,13 +34,14 @@ class AppTextStyle {
   static TextStyle s16w4({
     Color? color = AppColors.white,
     double fontSize = 16,
+    double height = 1.3,
     FontWeight fontWeight = FontWeight.w400,
   }) {
     return GoogleFonts.inter(
       color: color,
       fontSize: fontSize.sp,
       fontWeight: fontWeight,
-      height: 1.3,
+      height: height,
     );
   }
 

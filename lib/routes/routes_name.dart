@@ -2,6 +2,7 @@ class RoutesName {
   //<=============================== Splash Screen ==================================>
   static const String splash = "/splash";
   static const String onboarding = "/onboarding";
+
   //<=============================== Main Screen ==================================>
   static const String home = "/home";
   static const String createContractScreen = "/createContractScreen";
@@ -29,10 +30,23 @@ class RoutesName {
       '/contractAnalysisReportScreen';
   static const String contractAnalysisScreen = "/ContractAnalysisScreen";
 
-    //<=============================== Location Suitability Screen ==================================>
-  static const String locationPropertyDetailsScreen = '/locationPropertyDetailsScreen';
-  static const String locationAnalyzingScreen =
-      '/locationAnalyzingScreen';
+  //<=============================== Location Suitability Screen ==================================>
+  static const String locationPropertyDetailsScreen =
+      '/locationPropertyDetailsScreen';
+  static const String locationAnalyzingScreen = '/locationAnalyzingScreen';
   static const String locationResultsScreen = "/locationResultsScreen";
   static const String locationSuitabilityScreen = '/LocationSuitabilityScreen';
+
+  //<=============================== Profile Screen ==================================>
+  static const String savedFilesScreen = '/savedFilesScreen';
+  static const String personalInfoScreen = '/personalInfoScreen';
+  static const String companyInfoScreen = '/companyInfoScreen';
+  static const String defaultPreferencesScreen = '/defaultPreferencesScreen';
+  static const String helpFeedbackScreen = '/helpFeedbackScreen';
+  static const String settingsScreen = '/settingsScreen';
+  static const String changePasswordScreen = '/changePasswordScreen';
+  static const String termsConditionScreen = '/termsConditionScreen';
+  static const String privacyPolicyScreen = '/privacyPolicyScreen';
+  static const String guidesScreen = '/guidesScreen';
+  static const String aboutUsScreen = '/aboutUsScreen';
 }

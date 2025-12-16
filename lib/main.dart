@@ -5,7 +5,6 @@ import 'package:rent2rent/core/themes/themes.dart';
 import 'package:rent2rent/routes/app_routes.dart';
 import 'package:rent2rent/routes/routes_name.dart';
 
-
 void main() {
   runApp(const MyApp());
 }

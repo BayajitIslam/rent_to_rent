@@ -26,4 +26,5 @@ class AppImage {
   //<============================== Contract Analyzing Icon ====================================>
   static const String uploadIcon = "assets/icons/upload_icon.svg";
   static const String pdf = "assets/icons/pdf.svg";
+  static const String customerSupport = "assets/icons/customer support.svg";
 }

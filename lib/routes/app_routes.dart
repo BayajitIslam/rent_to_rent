@@ -16,7 +16,18 @@ import 'package:rent2rent/features/Location%20Suitability/screens/location_analy
 import 'package:rent2rent/features/Location%20Suitability/screens/location_property_details_screen.dart';
 import 'package:rent2rent/features/Location%20Suitability/screens/location_results_screen.dart';
 import 'package:rent2rent/features/Location%20Suitability/screens/location_suitability_screen.dart';
+import 'package:rent2rent/features/Profile/bindings/profile_binding.dart';
+import 'package:rent2rent/features/Profile/screens/about_us_screen.dart';
+import 'package:rent2rent/features/Profile/screens/change_password_screen.dart';
+import 'package:rent2rent/features/Profile/screens/company_info_screen.dart';
+import 'package:rent2rent/features/Profile/screens/guides_screen.dart';
+import 'package:rent2rent/features/Profile/screens/help_feedback_screen.dart';
+import 'package:rent2rent/features/Profile/screens/personal_info_screen.dart';
+import 'package:rent2rent/features/Profile/screens/privacy_policy_screen.dart';
 import 'package:rent2rent/features/Profile/screens/profile_screen.dart';
+import 'package:rent2rent/features/Profile/screens/saved_files_screen.dart';
+import 'package:rent2rent/features/Profile/screens/settings_screen.dart';
+import 'package:rent2rent/features/Profile/screens/terms_condition_screen.dart';
 import 'package:rent2rent/features/auth/bindings/auth_binding.dart';
 import 'package:rent2rent/features/auth/bindings/otp_binding.dart';
 import 'package:rent2rent/features/auth/bindings/subscription_binding.dart';
@@ -52,6 +63,7 @@ class AppRoutes {
       transition: Transition.noTransition,
       binding: SplashBinding(),
     ),
+    
     //<=============================== Main Screen ==================================>
     GetPage(
       name: RoutesName.home,
@@ -63,7 +75,7 @@ class AppRoutes {
       name: RoutesName.profile,
       page: () => ProfileScreen(),
       transition: Transition.noTransition,
-      bindings: [NavigationBinding()],
+      bindings: [NavigationBinding(), ProfileBinding()],
     ),
 
     GetPage(
@@ -114,7 +126,6 @@ class AppRoutes {
       name: RoutesName.resetSuccessfullScreen,
       page: () => ResetSuccesfullScreen(),
       transition: Transition.rightToLeft,
-      // binding: AuthBinding(),
     ),
     GetPage(
       name: RoutesName.getPremiumScreen,
@@ -163,10 +174,11 @@ class AppRoutes {
       transition: Transition.noTransition,
       bindings: [NavigationBinding(), ContractAnalysisBinding()],
     ),
-    //<=============================== Contract Anayliyzing Screen ==================================>
+    
+    //<=============================== Location Suitability Screen ==================================>
     GetPage(
-      name: RoutesName.locationAnalyzingScreen,
-      page: () => LocationAnalyzingScreen(),
+      name: RoutesName.locationSuitabilityScreen,
+      page: () => LocationSuitabilityScreen(),
       transition: Transition.noTransition,
       bindings: [NavigationBinding(), LocationSuitabilityBinding()],
     ),
@@ -177,16 +189,78 @@ class AppRoutes {
       bindings: [NavigationBinding(), LocationSuitabilityBinding()],
     ),
     GetPage(
+      name: RoutesName.locationAnalyzingScreen,
+      page: () => LocationAnalyzingScreen(),
+      transition: Transition.noTransition,
+      bindings: [NavigationBinding(), LocationSuitabilityBinding()],
+    ),
+    GetPage(
       name: RoutesName.locationResultsScreen,
       page: () => LocationResultsScreen(),
       transition: Transition.noTransition,
       bindings: [NavigationBinding(), LocationSuitabilityBinding()],
     ),
+
+    //<=============================== Profile Screen ==================================>
     GetPage(
-      name: RoutesName.locationSuitabilityScreen,
-      page: () => LocationSuitabilityScreen(),
-      transition: Transition.noTransition,
-      bindings: [NavigationBinding(), LocationSuitabilityBinding()],
+      name: RoutesName.savedFilesScreen,
+      page: () => SavedFilesScreen(),
+      transition: Transition.rightToLeft,
+      bindings: [NavigationBinding(), ProfileBinding()],
+    ),
+    GetPage(
+      name: RoutesName.personalInfoScreen,
+      page: () => PersonalInfoScreen(),
+      transition: Transition.rightToLeft,
+      bindings: [NavigationBinding(), ProfileBinding()],
+    ),
+    GetPage(
+      name: RoutesName.companyInfoScreen,
+      page: () => CompanyInfoScreen(),
+      transition: Transition.rightToLeft,
+      bindings: [NavigationBinding(), ProfileBinding()],
+    ),
+    GetPage(
+      name: RoutesName.helpFeedbackScreen,
+      page: () => HelpFeedbackScreen(),
+      transition: Transition.rightToLeft,
+      bindings: [NavigationBinding(), ProfileBinding()],
+    ),
+    GetPage(
+      name: RoutesName.settingsScreen,
+      page: () => SettingsScreen(),
+      transition: Transition.rightToLeft,
+      bindings: [NavigationBinding(), ProfileBinding()],
+    ),
+    GetPage(
+      name: RoutesName.changePasswordScreen,
+      page: () => ChangePasswordScreen(),
+      transition: Transition.rightToLeft,
+      bindings: [NavigationBinding(), ProfileBinding()],
+    ),
+    GetPage(
+      name: RoutesName.termsConditionScreen,
+      page: () => TermsConditionScreen(),
+      transition: Transition.rightToLeft,
+      binding: NavigationBinding(),
+    ),
+    GetPage(
+      name: RoutesName.privacyPolicyScreen,
+      page: () => PrivacyPolicyScreen(),
+      transition: Transition.rightToLeft,
+      binding: NavigationBinding(),
+    ),
+    GetPage(
+      name: RoutesName.guidesScreen,
+      page: () => GuidesScreen(),
+      transition: Transition.rightToLeft,
+      binding: NavigationBinding(),
+    ),
+    GetPage(
+      name: RoutesName.aboutUsScreen,
+      page: () => AboutUsScreen(),
+      transition: Transition.rightToLeft,
+      binding: NavigationBinding(),
     ),
   ];
 }
