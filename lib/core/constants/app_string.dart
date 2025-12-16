@@ -188,26 +188,85 @@ class AppString {
   static const String exampleEmail = "example@gmail.com";
 
   // Screen 1 - Contract Analysis Upload
-static const String contractAnalysis = 'Contract Analysis';
-static const String checkIncomingContractN = 'Check Incoming Contract';
-static const String dragAndDropOrTap = 'Drag & drop or tap to upload';
-static const String uploadContractDescription = 'Upload your rental contract PDF and get a full analysis.';
-static const String analyzeContract = 'Analyze Contract';
-static const String changeFile = 'Change file';
+  static const String contractAnalysis = 'Contract Analysis';
+  static const String checkIncomingContractN = 'Check Incoming Contract';
+  static const String dragAndDropOrTap = 'Drag & drop or tap to upload';
+  static const String uploadContractDescription =
+      'Upload your rental contract PDF and get a full analysis.';
+  static const String analyzeContract = 'Analyze Contract';
+  static const String changeFile = 'Change file';
 
-// Screen 2 - Analyzing
-static const String analyzingYourContract = 'Analyzing your contract...';
-static const String analyzingDescription = 'Extracting clauses, evaluating risks, checking missing information.';
+  // Screen 2 - Analyzing
+  static const String analyzingYourContract = 'Analyzing your contract...';
+  static const String analyzingDescription =
+      'Extracting clauses, evaluating risks, checking missing information.';
 
-// Screen 3 - Report
-static const String contractAnalysisReport = 'Contract Analysis Report';
-static const String overallRating = 'Overall Rating';
-static const String contractSummaryRiskAnalysis = 'CONTRACT SUMMARY & RISK ANALYSIS';
-static const String summaryInsight = 'SUMMARY INSIGHT';
-static const String safeClausesSection = 'SAFE CLAUSES SECTION';
-static const String redFlagsSection = 'RED FLAGS SECTION';
-static const String warningsSection = 'WARNINGS SECTION';
-static const String possibleVariations = 'Possible Variations:';
-static const String exampleItems = 'Example Items:';
-static const String regenerateAnalysis = 'Regenerate Analysis';
+  // Screen 3 - Report
+  static const String contractAnalysisReport = 'Contract Analysis Report';
+  static const String overallRating = 'Overall Rating';
+  static const String contractSummaryRiskAnalysis =
+      'CONTRACT SUMMARY & RISK ANALYSIS';
+  static const String summaryInsight = 'SUMMARY INSIGHT';
+  static const String safeClausesSection = 'SAFE CLAUSES SECTION';
+  static const String redFlagsSection = 'RED FLAGS SECTION';
+  static const String warningsSection = 'WARNINGS SECTION';
+  static const String possibleVariations = 'Possible Variations:';
+  static const String exampleItems = 'Example Items:';
+  static const String regenerateAnalysis = 'Regenerate Analysis';
+
+  // Location Suitability - General
+  static const String analyzeLocation = 'Analyze Location';
+
+  // Step Indicator
+  static const String selectYourPreferences = 'Select Your\nPreferences';
+  static const String landlordInfoPropertyDetails =
+      'Landlord info &\nproperty details';
+  static const String resultPage = 'Result Page';
+
+  // Screen 1 - Select Preferences
+  static const String backgroundImage = 'Background Image';
+  static const String categoryTypes = 'Category Types';
+  static const String selectCategories = 'Select categories';
+  static const String seniorLivingWG = 'Senior Living WG';
+  static const String students = 'Students';
+  static const String airbnbOptional = 'Airbnb (optional)';
+  static const String engineerHousing = 'Engineer Housing';
+
+  // Screen 2 - Property Details
+  static const String name = 'Name';
+  static const String phone = 'Phone';
+  static const String propertyInformation = 'Property Information';
+  static const String approxSquareMeters = 'Approx. Square Meters';
+  static const String numberOfRooms = 'Number of Rooms';
+  static const String walkthroughRoom = 'Walkthrough Room (Durchgangszimmer)';
+  static const String localAmenitiesAtAGlance = 'Local Amenities At A Glance';
+  static const String universityWithin10Minutes =
+      'University within 10 minutes';
+  static const String groceryStoreWithin10Minutes =
+      'Grocery store within 10 minutes';
+  static const String hospitalWithin10Minutes = 'Hospital within 10 minutes';
+  static const String publicTransportWithin10Minutes =
+      'Public transport within 10 minutes';
+  static const String additionalAttributes = 'Additional Attributes';
+  static const String goodResidentialArea = 'Good residential area';
+  static const String basicArea = 'Basic area';
+  static const String groundFloor = 'Ground floor';
+  static const String elevatorAvailable = 'Elevator available';
+  static const String barrierFree = 'Barrier-free';
+  static const String flatRate = 'Flat Rate';
+  static const String plusUtilities = 'Plus Utilities';
+  static const String enterUtilitiesAmount = 'Enter utilities amount';
+  static const String contractEndDate = 'Contract End Date';
+  static const String pickTheDate = 'Pick the date';
+  static const String reasonForContractLimitation =
+      'Reason for Contract Limitation';
+
+  // Screen 3 - Analyzing
+  static const String analyzingLocation = 'Analyzing Location...';
+  static const String thisMayTakeFewSeconds = 'This may take a few seconds.';
+
+  // Screen 4 - Results
+  static const String locationInsights = 'LOCATION INSIGHTS';
+  static const String saveAnalysis = 'Save Analysis';
+  static const String startNewAnalysis = 'Start New Analysis';
 }

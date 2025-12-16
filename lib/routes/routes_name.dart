@@ -6,7 +6,6 @@ class RoutesName {
   static const String home = "/home";
   static const String createContractScreen = "/createContractScreen";
   static const String profile = "/profile";
-  static const String locationSuitabilityScreen = "/LocationSuitabilityScreen";
   static const String fieldAgentScreen = "/fieldAgentScreen";
   static const String agentReplyScreen = "/agentReplyScreen";
 
@@ -29,4 +28,11 @@ class RoutesName {
   static const String contractAnalysisReportScreen =
       '/contractAnalysisReportScreen';
   static const String contractAnalysisScreen = "/ContractAnalysisScreen";
+
+    //<=============================== Location Suitability Screen ==================================>
+  static const String locationPropertyDetailsScreen = '/locationPropertyDetailsScreen';
+  static const String locationAnalyzingScreen =
+      '/locationAnalyzingScreen';
+  static const String locationResultsScreen = "/locationResultsScreen";
+  static const String locationSuitabilityScreen = '/LocationSuitabilityScreen';
 }

@@ -3,29 +3,20 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:rent2rent/core/constants/app_colors.dart';
 import 'package:rent2rent/core/themes/app_text_style.dart';
 
-class StepIndicator extends StatelessWidget {
+class LocationStepIndicator extends StatelessWidget {
   final int currentStep;
-  final List<String> titles;
 
-  const StepIndicator({
-    super.key,
-    required this.currentStep,
-    this.titles = const [
-      'Select Contract Type',
-      'Fill Contract\nDetails',
-      'Generate\nContract',
-    ],
-  });
+  const LocationStepIndicator({super.key, required this.currentStep});
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
-        _buildStepItem(1, titles[0], currentStep >= 1),
+        _buildStepItem(1, 'Select Your\nPreferences', currentStep >= 1),
         _buildDashedLine(currentStep >= 2),
-        _buildStepItem(2, titles[1], currentStep >= 2),
+        _buildStepItem(2, 'Landlord info & property details', currentStep >= 2),
         _buildDashedLine(currentStep >= 3),
-        _buildStepItem(3, titles[2], currentStep >= 3),
+        _buildStepItem(3, 'Result Page', currentStep >= 3),
       ],
     );
   }
@@ -80,7 +71,7 @@ class StepIndicator extends StatelessWidget {
 
   Widget _buildDashedLine(bool isActive) {
     return Container(
-      width: 50.w,
+      width: 44.w,
       margin: EdgeInsets.only(bottom: 40.h),
       child: CustomPaint(
         painter: DashedLinePainter(

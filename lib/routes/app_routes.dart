@@ -11,6 +11,10 @@ import 'package:rent2rent/features/Field%20Agent%20Communication/bindings/agent_
 import 'package:rent2rent/features/Field%20Agent%20Communication/bindings/field_agent_binding.dart';
 import 'package:rent2rent/features/Field%20Agent%20Communication/screens/agent_reply_screen.dart';
 import 'package:rent2rent/features/Field%20Agent%20Communication/screens/field_agent_communication_screen.dart';
+import 'package:rent2rent/features/Location%20Suitability/bindings/location_suitability_binding.dart';
+import 'package:rent2rent/features/Location%20Suitability/screens/location_analyzing_screen.dart';
+import 'package:rent2rent/features/Location%20Suitability/screens/location_property_details_screen.dart';
+import 'package:rent2rent/features/Location%20Suitability/screens/location_results_screen.dart';
 import 'package:rent2rent/features/Location%20Suitability/screens/location_suitability_screen.dart';
 import 'package:rent2rent/features/Profile/screens/profile_screen.dart';
 import 'package:rent2rent/features/auth/bindings/auth_binding.dart';
@@ -58,13 +62,6 @@ class AppRoutes {
     GetPage(
       name: RoutesName.profile,
       page: () => ProfileScreen(),
-      transition: Transition.noTransition,
-      bindings: [NavigationBinding()],
-    ),
-
-    GetPage(
-      name: RoutesName.locationSuitabilityScreen,
-      page: () => LocationSuitabilityScreen(),
       transition: Transition.noTransition,
       bindings: [NavigationBinding()],
     ),
@@ -131,20 +128,20 @@ class AppRoutes {
       name: RoutesName.createContractScreen,
       page: () => SelectContractTypeScreen(),
       transition: Transition.noTransition,
-      bindings: [NavigationBinding(), SelectContractTypeBinding()],
+      bindings: [NavigationBinding(), ContractBindings()],
     ),
     GetPage(
       name: RoutesName.fillContractDetailsScreen,
       page: () => FillContractDetailsScreen(),
       transition: Transition.rightToLeft,
-      binding: FillContractDetailsBinding(),
+      binding: ContractBindings(),
     ),
 
     GetPage(
       name: RoutesName.generateContractScreen,
       page: () => GenerateContractScreen(),
       transition: Transition.rightToLeft,
-      binding: GenerateContractBinding(),
+      binding: ContractBindings(),
     ),
 
     //<=============================== Contract Anayliyzing Screen ==================================>
@@ -165,6 +162,31 @@ class AppRoutes {
       page: () => ContractAnalysisReportScreen(),
       transition: Transition.noTransition,
       bindings: [NavigationBinding(), ContractAnalysisBinding()],
+    ),
+    //<=============================== Contract Anayliyzing Screen ==================================>
+    GetPage(
+      name: RoutesName.locationAnalyzingScreen,
+      page: () => LocationAnalyzingScreen(),
+      transition: Transition.noTransition,
+      bindings: [NavigationBinding(), LocationSuitabilityBinding()],
+    ),
+    GetPage(
+      name: RoutesName.locationPropertyDetailsScreen,
+      page: () => LocationPropertyDetailsScreen(),
+      transition: Transition.noTransition,
+      bindings: [NavigationBinding(), LocationSuitabilityBinding()],
+    ),
+    GetPage(
+      name: RoutesName.locationResultsScreen,
+      page: () => LocationResultsScreen(),
+      transition: Transition.noTransition,
+      bindings: [NavigationBinding(), LocationSuitabilityBinding()],
+    ),
+    GetPage(
+      name: RoutesName.locationSuitabilityScreen,
+      page: () => LocationSuitabilityScreen(),
+      transition: Transition.noTransition,
+      bindings: [NavigationBinding(), LocationSuitabilityBinding()],
     ),
   ];
 }
