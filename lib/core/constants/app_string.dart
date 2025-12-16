@@ -186,4 +186,28 @@ class AppString {
   static const String address = 'Address';
   static const String contactEmail = 'Contact Email';
   static const String exampleEmail = "example@gmail.com";
+
+  // Screen 1 - Contract Analysis Upload
+static const String contractAnalysis = 'Contract Analysis';
+static const String checkIncomingContractN = 'Check Incoming Contract';
+static const String dragAndDropOrTap = 'Drag & drop or tap to upload';
+static const String uploadContractDescription = 'Upload your rental contract PDF and get a full analysis.';
+static const String analyzeContract = 'Analyze Contract';
+static const String changeFile = 'Change file';
+
+// Screen 2 - Analyzing
+static const String analyzingYourContract = 'Analyzing your contract...';
+static const String analyzingDescription = 'Extracting clauses, evaluating risks, checking missing information.';
+
+// Screen 3 - Report
+static const String contractAnalysisReport = 'Contract Analysis Report';
+static const String overallRating = 'Overall Rating';
+static const String contractSummaryRiskAnalysis = 'CONTRACT SUMMARY & RISK ANALYSIS';
+static const String summaryInsight = 'SUMMARY INSIGHT';
+static const String safeClausesSection = 'SAFE CLAUSES SECTION';
+static const String redFlagsSection = 'RED FLAGS SECTION';
+static const String warningsSection = 'WARNINGS SECTION';
+static const String possibleVariations = 'Possible Variations:';
+static const String exampleItems = 'Example Items:';
+static const String regenerateAnalysis = 'Regenerate Analysis';
 }

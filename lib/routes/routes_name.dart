@@ -7,7 +7,6 @@ class RoutesName {
   static const String createContractScreen = "/createContractScreen";
   static const String profile = "/profile";
   static const String locationSuitabilityScreen = "/LocationSuitabilityScreen";
-  static const String contractAnalysisScreen = "/ContractAnalysisScreen";
   static const String fieldAgentScreen = "/fieldAgentScreen";
   static const String agentReplyScreen = "/agentReplyScreen";
 
@@ -24,4 +23,10 @@ class RoutesName {
   static const String selectContractTypeScreen = '/select-contract-type';
   static const String fillContractDetailsScreen = '/fill-contract-details';
   static const String generateContractScreen = '/generate-contract';
+
+  //<=============================== Contract Anaylyzing Screen ==================================>
+  static const String contractAnalyzingScreen = '/contractAnalyzingScreen';
+  static const String contractAnalysisReportScreen =
+      '/contractAnalysisReportScreen';
+  static const String contractAnalysisScreen = "/ContractAnalysisScreen";
 }

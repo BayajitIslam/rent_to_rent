@@ -125,26 +125,6 @@ class CustomAppBar extends StatelessWidget {
         // Download + Save buttons
         return Row(
           children: [
-            // Download Button
-            GestureDetector(
-              onTap: onDownloadTap,
-              child: Container(
-                width: 36.w,
-                height: 36.h,
-                decoration: BoxDecoration(
-                  color: AppColors.primaryLight,
-                  borderRadius: BorderRadius.circular(8.r),
-                ),
-                child: Center(
-                  child: Icon(
-                    Icons.file_download_outlined,
-                    color: AppColors.primary,
-                    size: 20.sp,
-                  ),
-                ),
-              ),
-            ),
-            SizedBox(width: 8.w),
             // Save Button
             GestureDetector(
               onTap: onSaveTap,
@@ -158,7 +138,28 @@ class CustomAppBar extends StatelessWidget {
                 child: Center(
                   child: Icon(
                     Icons.save_outlined,
-                    color: AppColors.primary,
+                    color: AppColors.neutralS,
+                    size: 20.sp,
+                  ),
+                ),
+              ),
+            ),
+            SizedBox(width: 8.w),
+
+            // Download Button
+            GestureDetector(
+              onTap: onDownloadTap,
+              child: Container(
+                width: 36.w,
+                height: 36.h,
+                decoration: BoxDecoration(
+                  color: AppColors.primaryLight,
+                  borderRadius: BorderRadius.circular(8.r),
+                ),
+                child: Center(
+                  child: Icon(
+                    Icons.file_download_outlined,
+                    color: AppColors.neutralS,
                     size: 20.sp,
                   ),
                 ),

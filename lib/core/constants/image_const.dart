@@ -22,4 +22,8 @@ class AppImage {
   static const String locationSuitability =
       "assets/icons/locationSuitability.svg";
   static const String fieldAgent = "assets/icons/fieldAgent.svg";
+
+  //<============================== Contract Analyzing Icon ====================================>
+  static const String uploadIcon = "assets/icons/upload_icon.svg";
+  static const String pdf = "assets/icons/pdf.svg";
 }

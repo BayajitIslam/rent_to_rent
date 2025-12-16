@@ -1,5 +1,8 @@
 import 'package:get/get_navigation/get_navigation.dart';
+import 'package:rent2rent/features/Contract%20Analysis/bindings/contract_analysis_binding.dart';
+import 'package:rent2rent/features/Contract%20Analysis/screens/contract_analysis_report_screen.dart.dart';
 import 'package:rent2rent/features/Contract%20Analysis/screens/contract_analysis_screen.dart';
+import 'package:rent2rent/features/Contract%20Analysis/screens/contract_analyzing_screen.dart';
 import 'package:rent2rent/features/Create%20Contract/bindings/contract_bindings.dart';
 import 'package:rent2rent/features/Create%20Contract/screens/fill_contract_details_screen.dart';
 import 'package:rent2rent/features/Create%20Contract/screens/generate_contract_screen.dart';
@@ -60,24 +63,12 @@ class AppRoutes {
     ),
 
     GetPage(
-      name: RoutesName.createContractScreen,
-      page: () => SelectContractTypeScreen(),
-      transition: Transition.noTransition,
-      bindings: [NavigationBinding(), SelectContractTypeBinding()],
-    ),
-
-    GetPage(
       name: RoutesName.locationSuitabilityScreen,
       page: () => LocationSuitabilityScreen(),
       transition: Transition.noTransition,
       bindings: [NavigationBinding()],
     ),
-    GetPage(
-      name: RoutesName.contractAnalysisScreen,
-      page: () => ContractAnalysisScreen(),
-      transition: Transition.noTransition,
-      bindings: [NavigationBinding()],
-    ),
+
     GetPage(
       name: RoutesName.fieldAgentScreen,
       page: () => FieldAgentCommunicationScreen(),
@@ -135,7 +126,13 @@ class AppRoutes {
       binding: SubscriptionBinding(),
     ),
 
-    // Step 2 - Fill Contract Details
+    //<=============================== Create Contract Screen ==================================>
+    GetPage(
+      name: RoutesName.createContractScreen,
+      page: () => SelectContractTypeScreen(),
+      transition: Transition.noTransition,
+      bindings: [NavigationBinding(), SelectContractTypeBinding()],
+    ),
     GetPage(
       name: RoutesName.fillContractDetailsScreen,
       page: () => FillContractDetailsScreen(),
@@ -143,12 +140,31 @@ class AppRoutes {
       binding: FillContractDetailsBinding(),
     ),
 
-    // Step 3 - Generate Contract
     GetPage(
       name: RoutesName.generateContractScreen,
       page: () => GenerateContractScreen(),
       transition: Transition.rightToLeft,
       binding: GenerateContractBinding(),
+    ),
+
+    //<=============================== Contract Anayliyzing Screen ==================================>
+    GetPage(
+      name: RoutesName.contractAnalysisScreen,
+      page: () => ContractAnalysisScreen(),
+      transition: Transition.noTransition,
+      bindings: [NavigationBinding(), ContractAnalysisBinding()],
+    ),
+    GetPage(
+      name: RoutesName.contractAnalyzingScreen,
+      page: () => ContractAnalyzingScreen(),
+      transition: Transition.noTransition,
+      bindings: [NavigationBinding(), ContractAnalysisBinding()],
+    ),
+    GetPage(
+      name: RoutesName.contractAnalysisReportScreen,
+      page: () => ContractAnalysisReportScreen(),
+      transition: Transition.noTransition,
+      bindings: [NavigationBinding(), ContractAnalysisBinding()],
     ),
   ];
 }

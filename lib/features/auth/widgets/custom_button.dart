@@ -10,6 +10,7 @@ class CustomButton extends StatelessWidget {
   final Color bgColor;
   final bool isloading;
   final double buttonHeight;
+  final double radius;
   const CustomButton({
     super.key,
     this.onTap,
@@ -17,7 +18,8 @@ class CustomButton extends StatelessWidget {
     this.textColors = AppColors.white,
     this.bgColor = AppColors.deepBlue,
     this.isloading = false,
-    this.buttonHeight = 50
+    this.buttonHeight = 50,
+    this.radius = 24,
   });
 
   @override
@@ -32,7 +34,7 @@ class CustomButton extends StatelessWidget {
           foregroundColor: AppColors.white,
           elevation: 0,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(24.r),
+            borderRadius: BorderRadius.circular(radius.r),
           ),
         ),
         child: isloading
