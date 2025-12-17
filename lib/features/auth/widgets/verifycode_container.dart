@@ -107,8 +107,8 @@ class VerifyCodeContainer extends StatelessWidget {
 
   Widget _buildOtpBox(int index) {
     return Container(
-      width: 50.w,
-      height: 50.h,
+      width: 54.w,
+      height: 54.h,
       decoration: BoxDecoration(
         color: AppColors.white,
         borderRadius: BorderRadius.circular(12.r),
