@@ -110,6 +110,11 @@ class AppString {
   static const String adminRecommendations = 'ADMIN RECOMMENDATIONS';
 
   // Agent Reply Screen
+  static const String generateFirstContract = 'Generate First Contract';
+  static const String createAProfessionalMessage = 'Create a professional first-contact message for property agents';
+  static const String enterYourText = 'Enter Your Text here';
+  static const String pasteEmail = 'Paste the email you received here…';
+  static const String replyInstructions = 'Reply Instructions / Guidance';
   static const String agentReply = 'Agent Reply';
   static const String agentInquiry = 'Agent Inquiry';
   static const String agentInquiryDesc =
