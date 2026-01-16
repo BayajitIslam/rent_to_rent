@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rent2rent/core/utils/log.dart';
 import 'package:rent2rent/features/auth/models/user_model.dart';
+import 'package:rent2rent/features/home/widgets/custome_snackbar.dart';
 import 'package:rent2rent/routes/routes_name.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -200,12 +201,14 @@ class AuthController extends GetxController {
 
     // Validation
     if (forgotPasswordEmailController.text.trim().isEmpty) {
+      CustomeSnackBar.error('Please enter your email');
       errorMessageForgotPassword.value = 'Please enter your email';
       Console.red(errorMessageForgotPassword.value);
       return;
     }
 
     if (!GetUtils.isEmail(forgotPasswordEmailController.text.trim())) {
+      CustomeSnackBar.error('Please enter a valid email');
       errorMessageForgotPassword.value = 'Please enter a valid email';
       Console.red(errorMessageForgotPassword.value);
       return;
@@ -262,12 +265,14 @@ class AuthController extends GetxController {
 
     // Validation
     if (newPasswordController.text.isEmpty) {
+      CustomeSnackBar.error('Please enter your new password');
       errorMessageResetPassword.value = 'Please enter your new password';
       Console.red("Error: Please enter your new password");
       return;
     }
 
     if (newPasswordController.text.length < 6) {
+      CustomeSnackBar.error('Password must be at least 6 characters');
       errorMessageResetPassword.value =
           'Password must be at least 6 characters';
       Console.red("Error: Password must be at least 6 characters");
@@ -275,12 +280,14 @@ class AuthController extends GetxController {
     }
 
     if (confirmNewPasswordController.text.isEmpty) {
+      CustomeSnackBar.error('Please confirm your password');
       errorMessageResetPassword.value = 'Please confirm your password';
       Console.red("Please confirm your password");
       return;
     }
 
     if (newPasswordController.text != confirmNewPasswordController.text) {
+      CustomeSnackBar.error('Passwords do not match');
       errorMessageResetPassword.value = 'Passwords do not match';
       Console.red("Error: Passwords do not match");
       return;
@@ -305,6 +312,7 @@ class AuthController extends GetxController {
       //   colorText: Colors.white,
       //   snackPosition: SnackPosition.BOTTOM,
       // );
+      CustomeSnackBar.error('Password has been reset successfully!');
       Console.green("Success: Password has been reset successfully!");
 
       // Clear fields
@@ -315,6 +323,7 @@ class AuthController extends GetxController {
       await Future.delayed(Duration(seconds: 1));
       Get.offAllNamed(RoutesName.resetSuccessfullScreen);
     } catch (e) {
+      CustomeSnackBar.success('Failed to reset password. Please try again.');
       errorMessageResetPassword.value =
           'Failed to reset password. Please try again.';
       Console.red(

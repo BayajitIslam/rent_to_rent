@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rent2rent/core/utils/log.dart';
+import 'package:rent2rent/features/home/widgets/custome_snackbar.dart';
 import 'package:rent2rent/routes/routes_name.dart';
 
 class OTPController extends GetxController {
@@ -70,6 +71,7 @@ class OTPController extends GetxController {
     // Validation (6 digits now)
     if (otp.length != 6) {
       errorMessage.value = 'Please enter complete 6 digit code';
+      CustomeSnackBar.error('Enter Randome 6 digit code');
       // Get.snackbar(
       //   'Error',
       //   'Please enter complete 6 digit code',
@@ -97,10 +99,12 @@ class OTPController extends GetxController {
       // Navigate based on verification type
       if (verificationType == 'signup') {
         // Sign Up Flow: Go to Login
+        CustomeSnackBar.success('Veryfication Succesfully Done');
         Console.magenta("Verification Type: $verificationType");
         Get.offAllNamed(RoutesName.login);
       } else if (verificationType == 'forgot_password') {
         // Forgot Password Flow: Go to Reset Password
+        CustomeSnackBar.success('Veryfication Succesfully Done');
         Console.magenta("Verification Type: $verificationType");
         Get.offAllNamed(RoutesName.resetPasswordScreen);
       }
@@ -147,6 +151,7 @@ class OTPController extends GetxController {
       //   colorText: Colors.white,
       //   snackPosition: SnackPosition.BOTTOM,
       // );
+      CustomeSnackBar.error('Verification failed. Please try again.');
       Console.red("Error: Verification failed. Please try again.");
     } finally {
       isLoading.value = false;

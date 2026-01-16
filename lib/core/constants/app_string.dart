@@ -132,6 +132,10 @@ class AppString {
   static const String fillContractDetails = 'Fill Contract\nDetails';
   static const String entireApartment = 'Entire Apartment';
   static const String singleRoom = 'Single Room';
+  static const String rentalObjectAddress = 'Rental Object Address';
+  static const String apartmentNumber = 'Apartment number';
+  static const String enterUtilities = 'Enter utilities amount';
+  static const String contractStartDate = 'Contract Start Date';
 
   // Landlord Info
   static const String landlordInfo = 'Landlord Info';
@@ -165,6 +169,11 @@ class AppString {
   static const String selectStartDate = 'Select start date';
   static const String confirmContractDetails =
       'I confirm that all contract details are correct.';
+
+  //Contract Limitation
+  static const String contractLimitation = 'Contract Limitation';
+  static const String contractLimitationDesc = 'Please provide a detailed explanation.';
+  static const String reason = 'Reason';
 
   // Step 3 - Generate Contract
   static const String generateContract = 'Generate\nContract';

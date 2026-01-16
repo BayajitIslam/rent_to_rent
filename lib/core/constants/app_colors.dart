@@ -15,4 +15,20 @@ class AppColors {
   static const Color primaryLight = Color(0xFFE8F4FD);
   static const Color deepblue = Color(0xFF1A4F8B);
   static const Color whiteBorder = Color(0xFFEBEBEB);
+
+  // ═══════════════════════════════════════════════════════════════════════════
+  // Status Colors
+  // ═══════════════════════════════════════════════════════════════════════════
+
+  /// Success color - Green
+  static const Color success = Color(0xFF4CAF50);
+
+  /// Warning color - Orange
+  static const Color warning = Color(0xFFFFC107);
+
+  /// Error color - Red
+  static const Color error = Color(0xFFE53935);
+
+  /// Info color - Blue
+  static const Color info = Color(0xFF2196F3);
 }

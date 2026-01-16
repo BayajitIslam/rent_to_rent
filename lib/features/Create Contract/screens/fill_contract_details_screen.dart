@@ -58,8 +58,16 @@ class FillContractDetailsScreen extends StatelessWidget {
                   _buildPropertyDetailsSection(),
                   SizedBox(height: 16.h),
 
+                  // Monthly Rent Section
+                  _buildMonthlyRentSection(),
+                  SizedBox(height: 16.h),
+
                   // Rent Terms Section
                   _buildRentTermsSection(),
+                  SizedBox(height: 16.h),
+
+                  // Contract Limitation
+                  _buildContractLimitationSection(),
                   SizedBox(height: 16.h),
 
                   // Admin Recommendations
@@ -196,9 +204,14 @@ class FillContractDetailsScreen extends StatelessWidget {
       title: AppString.propertyDetails,
       children: [
         _buildFormField(
-          label: AppString.propertyAddress,
-          controller: controller.propertyAddressController,
+          label: AppString.rentalObjectAddress,
+          controller: controller.rentalObjectController,
           hint: AppString.enterPropertyAddress,
+        ),
+        _buildFormField(
+          label: AppString.apartmentNumber,
+          controller: controller.apartmentNumberController,
+          hint: AppString.typeHere,
         ),
         SizedBox(height: 12.h),
         _buildDropdownField(
@@ -212,16 +225,40 @@ class FillContractDetailsScreen extends StatelessWidget {
     );
   }
 
+  // ==================== Monthly Rent Section ====================
+
+  Widget _buildMonthlyRentSection() {
+    return _buildFormSection(
+      title: AppString.monthlyRent,
+      children: [
+        _buildRentStructureSection(),
+        SizedBox(height: 12.h),
+
+        _buildDateField(
+          label: AppString.selectStartDate,
+          selectedDate: controller.contractStartDate,
+        ),
+        SizedBox(height: 12.h),
+        _buildDateField(
+          label: AppString.contractEndDate,
+          selectedDate: controller.contractEndDate,
+        ),
+        SizedBox(height: 12.h),
+
+        _buildFormField(
+          label: AppString.reasonForContractLimitation,
+          controller: controller.monthlyRentController,
+          hint: AppString.typeHere,
+        ),
+      ],
+    );
+  }
+
   // ==================== Rent Terms Section ====================
   Widget _buildRentTermsSection() {
     return _buildFormSection(
       title: AppString.rentTerms,
       children: [
-        _buildDropdownField(
-          label: AppString.numberOfBeds,
-          value: controller.numberOfBeds,
-          items: ['1 Bed', '2 Beds', '3 Beds', '4 Beds', '5+ Beds'],
-        ),
         SizedBox(height: 12.h),
         _buildFormField(
           label: AppString.monthlyRent,
@@ -245,8 +282,6 @@ class FillContractDetailsScreen extends StatelessWidget {
           label: AppString.startDate,
           selectedDate: controller.startDate,
         ),
-        SizedBox(height: 12.h),
-        _buildCheckboxField(),
       ],
     );
   }
@@ -434,7 +469,7 @@ class FillContractDetailsScreen extends StatelessWidget {
         ),
         SizedBox(height: 8.h),
         GestureDetector(
-          onTap: () => controller.selectStartDate(),
+          onTap: () => controller.selectStartDate(selectedDate),
           child: Obx(
             () => Container(
               height: 48.h,
@@ -511,6 +546,112 @@ class FillContractDetailsScreen extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildRentStructureSection() {
+    return Obx(
+      () => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Flat Rate Option
+          _buildSimpleCheckbox(
+            label: "Flat Rate",
+            value: controller.isFlatRate.value,
+            onTap: () {
+              controller.isFlatRate.value = true;
+              controller.isPlusUtilities.value = false;
+            },
+          ),
+          SizedBox(height: 16.h),
+
+          // Plus Utilities Option
+          _buildSimpleCheckbox(
+            label: "Plus Utilities",
+            value: controller.isPlusUtilities.value,
+            onTap: () {
+              controller.isPlusUtilities.value = true;
+              controller.isFlatRate.value = false;
+            },
+          ),
+
+          // Conditional Text Field
+          if (controller.isPlusUtilities.value) ...[
+            SizedBox(height: 12.h),
+            CustomeTextfield(
+              controller: controller.utilitiesAmountController,
+              hintText: "Enter utilities amount",
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+
+  // Helper for simple minimal checkboxes
+  Widget _buildSimpleCheckbox({
+    required String label,
+    required bool value,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Row(
+        children: [
+          Container(
+            width: 20.w,
+            height: 20.h,
+            decoration: BoxDecoration(
+              color: value ? Colors.black : Colors.white,
+              borderRadius: BorderRadius.circular(4.r),
+              border: Border.all(color: Colors.black, width: 2),
+            ),
+            child: value
+                ? Icon(Icons.check, color: Colors.white, size: 16.sp)
+                : null,
+          ),
+          SizedBox(width: 12.w),
+          Text(
+            label,
+            style: AppTextStyle.s16w4(
+              color: const Color(0xFF1F2937),
+              fontSize: 14.sp,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildContractLimitationSection() {
+    return _buildFormSection(
+      title: AppString.contractLimitation,
+      children: [
+        _buildDropdownField(
+          label: AppString.reason,
+          value: controller.limitationReason,
+          items: [
+            'Temporary use / project-based rental',
+            'Own use',
+            'Modernization',
+          ],
+        ),
+        SizedBox(height: 12.h),
+        Text(
+          AppString.contractLimitationDesc,
+          style: AppTextStyle.s16w4(color: AppColors.neutralS, fontSize: 14),
+        ),
+        SizedBox(height: 4.h),
+        CustomeTextfield(
+          radius: 8,
+          height: 180.h,
+          controller: controller.limitationExplanationController,
+          hintText: AppString.typeHere,
+          maxLines: 5,
+        ),
+        SizedBox(height: 12.h),
+        _buildCheckboxField(),
+      ],
     );
   }
 }
