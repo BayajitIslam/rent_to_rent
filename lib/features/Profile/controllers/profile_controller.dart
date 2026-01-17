@@ -93,24 +93,24 @@ class ProfileController extends GetxController {
   void _loadSavedFiles() {
     // Mock data - unlimited items
     contracts.value = [
-      SavedFile(name: 'contrats1.pdf', type: 'pdf'),
-      SavedFile(name: 'contrats1.pdf', type: 'pdf'),
-      SavedFile(name: 'contrats1.pdf', type: 'pdf'),
-      SavedFile(name: 'contrats1.pdf', type: 'pdf'),
-      SavedFile(name: 'contrats1.pdf', type: 'pdf'),
+      SavedFile(name: 'contrats1.pdf', date: "21 May, 2023", type: 'pdf'),
+      SavedFile(name: 'contrats2.pdf', date: "21 May, 2023", type: 'pdf'),
+      SavedFile(name: 'contrats3.pdf', date: "21 May, 2023", type: 'pdf'),
+      SavedFile(name: 'contrats4.pdf', date: "21 May, 2023", type: 'pdf'),
+      SavedFile(name: 'contrats5.pdf', date: "21 May, 2023", type: 'pdf'),
     ];
 
     inquiries.value = [
-      SavedFile(name: 'contrats1.pdf', type: 'pdf'),
-      SavedFile(name: 'contrats1.pdf', type: 'pdf'),
-      SavedFile(name: 'contrats1.pdf', type: 'pdf'),
+      SavedFile(name: 'contrats1.pdf', date: "21 May, 2023", type: 'pdf'),
+      SavedFile(name: 'contrats2.pdf', date: "21 May, 2023", type: 'pdf'),
+      SavedFile(name: 'contrats3.pdf', date: "21 May, 2023", type: 'pdf'),
     ];
 
     uploadedDocuments.value = [
-      SavedFile(name: 'contrats1.pdf', type: 'pdf'),
-      SavedFile(name: 'contrats1.pdf', type: 'pdf'),
-      SavedFile(name: 'contrats1.pdf', type: 'pdf'),
-      SavedFile(name: 'contrats1.pdf', type: 'pdf'),
+      SavedFile(name: 'contrats1.pdf', date: "21 May, 2023", type: 'pdf'),
+      SavedFile(name: 'contrats2.pdf', date: "21 May, 2023", type: 'pdf'),
+      SavedFile(name: 'contrats3.pdf', date: "21 May, 2023", type: 'pdf'),
+      SavedFile(name: 'contrats4.pdf', date: "21 May, 2023", type: 'pdf'),
     ];
   }
 
@@ -311,7 +311,8 @@ class ProfileController extends GetxController {
 // ==================== Model ====================
 class SavedFile {
   final String name;
+  final String date;
   final String type;
 
-  SavedFile({required this.name, required this.type});
+  SavedFile({required this.name, required this.type, required this.date});
 }
