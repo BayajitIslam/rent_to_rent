@@ -38,8 +38,6 @@ class ProfileController extends GetxController {
   final RxBool obscureRetypePassword = true.obs;
 
   // ==================== Help & Feedback ====================
-  final TextEditingController feedbackEmailController = TextEditingController();
-  final TextEditingController feedbackPhoneController = TextEditingController();
   final TextEditingController feedbackDescriptionController =
       TextEditingController();
 
@@ -237,8 +235,6 @@ class ProfileController extends GetxController {
       await Future.delayed(Duration(seconds: 2));
 
       Console.green('Feedback submitted');
-      feedbackEmailController.clear();
-      feedbackPhoneController.clear();
       feedbackDescriptionController.clear();
       Get.back();
     } catch (e) {
@@ -300,8 +296,6 @@ class ProfileController extends GetxController {
     vatNumberController.dispose();
     newPasswordController.dispose();
     retypePasswordController.dispose();
-    feedbackEmailController.dispose();
-    feedbackPhoneController.dispose();
     feedbackDescriptionController.dispose();
     Console.yellow('ProfileController disposed');
     super.onClose();
