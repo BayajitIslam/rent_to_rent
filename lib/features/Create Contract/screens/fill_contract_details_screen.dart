@@ -367,11 +367,13 @@ class FillContractDetailsScreen extends StatelessWidget {
                 ),
                 isExpanded: true,
                 icon: Icon(
-                  Icons.arrow_drop_down,
+                  Icons.keyboard_arrow_down_rounded,
                   color: AppColors.neutralS,
-                  size: 30,
+                  size: 24.sp,
                 ),
-                items: items.map((item) {
+                dropdownColor: AppColors.white,
+                borderRadius: BorderRadius.circular(12.r),
+                items: items.map((String item) {
                   return DropdownMenuItem<String>(
                     value: item,
                     child: Text(
@@ -383,7 +385,11 @@ class FillContractDetailsScreen extends StatelessWidget {
                     ),
                   );
                 }).toList(),
-                onChanged: (newValue) => value.value = newValue ?? '',
+                onChanged: (String? newValue) {
+                  if (newValue != null) {
+                    value.value = newValue;
+                  }
+                },
               ),
             ),
           ),
@@ -642,12 +648,22 @@ class FillContractDetailsScreen extends StatelessWidget {
           style: AppTextStyle.s16w4(color: AppColors.neutralS, fontSize: 14),
         ),
         SizedBox(height: 4.h),
-        CustomeTextfield(
-          radius: 8,
-          height: 180.h,
-          controller: controller.limitationExplanationController,
-          hintText: AppString.typeHere,
-          maxLines: 5,
+        Container(
+          height: 181.h,
+          decoration: BoxDecoration(
+            border: Border.all(color: AppColors.border, width: 0.5),
+            borderRadius: BorderRadius.circular(8.r),
+          ),
+          child: TextField(
+            controller: controller.limitationExplanationController,
+            maxLines: 5,
+            decoration: InputDecoration(
+              hintText: AppString.typeHere,
+              hintStyle: AppTextStyle.s16w4(color: AppColors.ash, fontSize: 16),
+              contentPadding: EdgeInsets.all(16.r),
+              border: InputBorder.none,
+            ),
+          ),
         ),
         SizedBox(height: 12.h),
         _buildCheckboxField(),
