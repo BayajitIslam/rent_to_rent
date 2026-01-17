@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rent2rent/core/utils/log.dart';
 import 'package:rent2rent/features/Create%20Contract/models/contract_type_model.dart';
+import 'package:rent2rent/features/home/widgets/custome_snackbar.dart';
 import 'package:rent2rent/routes/routes_name.dart';
 
 class CreateContractController extends GetxController {
@@ -28,19 +29,34 @@ class CreateContractController extends GetxController {
   final TextEditingController tenantEmailController = TextEditingController();
 
   // Property Details
-  final TextEditingController propertyAddressController =
+  final TextEditingController rentalObjectController = TextEditingController();
+  final TextEditingController apartmentNumberController =
       TextEditingController();
   final RxString roomCount = ''.obs;
   final RxBool isFurnished = false.obs;
 
+  // Monthly Rent
+  final TextEditingController contractLimitationController =
+      TextEditingController();
+  final TextEditingController utilitiesAmountController =
+      TextEditingController();
+  final Rx<DateTime?> contractEndDate = Rx<DateTime?>(null);
+  final Rx<DateTime?> contractStartDate = Rx<DateTime?>(null);
+  final RxBool isPlusUtilities = false.obs;
+  final RxBool isFlatRate = false.obs;
+
   // Rent Terms
-  final RxString numberOfBeds = ''.obs;
   final TextEditingController monthlyRentController = TextEditingController();
   final TextEditingController depositController = TextEditingController();
   final TextEditingController contractDurationController =
       TextEditingController();
   final Rx<DateTime?> startDate = Rx<DateTime?>(null);
   final RxBool confirmDetails = false.obs;
+
+  //limitation
+  final RxString limitationReason = ''.obs;
+
+  final TextEditingController limitationExplanationController = TextEditingController();
 
   // Recommendations
   final RxList<String> recommendations = <String>[
@@ -67,26 +83,10 @@ class CreateContractController extends GetxController {
   // Load Contract Types
   void loadContractTypes() {
     contractTypes.value = [
-      ContractTypeModel(
-        id: 'wg',
-        name: 'WG',
-        previewImage: 'assets/images/contract_preview.png',
-      ),
-      ContractTypeModel(
-        id: 'short_stay',
-        name: 'Short Stay/Temporary',
-        previewImage: 'assets/images/contract_preview.png',
-      ),
-      ContractTypeModel(
-        id: 'fully_furnished',
-        name: 'Fully Furnished Unit',
-        previewImage: 'assets/images/contract_preview.png',
-      ),
-      ContractTypeModel(
-        id: 'type_4',
-        name: 'Type 4',
-        previewImage: 'assets/images/contract_preview.png',
-      ),
+      ContractTypeModel(id: 'Ingenieurswohnung', name: 'Ingenieurswohnung'),
+      ContractTypeModel(id: 'Monteurswohnung', name: 'Monteurswohnung'),
+      ContractTypeModel(id: 'wg_zimmer', name: 'WG-Zimmer'),
+      ContractTypeModel(id: 'type_4', name: 'Type 4'),
     ];
     Console.green('Contract types loaded: ${contractTypes.length}');
   }
@@ -101,6 +101,8 @@ class CreateContractController extends GetxController {
   // Step 1 -> Step 2
   void goToFillContractDetails() {
     if (selectedContractType.value.isEmpty) {
+      // Show error
+      CustomeSnackBar.error('Please select a contract type');
       Console.red('Error: Please select a contract type');
       return;
     }
@@ -123,7 +125,7 @@ class CreateContractController extends GetxController {
       partiesContent.value =
           'This Agreement (hereinafter the "Agreement") is entered into as of [Date] by and between the following parties. The Seller hereby agrees to sell and the Purchaser agrees to buy the Property described herein.';
       propertyDescContent.value =
-          'The Property is described as follows: ${propertyAddressController.text}. The property consists of ${roomCount.value} with ${numberOfBeds.value}.';
+          'The Property is described as follows: ${rentalObjectController.text}. The property consists of ${roomCount.value} with ${roomCount.value}.';
       saleContent.value =
           'The Seller agrees to sell and the Purchaser agrees to purchase herein the "Property" located at the address mentioned above, subject to the terms and conditions set forth in this Agreement.';
       priceContent.value =
@@ -142,18 +144,22 @@ class CreateContractController extends GetxController {
 
   bool _validateStep2() {
     if (landlordNameController.text.trim().isEmpty) {
+      CustomeSnackBar.error('Please enter landlord name');
       Console.red('Error: Please enter landlord name');
       return false;
     }
     if (tenantNameController.text.trim().isEmpty) {
+      CustomeSnackBar.error('Please enter tenant name');
       Console.red('Error: Please enter tenant name');
       return false;
     }
-    if (propertyAddressController.text.trim().isEmpty) {
+    if (rentalObjectController.text.trim().isEmpty) {
+      CustomeSnackBar.error('Please enter property address');
       Console.red('Error: Please enter property address');
       return false;
     }
     if (!confirmDetails.value) {
+      CustomeSnackBar.error('Please confirm contract details');
       Console.red('Error: Please confirm contract details');
       return false;
     }
@@ -169,16 +175,16 @@ class CreateContractController extends GetxController {
   }
 
   // Select Start Date
-  Future<void> selectStartDate() async {
-    final DateTime? picked = await showDatePicker(
+  Future<void> selectStartDate(Rx<DateTime?> date) async {
+    DateTime? pickedDate = await showDatePicker(
       context: Get.context!,
-      initialDate: startDate.value ?? DateTime.now(),
-      firstDate: DateTime.now(),
-      lastDate: DateTime.now().add(Duration(days: 365 * 5)),
+      initialDate: date.value ?? DateTime.now(),
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2101),
     );
-    if (picked != null) {
-      startDate.value = picked;
-      Console.cyan('Start date selected: $picked');
+
+    if (pickedDate != null) {
+      date.value = pickedDate;
     }
   }
 
@@ -243,7 +249,8 @@ class CreateContractController extends GetxController {
     tenantNameController.dispose();
     tenantAddressController.dispose();
     tenantEmailController.dispose();
-    propertyAddressController.dispose();
+    rentalObjectController.dispose();
+    apartmentNumberController.dispose();
     monthlyRentController.dispose();
     depositController.dispose();
     contractDurationController.dispose();

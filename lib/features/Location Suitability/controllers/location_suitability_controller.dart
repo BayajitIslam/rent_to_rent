@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rent2rent/core/utils/log.dart';
+import 'package:rent2rent/features/home/widgets/custome_snackbar.dart';
 import 'package:rent2rent/routes/routes_name.dart';
 
 class LocationSuitabilityController extends GetxController {
@@ -10,61 +10,60 @@ class LocationSuitabilityController extends GetxController {
 
   // ==================== STEP 1: Select Preferences ====================
 
-  // Background Image Selection (4 images)
-  final RxInt selectedBackgroundIndex = 0.obs;
-  final RxList<String> backgroundImages = <String>[
-    'assets/images/contract_preview.png',
-    'assets/images/contract_preview.png',
-    'assets/images/contract_preview.png',
-    'assets/images/contract_preview.png',
-  ].obs;
-
-  // Category Types
+  // Category Types (Checkboxes)
   final RxBool seniorLivingWG = false.obs;
   final RxBool seniorLivingWG2 = false.obs;
   final RxBool students = false.obs;
   final RxBool airbnbOptional = false.obs;
   final RxBool engineerHousing = false.obs;
 
-  // ==================== STEP 2: Landlord Info & Property Details ====================
+  // ==================== STEP 2: Property Details (Dropdowns) ====================
 
-  // Landlord Info
-  final TextEditingController nameController = TextEditingController();
-  final TextEditingController phoneController = TextEditingController();
-  final TextEditingController emailController = TextEditingController();
+  // Area Section
+  final RxString citySize = ''.obs;
+  final RxString districtType = ''.obs;
+  final RxString demandProfile = ''.obs;
 
-  // Property Information
-  final TextEditingController addressController = TextEditingController();
-  final TextEditingController squareMetersController = TextEditingController();
-  final TextEditingController numberOfRoomsController = TextEditingController();
-  final RxBool walkthroughRoom = false.obs;
+  // Dropdown Options for Area
+  final List<String> citySizeOptions = [
+    'Major city',
+    'Medium city',
+    'Small city',
+    'Rural area',
+  ];
 
-  // Local Amenities At A Glance
-  final RxBool universityWithin10Min = false.obs;
-  final RxBool groceryStoreWithin10Min = false.obs;
-  final RxBool hospitalWithin10Min = false.obs;
-  final RxBool publicTransportWithin10Min = false.obs;
+  final List<String> districtTypeOptions = [
+    'Central',
+    'Suburban',
+    'Outskirts',
+    'Industrial',
+  ];
 
-  // Additional Attributes
-  final RxBool goodResidentialArea = false.obs;
-  final RxBool basicArea = false.obs;
-  final RxBool groundFloor = false.obs;
-  final RxBool elevatorAvailable = false.obs;
-  final RxBool barrierFree = false.obs;
+  final List<String> demandProfileOptions = [
+    'Business',
+    'Tourist',
+    'Student',
+    'Residential',
+  ];
 
-  // Monthly Rent
-  final RxBool flatRate = false.obs;
-  final RxBool plusUtilities = true.obs;
-  final TextEditingController utilitiesAmountController =
-      TextEditingController();
+  // Infrastructure Section
+  final RxString publicTransport = ''.obs;
+  final RxString supermarketsNearby = ''.obs;
+  final RxString attractionsNearby = ''.obs;
 
-  // Contract End Date
-  final Rx<DateTime?> contractEndDate = Rx<DateTime?>(null);
+  // Dropdown Options for Infrastructure
+  final List<String> yesNoOptions = ['Yes', 'No'];
 
-  // Reason for Contract Limitation
-  final TextEditingController reasonController = TextEditingController();
+  // Rent2Rent Potential Section
+  final RxString localDemand = ''.obs;
+  final RxString competitionLevel = ''.obs;
+  final RxString rentalPrices = ''.obs;
+  final RxString regulatoryFriendliness = ''.obs;
 
-  // ==================== STEP 4: Results ====================
+  // Dropdown Options for Rent2Rent Potential
+  final List<String> levelOptions = ['Low', 'Medium', 'High'];
+
+  // ==================== STEP 3: Results ====================
 
   // Category Ratings
   final RxList<CategoryRating> categoryRatings = <CategoryRating>[].obs;
@@ -73,23 +72,12 @@ class LocationSuitabilityController extends GetxController {
   final RxList<LocationInsight> locationInsights = <LocationInsight>[].obs;
 
   // Admin Recommendations
-  final RxList<String> recommendations = <String>[
-    'This area is high demand for engineers.',
-    'Avoid short-term rentals in first 12 months.',
-    'Make sure contract includes noise clause.',
-  ].obs;
+  final RxList<String> recommendations = <String>[].obs;
 
   @override
   void onInit() {
     super.onInit();
     Console.green('LocationSuitabilityController initialized');
-  }
-
-  // ==================== Select Background Image ====================
-  void selectBackgroundImage(int index) {
-    selectedBackgroundIndex.value = index;
-    update();
-    Console.cyan('Selected background image: $index');
   }
 
   // ==================== Navigation ====================
@@ -101,7 +89,7 @@ class LocationSuitabilityController extends GetxController {
     Console.blue('Navigated to Step 2');
   }
 
-  // Step 2 -> Step 3 (Analyzing)
+  // Step 2 -> Step 3 (Analyzing -> Results)
   Future<void> analyzeLocation() async {
     if (!_validateStep2()) return;
 
@@ -115,10 +103,11 @@ class LocationSuitabilityController extends GetxController {
       Console.blue('Analyzing location...');
 
       // TODO: Replace with actual API call
-      await Future.delayed(Duration(seconds: 3));
+      // final response = await _apiService.analyzeLocation(_buildRequestData());
+      await Future.delayed(const Duration(seconds: 3));
 
-      // Load mock results
-      _loadMockResults();
+      // Load results (replace with API response)
+      _loadResults();
 
       Console.green('Location analysis completed');
 
@@ -126,6 +115,7 @@ class LocationSuitabilityController extends GetxController {
       Get.offNamed(RoutesName.locationResultsScreen);
     } catch (e) {
       Console.red('Error analyzing location: $e');
+      _showError('Failed to analyze location. Please try again.');
       Get.back();
     } finally {
       isLoading.value = false;
@@ -133,10 +123,44 @@ class LocationSuitabilityController extends GetxController {
     }
   }
 
+  // Build request data for API
+  Map<String, dynamic> buildRequestData() {
+    return {
+      // Step 1: Categories
+      'categories': {
+        'senior_living_wg': seniorLivingWG.value,
+        'senior_living_wg_2': seniorLivingWG2.value,
+        'students': students.value,
+        'airbnb_optional': airbnbOptional.value,
+        'engineer_housing': engineerHousing.value,
+      },
+      // Step 2: Area
+      'area': {
+        'city_size': citySize.value,
+        'district_type': districtType.value,
+        'demand_profile': demandProfile.value,
+      },
+      // Step 2: Infrastructure
+      'infrastructure': {
+        'public_transport': publicTransport.value,
+        'supermarkets_nearby': supermarketsNearby.value,
+        'attractions_nearby': attractionsNearby.value,
+      },
+      // Step 2: Rent2Rent Potential
+      'rent2rent_potential': {
+        'local_demand': localDemand.value,
+        'competition_level': competitionLevel.value,
+        'rental_prices': rentalPrices.value,
+        'regulatory_friendliness': regulatoryFriendliness.value,
+      },
+    };
+  }
+
   // Save Analysis
   void saveAnalysis() {
+    // TODO: Save to database/API
     Console.green('Analysis saved');
-    // TODO: Save to database
+    _showSuccess('Analysis saved successfully!');
   }
 
   // Start New Analysis
@@ -147,46 +171,73 @@ class LocationSuitabilityController extends GetxController {
   }
 
   // ==================== Validation ====================
+
   bool _validateStep1() {
     if (!seniorLivingWG.value &&
         !seniorLivingWG2.value &&
         !students.value &&
         !airbnbOptional.value &&
         !engineerHousing.value) {
-      Console.red('Error: Please select at least one category');
+      _showError('Please select at least one category');
       return false;
     }
     return true;
   }
 
   bool _validateStep2() {
-    if (nameController.text.trim().isEmpty) {
-      Console.red('Error: Please enter name');
+    // Area validation
+    if (citySize.value.isEmpty) {
+      _showError('Please select city size');
       return false;
     }
-    if (addressController.text.trim().isEmpty) {
-      Console.red('Error: Please enter property address');
+    if (districtType.value.isEmpty) {
+      _showError('Please select district type');
       return false;
     }
+    if (demandProfile.value.isEmpty) {
+      _showError('Please select demand profile');
+      return false;
+    }
+
+    // Infrastructure validation
+    if (publicTransport.value.isEmpty) {
+      _showError('Please select public transport option');
+      return false;
+    }
+    if (supermarketsNearby.value.isEmpty) {
+      _showError('Please select supermarkets/restaurants option');
+      return false;
+    }
+    if (attractionsNearby.value.isEmpty) {
+      _showError('Please select attractions nearby option');
+      return false;
+    }
+
+    // Rent2Rent Potential validation
+    if (localDemand.value.isEmpty) {
+      _showError('Please select local demand');
+      return false;
+    }
+    if (competitionLevel.value.isEmpty) {
+      _showError('Please select competition level');
+      return false;
+    }
+    if (rentalPrices.value.isEmpty) {
+      _showError('Please select rental prices');
+      return false;
+    }
+    if (regulatoryFriendliness.value.isEmpty) {
+      _showError('Please select regulatory friendliness');
+      return false;
+    }
+
     return true;
   }
 
-  // ==================== Date Picker ====================
-  Future<void> selectContractEndDate() async {
-    final DateTime? picked = await showDatePicker(
-      context: Get.context!,
-      initialDate: contractEndDate.value ?? DateTime.now(),
-      firstDate: DateTime.now(),
-      lastDate: DateTime.now().add(Duration(days: 365 * 10)),
-    );
-    if (picked != null) {
-      contractEndDate.value = picked;
-      Console.cyan('Contract end date selected: $picked');
-    }
-  }
+  // ==================== Load Results ====================
 
-  // ==================== Load Mock Results ====================
-  void _loadMockResults() {
+  void _loadResults() {
+    // TODO: Replace with actual API response parsing
     categoryRatings.value = [
       CategoryRating(name: 'Senior Living WG', rating: 4.0),
       CategoryRating(name: 'Students', rating: 4.0),
@@ -221,12 +272,6 @@ class LocationSuitabilityController extends GetxController {
         value: 'Within 5 km',
         subtitle: 'Amboya Hospital',
       ),
-      LocationInsight(
-        icon: 'hospital',
-        title: 'Nearby Hospitals',
-        value: '',
-        subtitle: '',
-      ),
     ];
 
     recommendations.value = [
@@ -236,67 +281,124 @@ class LocationSuitabilityController extends GetxController {
     ];
   }
 
+  // Parse API response (call this when you have real API)
+  void parseApiResponse(Map<String, dynamic> response) {
+    try {
+      // Parse category ratings
+      if (response['category_ratings'] != null) {
+        categoryRatings.value = (response['category_ratings'] as List)
+            .map(
+              (e) => CategoryRating(
+                name: e['name'] ?? '',
+                rating: (e['rating'] ?? 0).toDouble(),
+              ),
+            )
+            .toList();
+      }
+
+      // Parse location insights
+      if (response['location_insights'] != null) {
+        locationInsights.value = (response['location_insights'] as List)
+            .map(
+              (e) => LocationInsight(
+                icon: e['icon'] ?? '',
+                title: e['title'] ?? '',
+                value: e['value'] ?? '',
+                subtitle: e['subtitle'] ?? '',
+              ),
+            )
+            .toList();
+      }
+
+      // Parse recommendations
+      if (response['recommendations'] != null) {
+        recommendations.value = List<String>.from(response['recommendations']);
+      }
+    } catch (e) {
+      Console.red('Error parsing API response: $e');
+    }
+  }
+
+  // ==================== Helper Methods ====================
+
+  void _showError(String message) {
+    CustomeSnackBar.error(message);
+  }
+
+  void _showSuccess(String message) {
+    CustomeSnackBar.success(message);
+  }
+
   // ==================== Clear Data ====================
+
   void _clearAllData() {
-    // Step 1
-    selectedBackgroundIndex.value = 0;
+    // Step 1: Categories
     seniorLivingWG.value = false;
     seniorLivingWG2.value = false;
     students.value = false;
     airbnbOptional.value = false;
     engineerHousing.value = false;
 
-    // Step 2
-    nameController.clear();
-    phoneController.clear();
-    emailController.clear();
-    addressController.clear();
-    squareMetersController.clear();
-    numberOfRoomsController.clear();
-    walkthroughRoom.value = false;
-    universityWithin10Min.value = false;
-    groceryStoreWithin10Min.value = false;
-    hospitalWithin10Min.value = false;
-    publicTransportWithin10Min.value = false;
-    goodResidentialArea.value = false;
-    basicArea.value = false;
-    groundFloor.value = false;
-    elevatorAvailable.value = false;
-    barrierFree.value = false;
-    flatRate.value = false;
-    plusUtilities.value = true;
-    utilitiesAmountController.clear();
-    contractEndDate.value = null;
-    reasonController.clear();
+    // Step 2: Area
+    citySize.value = '';
+    districtType.value = '';
+    demandProfile.value = '';
 
-    // Step 4
+    // Step 2: Infrastructure
+    publicTransport.value = '';
+    supermarketsNearby.value = '';
+    attractionsNearby.value = '';
+
+    // Step 2: Rent2Rent Potential
+    localDemand.value = '';
+    competitionLevel.value = '';
+    rentalPrices.value = '';
+    regulatoryFriendliness.value = '';
+
+    // Step 3: Results
     categoryRatings.clear();
     locationInsights.clear();
+    recommendations.clear();
 
     Console.yellow('All data cleared');
   }
 
+  // Get selected categories as list (useful for API)
+  List<String> getSelectedCategories() {
+    List<String> selected = [];
+    if (seniorLivingWG.value) selected.add('Senior Living WG');
+    if (seniorLivingWG2.value) selected.add('Senior Living WG 2');
+    if (students.value) selected.add('Students');
+    if (airbnbOptional.value) selected.add('Airbnb (optional)');
+    if (engineerHousing.value) selected.add('Engineer Housing');
+    return selected;
+  }
+
   @override
   void onClose() {
-    nameController.dispose();
-    phoneController.dispose();
-    emailController.dispose();
-    addressController.dispose();
-    squareMetersController.dispose();
-    numberOfRoomsController.dispose();
-    utilitiesAmountController.dispose();
-    reasonController.dispose();
     Console.yellow('LocationSuitabilityController disposed');
     super.onClose();
   }
 }
 
 // ==================== Models ====================
+
 class CategoryRating {
   final String name;
   final double rating;
 
   CategoryRating({required this.name, required this.rating});
+
+  factory CategoryRating.fromJson(Map<String, dynamic> json) {
+    return CategoryRating(
+      name: json['name'] ?? '',
+      rating: (json['rating'] ?? 0).toDouble(),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'name': name, 'rating': rating};
+  }
 }
 
 class LocationInsight {
@@ -311,4 +413,17 @@ class LocationInsight {
     required this.value,
     required this.subtitle,
   });
+
+  factory LocationInsight.fromJson(Map<String, dynamic> json) {
+    return LocationInsight(
+      icon: json['icon'] ?? '',
+      title: json['title'] ?? '',
+      value: json['value'] ?? '',
+      subtitle: json['subtitle'] ?? '',
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {'icon': icon, 'title': title, 'value': value, 'subtitle': subtitle};
+  }
 }

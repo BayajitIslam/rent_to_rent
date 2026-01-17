@@ -23,7 +23,7 @@ class SavedFilesScreen extends StatelessWidget {
             CustomAppBar(title: AppString.savedFiles),
 
             Padding(
-              padding: EdgeInsets.only(left: 16.w),
+              padding: EdgeInsets.symmetric(horizontal: 16.w),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -32,30 +32,20 @@ class SavedFilesScreen extends StatelessWidget {
                   // Contracts Section
                   _buildSectionTitle(AppString.contracts),
                   SizedBox(height: 12.h),
-                  Obx(
-                    () => _buildHorizontalFileList(
-                      controller.contracts,
-                      'contracts',
-                    ),
-                  ),
+                  Obx(() => _buildFileGrid(controller.contracts, 'contracts')),
                   SizedBox(height: 24.h),
 
                   // Inquiries Section
                   _buildSectionTitle(AppString.inquiries),
                   SizedBox(height: 12.h),
-                  Obx(
-                    () => _buildHorizontalFileList(
-                      controller.inquiries,
-                      'inquiries',
-                    ),
-                  ),
+                  Obx(() => _buildFileGrid(controller.inquiries, 'inquiries')),
                   SizedBox(height: 24.h),
 
                   // Uploaded Documents Section
                   _buildSectionTitle(AppString.uploadedDocuments),
                   SizedBox(height: 12.h),
                   Obx(
-                    () => _buildHorizontalFileList(
+                    () => _buildFileGrid(
                       controller.uploadedDocuments,
                       'documents',
                     ),
@@ -75,125 +65,115 @@ class SavedFilesScreen extends StatelessWidget {
       title,
       style: AppTextStyle.s16w4(
         color: AppColors.neutralS,
-
         fontWeight: FontWeight.w500,
       ),
     );
   }
 
-  Widget _buildHorizontalFileList(List<SavedFile> files, String category) {
-    return SizedBox(
-      height: 100.h,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: files.length,
-        itemBuilder: (context, index) {
-          return Padding(
-            padding: EdgeInsets.only(right: 12.w),
-            child: _buildFileCard(files[index], category, index),
-          );
-        },
+  Widget _buildFileGrid(List<SavedFile> files, String category) {
+    if (files.isEmpty) {
+      return Container(
+        height: 100.h,
+        alignment: Alignment.center,
+        child: Text(
+          'No files available',
+          style: AppTextStyle.s16w4(color: AppColors.ash, fontSize: 14),
+        ),
+      );
+    }
+
+    return Wrap(
+      spacing: 12.w,
+      runSpacing: 12.h,
+      children: List.generate(
+        files.length,
+        (index) => _buildFileCard(files[index], category, index),
       ),
     );
   }
 
   Widget _buildFileCard(SavedFile file, String category, int index) {
-    return Stack(
-      children: [
-        Container(
-          padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 8.w),
-          decoration: BoxDecoration(
-            color: AppColors.white,
-            borderRadius: BorderRadius.circular(8.r),
+    return Container(
+      width: 125.w,
+      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 16.h),
+      decoration: BoxDecoration(
+        color: AppColors.white,
+        borderRadius: BorderRadius.circular(12.r),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
           ),
-          child: Column(
+        ],
+      ),
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          // Main Content
+          Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              // PDF Icon with Delete Button
-              Stack(
-                clipBehavior: Clip.none,
-                children: [
-                  // PDF Icon Container
-                  SizedBox(
-                    // width: 50.w,
-                    // height: 55.h,
-                    // decoration: BoxDecoration(
-                    //   color: AppColors.primaryLight,
-                    //   borderRadius: BorderRadius.circular(6.r),
-                    // ),
-                    child: Stack(
-                      children: [
-                        // Document Icon
-                        Center(
-                          child: Icon(
-                            Icons.description_outlined,
-                            color: AppColors.neutralS,
-                            size: 44.sp,
-                          ),
-                        ),
-                        // PDF Badge
-                        Positioned(
-                          bottom: 8.h,
-                          right: 8.w,
-                          child: Container(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: 4.w,
-                              vertical: 2.h,
-                            ),
-
-                            child: Text(
-                              'PDF',
-                              style: TextStyle(
-                                color: AppColors.white,
-                                fontSize: 6.sp,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
+              // PDF Icon
+              Image.asset(
+                'assets/icons/pdf_icon.png',
+                width: 36.w,
+                height: 36.h,
+                errorBuilder: (context, error, stackTrace) {
+                  return Icon(
+                    Icons.description_outlined,
+                    color: AppColors.deepblue,
+                    size: 36.sp,
+                  );
+                },
               ),
-              SizedBox(height: 4.h),
+              SizedBox(height: 8.h),
 
               // File Name
               Text(
                 file.name,
                 style: AppTextStyle.s16w4(
                   color: AppColors.neutralS,
-                  fontSize: 10,
+                  fontSize: 11,
                   fontWeight: FontWeight.w500,
                 ),
                 textAlign: TextAlign.center,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
-              SizedBox(height: 4.h),
+              SizedBox(height: 2.h),
+
+              // Date
+              Text(
+                file.date,
+                style: AppTextStyle.s16w4(color: AppColors.ash, fontSize: 9),
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(height: 8.h),
 
               // Download Button
               GestureDetector(
                 onTap: () => controller.downloadFile(file),
                 child: Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 10.w,
-                    vertical: 5.h,
-                  ),
+                  width: double.infinity,
+                  padding: EdgeInsets.symmetric(vertical: 6.h),
                   decoration: BoxDecoration(
                     color: AppColors.deepblue,
-                    borderRadius: BorderRadius.circular(4.r),
+                    borderRadius: BorderRadius.circular(6.r),
                   ),
                   child: Row(
-                    mainAxisSize: MainAxisSize.min,
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.download, color: AppColors.white, size: 12.sp),
+                      Icon(
+                        Icons.download_rounded,
+                        color: AppColors.white,
+                        size: 12.sp,
+                      ),
                       SizedBox(width: 4.w),
                       Text(
                         AppString.download,
                         style: AppTextStyle.s16w4(
-                          color: AppColors.cloudWhite,
+                          color: AppColors.white,
                           fontWeight: FontWeight.w500,
                           fontSize: 10,
                         ),
@@ -204,19 +184,22 @@ class SavedFilesScreen extends StatelessWidget {
               ),
             ],
           ),
-        ),
 
-        // Delete Button - Top Right
-        Positioned(
-          top: 4.h,
-          right: 4.w,
-          child: GestureDetector(
-            onTap: () => controller.deleteFile(category, index),
-
-            child: Icon(Icons.delete_outline, color: Colors.red, size: 22.sp),
+          // Delete Button - Top Right
+          Positioned(
+            top: -4.h,
+            right: -2.w,
+            child: GestureDetector(
+              onTap: () => controller.deleteFile(category, index),
+              child: Icon(
+                Icons.delete_outline,
+                color: Colors.red.shade400,
+                size: 18.sp,
+              ),
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

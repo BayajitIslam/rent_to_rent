@@ -32,17 +32,19 @@ class FieldAgentCommunicationScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(height: 20.h),
-
+                  Align(
+                    alignment: Alignment.topLeft,
+                    child: Text(
+                      AppString.createAProfessionalMessage,
+                      style: AppTextStyle.s16w4(
+                        color: AppColors.ash,
+                        fontSize: 14,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 8.h),
                   // Create Agent Inquiry Section
                   _buildCreateAgentInquiry(),
-                  SizedBox(height: 16.h),
-
-                  // Agent Reply Assistant Section
-                  _buildAgentReplyAssistant(),
-                  SizedBox(height: 16.h),
-
-                  // Reply to a Tenant Section
-                  _buildReplyToTenant(),
                   SizedBox(height: 16.h),
 
                   // Admin Recommendations Section
@@ -71,120 +73,6 @@ class FieldAgentCommunicationScreen extends StatelessWidget {
         children: [
           // Section Title
           Text(
-            AppString.createAgentInquiry,
-            style: AppTextStyle.s16w4(
-              color: AppColors.neutralS,
-              fontSize: 16,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-          SizedBox(height: 16.h),
-
-          // Property Link Field
-          _buildLabel(AppString.propertyLink),
-          SizedBox(height: 8.h),
-          CustomeTextfield(
-            controller: controller.propertyLinkController,
-            hintText: AppString.typeHere,
-          ),
-          SizedBox(height: 4.h),
-          Align(
-            alignment: Alignment.centerRight,
-            child: Text(
-              AppString.copiedFromOnlineAd,
-              style: AppTextStyle.s16w4(color: AppColors.ash, fontSize: 14),
-            ),
-          ),
-          SizedBox(height: 12.h),
-
-          // Notes Field
-          _buildLabel(AppString.notes),
-          SizedBox(height: 8.h),
-          CustomeTextfield(
-            controller: controller.notesController,
-            hintText: AppString.typeHere,
-          ),
-          SizedBox(height: 16.h),
-
-          // Ask AI Button
-          Obx(
-            () => CustomButton(
-              buttonHeight: 39,
-              buttonName: AppString.askAI,
-              isloading: controller.isAskAILoading.value,
-              onTap: () => controller.askAI(),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  // ==================== Agent Reply Assistant ====================
-  Widget _buildAgentReplyAssistant() {
-    return Container(
-      padding: EdgeInsets.all(16.r),
-      decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadius.circular(16.r),
-        boxShadow: [BoxShadow(color: const Color(0XffE4E4E4), blurRadius: 16)],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Section Title
-          Text(
-            AppString.agentReplyAssistant,
-            style: AppTextStyle.s16w4(
-              color: AppColors.neutralS,
-              fontSize: 16,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-          SizedBox(height: 4.h),
-          Text(
-            AppString.aiCreatesInitialOutreach,
-            style: AppTextStyle.s16w4(color: AppColors.ash, fontSize: 14),
-          ),
-          SizedBox(height: 16.h),
-
-          // Paste Agent Message Field
-          _buildLabel(AppString.pasteAgentMessage),
-          SizedBox(height: 8.h),
-          CustomeTextfield(
-            controller: controller.agentMessageController,
-            hintText: AppString.pasteMessageHere,
-          ),
-          SizedBox(height: 16.h),
-
-          // Generate Friendly First Message Button
-          Obx(
-            () => CustomButton(
-              buttonHeight: 39,
-              buttonName: AppString.generateFriendlyFirstMessage,
-              isloading: controller.isGenerateMessageLoading.value,
-              onTap: () => controller.generateFriendlyMessage(),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  // ==================== Reply to a Tenant ====================
-  Widget _buildReplyToTenant() {
-    return Container(
-      padding: EdgeInsets.all(16.r),
-      decoration: BoxDecoration(
-        color: AppColors.white,
-        borderRadius: BorderRadius.circular(16.r),
-        boxShadow: [BoxShadow(color: const Color(0XffE4E4E4), blurRadius: 16)],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Section Title
-          Text(
             AppString.replyToTenant,
             style: AppTextStyle.s16w4(
               color: AppColors.neutralS,
@@ -194,16 +82,33 @@ class FieldAgentCommunicationScreen extends StatelessWidget {
           ),
           SizedBox(height: 16.h),
 
-          // Incoming Email Field
+          // Property Link Field
           _buildLabel(AppString.incomingEmail),
           SizedBox(height: 8.h),
           CustomeTextfield(
+            radius: 8,
+            height: 160.h,
+            maxLines: 5,
             controller: controller.incomingEmailController,
-            hintText: AppString.pasteEmailHere,
+            hintText: AppString.pasteEmail,
+          ),
+          SizedBox(height: 4.h),
+
+          SizedBox(height: 12.h),
+
+          // Notes Field
+          _buildLabel(AppString.replyInstructions),
+          SizedBox(height: 8.h),
+          CustomeTextfield(
+            radius: 8,
+            height: 160.h,
+            maxLines: 5,
+            controller: controller.notesController,
+            hintText: AppString.enterYourText,
           ),
           SizedBox(height: 16.h),
 
-          // Generate Reply Button
+          // Ask AI Button
           Obx(
             () => CustomButton(
               buttonHeight: 39,

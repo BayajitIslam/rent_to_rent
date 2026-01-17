@@ -57,7 +57,7 @@ class SelectContractTypeScreen extends StatelessWidget {
                         crossAxisCount: 2,
                         crossAxisSpacing: 12.w,
                         mainAxisSpacing: 12.h,
-                        childAspectRatio: 0.58,
+                        childAspectRatio: 3.9,
                       ),
                       itemCount: ctrl.contractTypes.length,
                       itemBuilder: (context, index) {
@@ -96,56 +96,37 @@ class SelectContractTypeScreen extends StatelessWidget {
     return GestureDetector(
       onTap: () => controller.selectContractType(contractType.id),
       child: Container(
+        // Padding and margin to match the spacing in the screenshot
+        padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 14.h),
         decoration: BoxDecoration(
-          // color: AppColors.white,
-          // boxShadow: [BoxShadow(color: const Color(0XffE4E4E4), blurRadius: 8)],
+          color: AppColors.white,
+          borderRadius: BorderRadius.circular(8.r),
+          // Adding the border around the entire card
+          border: Border.all(
+            color: isSelected ? AppColors.primary : AppColors.whiteBorder,
+            width: 1.2,
+          ),
         ),
-        child: Stack(
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
           children: [
-            // Main Content
-            Column(
-              children: [
-                // Contract Preview Image Container
-                Expanded(
-                  child: Container(
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      color: AppColors.white,
-                      border: isSelected
-                          ? Border.all(color: AppColors.primary, width: 2.5)
-                          : null,
-                    ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(8.r),
-                      child: Image.asset(
-                        contractType.previewImage,
-                        fit: BoxFit.contain,
-                      ),
-                    ),
-                  ),
+            // Radio-style selection indicator
+            _buildSelectionIndicator(isSelected),
+
+            SizedBox(width: 12.w),
+
+            // Contract Type Name
+            Expanded(
+              child: Text(
+                contractType.name,
+                style: AppTextStyle.s16w4(
+                  color: AppColors.neutralS,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
                 ),
-                SizedBox(height: 10.h),
-
-                // Contract Type Name
-                Text(
-                  contractType.name,
-                  textAlign: TextAlign.center,
-                  style: AppTextStyle.s16w4(
-                    color: AppColors.neutralS,
-
-                    fontWeight: FontWeight.w700,
-                  ),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ],
-            ),
-
-            // Selection Indicator - Top Right
-            Positioned(
-              top: 12.h,
-              right: 12.w,
-              child: _buildSelectionIndicator(isSelected),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
           ],
         ),
@@ -154,26 +135,28 @@ class SelectContractTypeScreen extends StatelessWidget {
   }
 
   Widget _buildSelectionIndicator(bool isSelected) {
-    if (isSelected) {
-      return Container(
-        width: 24.w,
-        height: 24.h,
-        decoration: BoxDecoration(
-          color: AppColors.primary,
-          shape: BoxShape.circle,
+    return Container(
+      width: 22.w,
+      height: 22.h,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        border: Border.all(
+          color: isSelected ? AppColors.primary : AppColors.neutralS,
+          width: 2,
         ),
-        child: Icon(Icons.check, color: AppColors.white, size: 16.sp),
-      );
-    } else {
-      return Container(
-        // width: 24.w,
-        // height: 24.h,
-        // decoration: BoxDecoration(
-        //   color: AppColors.white,
-        //   shape: BoxShape.circle,
-        //   border: Border.all(color: AppColors.primary, width: 2),
-        // ),
-      );
-    }
+      ),
+      child: isSelected
+          ? Center(
+              child: Container(
+                width: 12.w,
+                height: 12.h,
+                decoration: BoxDecoration(
+                  color: AppColors.primary,
+                  shape: BoxShape.circle,
+                ),
+              ),
+            )
+          : null,
+    );
   }
 }

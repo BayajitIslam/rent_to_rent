@@ -33,7 +33,26 @@ class AgentReplyScreen extends StatelessWidget {
 
                   // Agent Inquiry Response Section
                   _buildAgentInquiryResponse(),
-                  SizedBox(height: 100.h), // Bottom padding for navbar
+                  SizedBox(height: 100.h),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    child: Obx(
+                      // () => CustomButton(
+                      //   buttonHeight: 39,
+                      //   buttonName: ,
+                      //   isloading: controller.isRegenerateLoading.value,
+                      //   onTap: () {},
+                      // ),
+                      () => SizedBox(
+                        width: double.infinity,
+                        child: OutlinedButton(
+                          onPressed: () {},
+                          child: Text(AppString.generateFirstContract),
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 100.h),
                 ],
               ),
             ),
@@ -57,7 +76,7 @@ class AgentReplyScreen extends StatelessWidget {
         children: [
           // Section Title
           Text(
-            AppString.agentInquiry,
+            'Ai Generated Reply',
             style: AppTextStyle.s16w4(
               color: AppColors.neutralS,
               fontSize: 16,
@@ -68,55 +87,24 @@ class AgentReplyScreen extends StatelessWidget {
 
           // Description
           Text(
-            AppString.agentInquiryDesc,
+            """Hello [Agent Name],
+
+I hope you’re doing well.
+
+My name is [User Name], and I represent a professional Rent2Rent operation. 
+We work with property owners to manage long-term and special-purpose rentals 
+with full compliance and reliable monthly payments.
+
+I came across your listing and would be happy to discuss whether this property 
+could be a good fit for our model.
+
+Looking forward to your reply.
+
+Kind regards,
+[User Name""",
             style: AppTextStyle.s16w4(color: AppColors.neutralS, fontSize: 14),
           ),
           SizedBox(height: 16.h),
-
-          // AI Says Title
-          Text(
-            AppString.aiSays,
-            style: AppTextStyle.s16w4(
-              color: AppColors.neutralS,
-              fontSize: 16,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-          SizedBox(height: 8.h),
-
-          // AI Response
-          Obx(
-            () => Text(
-              controller.aiResponse.value,
-              style: AppTextStyle.s16w4(
-                color: AppColors.neutralS,
-                fontSize: 14,
-              ),
-            ),
-          ),
-          SizedBox(height: 16.h),
-
-          // Key Highlights Section
-          Text(
-            AppString.keyHighlights,
-            style: AppTextStyle.s16w4(
-              color: AppColors.neutralS,
-              fontSize: 14,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-          SizedBox(height: 8.h),
-
-          // Highlights List
-          Obx(
-            () => Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: controller.keyHighlights
-                  .map((highlight) => _buildHighlightItem(highlight))
-                  .toList(),
-            ),
-          ),
-          SizedBox(height: 24.h),
 
           // Regenerate Button
           Obx(
@@ -125,30 +113,6 @@ class AgentReplyScreen extends StatelessWidget {
               buttonName: AppString.regenerate,
               isloading: controller.isRegenerateLoading.value,
               onTap: () => controller.regenerate(),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildHighlightItem(String text) {
-    return Padding(
-      padding: EdgeInsets.only(bottom: 6.h, left: 8.w),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            '•  ',
-            style: AppTextStyle.s16w4(color: AppColors.neutralS, fontSize: 14),
-          ),
-          Expanded(
-            child: Text(
-              text,
-              style: AppTextStyle.s16w4(
-                color: AppColors.neutralS,
-                fontSize: 14,
-              ),
             ),
           ),
         ],
