@@ -3,7 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:rent2rent/core/constants/app_colors.dart';
 import 'package:rent2rent/core/constants/app_string.dart';
-import 'package:rent2rent/core/constants/image_const.dart';
 import 'package:rent2rent/core/themes/app_text_style.dart';
 import 'package:rent2rent/features/Location%20Suitability/controllers/location_suitability_controller.dart';
 import 'package:rent2rent/features/Create%20Contract/widgets/step_indicator.dart';
@@ -44,38 +43,6 @@ class LocationSuitabilityScreen extends StatelessWidget {
                   ),
                   SizedBox(height: 24.h),
 
-                  // Background Image Section Title
-                  Text(
-                    AppString.backgroundImage,
-                    style: AppTextStyle.s16w4(
-                      color: AppColors.neutralS,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                  SizedBox(height: 16.h),
-
-                  // Background Image Grid - 4 images (2x2)
-                  GetBuilder<LocationSuitabilityController>(
-                    builder: (ctrl) => GridView.builder(
-                      shrinkWrap: true,
-                      physics: NeverScrollableScrollPhysics(),
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        crossAxisSpacing: 12.w,
-                        mainAxisSpacing: 12.h,
-                        childAspectRatio: 0.58,
-                      ),
-                      itemCount: ctrl.backgroundImages.length,
-                      itemBuilder: (context, index) {
-                        final isSelected =
-                            ctrl.selectedBackgroundIndex.value == index;
-                        return _buildBackgroundImageCard(index, isSelected);
-                      },
-                    ),
-                  ),
-                  SizedBox(height: 24.h),
-
                   // Category Types Section
                   Text(
                     AppString.categoryTypes,
@@ -103,7 +70,7 @@ class LocationSuitabilityScreen extends StatelessWidget {
                   Obx(
                     () => CustomButton(
                       buttonHeight: 50,
-                      buttonName: AppString.analyzeLocation,
+                      buttonName: AppString.next,
                       isloading: controller.isLoading.value,
                       onTap: () => controller.goToStep2(),
                     ),
@@ -116,61 +83,6 @@ class LocationSuitabilityScreen extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  Widget _buildBackgroundImageCard(int index, bool isSelected) {
-    return GestureDetector(
-      onTap: () => controller.selectBackgroundImage(index),
-      child: Container(
-        height: 244.h,
-        decoration: BoxDecoration(
-          color: AppColors.white,
-          border: isSelected
-              ? Border.all(color: AppColors.primary, width: 2.5)
-              : null,
-        ),
-        padding: EdgeInsets.symmetric(horizontal: 6),
-        child: Stack(
-          children: [
-            // Image
-            ClipRRect(
-              borderRadius: BorderRadius.circular(8.r),
-              child: Image.asset(
-                isSelected
-                    ? AppImage.locationBackround
-                    : controller.backgroundImages[index],
-                width: double.infinity,
-                height: double.infinity,
-                fit: BoxFit.cover,
-              ),
-            ),
-
-            // Selection Indicator - Top Right
-            Positioned(
-              top: 12.h,
-              right: 12.w,
-              child: _buildSelectionIndicator(isSelected),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildSelectionIndicator(bool isSelected) {
-    if (isSelected) {
-      return Container(
-        width: 24.w,
-        height: 24.h,
-        decoration: BoxDecoration(
-          color: AppColors.primary,
-          shape: BoxShape.circle,
-        ),
-        child: Icon(Icons.check, color: AppColors.white, size: 16.sp),
-      );
-    } else {
-      return Container();
-    }
   }
 
   Widget _buildCategoryCheckboxes() {
