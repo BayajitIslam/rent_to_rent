@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import 'package:get/get.dart';
+import 'package:rent2rent/core/services/local_storage/storage_service.dart';
 import 'package:rent2rent/core/utils/log.dart';
 import 'package:rent2rent/routes/routes_name.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashController extends GetxController {
   Timer? timer;
@@ -38,16 +38,14 @@ class SplashController extends GetxController {
     _hasNavigated = true;
 
     try {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-
       // Check Onboarding Completed
-      bool onboardingCompleted = prefs.getBool("onboarding_completed") ?? false;
+      bool onboardingCompleted = await StorageService.getOnboardingCompleted();
 
       // Check Login
-      bool loginCompleted = prefs.getBool("login_completed") ?? false;
+      bool loginCompleted = await StorageService.getIsLoggedIn();
 
       // Check Plan Active
-      bool isPlanActive = prefs.getBool('plan_active') ?? false;
+      bool isPlanActive = await StorageService.getIsPremium();
 
       Console.green("Onboarding: $onboardingCompleted");
       Console.green("Login: $loginCompleted");

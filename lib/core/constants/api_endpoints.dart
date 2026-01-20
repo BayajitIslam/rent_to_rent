@@ -12,4 +12,8 @@ class ApiEndpoints {
       "$baseUrl/api/v1/auth/forgot-password/";
   static const String resetPassword =
       "$baseUrl/api/v1/auth/forgot-password/set/password/";
+
+  //====================== services Endpoints ======================
+  static const String emailReplyDraft =
+      "$baseUrl/api/v1/service/email-reply-draft/";
 }

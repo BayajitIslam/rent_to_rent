@@ -1,80 +1,85 @@
 import 'package:get/get.dart';
+import 'package:rent2rent/core/services/api_service.dart';
 import 'package:rent2rent/core/utils/log.dart';
+import 'package:rent2rent/features/home/widgets/custome_snackbar.dart';
+
+import '../../../core/constants/api_endpoints.dart';
 
 class AgentReplyController extends GetxController {
-  // Loading State
+  // loading state
   final RxBool isRegenerateLoading = false.obs;
 
-  // AI Response
+  // ai response data
   final RxString aiResponse = ''.obs;
-
-  // Key Highlights
-  final RxList<String> keyHighlights = <String>[].obs;
-
-  // Original Data (for regeneration)
-  String? propertyLink;
-  String? notes;
-  String? originalMessage;
-  String? incomingEmail;
+  final RxString subject = ''.obs;
+  final RxString incomingEmail = ''.obs;
 
   @override
   void onInit() {
     super.onInit();
-    _loadFromArguments();
+    // delayed to ensure screen is ready
+    Future.delayed(Duration.zero, () {
+      _loadFromArguments();
+    });
   }
 
-  // Load data from navigation arguments
+  // load data from navigation arguments
   void _loadFromArguments() {
-    final args = Get.arguments as Map<String, dynamic>?;
+    final args = Get.arguments;
 
     if (args == null) {
-      Console.red('Error: No arguments passed to AgentReplyScreen');
-      Get.back(); // Go back if no data
+      Console.red('Warning: No arguments passed to AgentReplyScreen');
+      aiResponse.value = 'No response available';
       return;
     }
 
-    aiResponse.value = args['aiResponse'] ?? '';
-    keyHighlights.value = List<String>.from(args['keyHighlights'] ?? []);
+    aiResponse.value = args['aiResponse'] ?? 'No response available';
+    subject.value = args['subject'] ?? '';
+    incomingEmail.value = args['incomingEmail'] ?? '';
 
-    notes = args['notes'];
-    originalMessage = args['originalMessage'];
-    incomingEmail = args['incomingEmail'];
-
-    Console.cyan('AI Response: ${aiResponse.value}');
-    Console.cyan('Highlights: ${keyHighlights.length} items');
+    Console.cyan('AI Response loaded');
   }
 
-  // Regenerate Response based on type
+  // regenerate response
   Future<void> regenerate() async {
+    if (incomingEmail.value.isEmpty) {
+      CustomeSnackBar.error('No incoming email found');
+      return;
+    }
+
     try {
       isRegenerateLoading.value = true;
-      Console.blue('Regenerating ...');
+      Console.blue('Regenerating reply...');
 
-      // TODO: Replace with actual API call based on type
-      await Future.delayed(Duration(seconds: 2));
+      final response = await ApiService.postAuth(
+        ApiEndpoints.emailReplyDraft,
+        body: {
+          'original_email_body': incomingEmail.value,
+          'reply_guidance': '',
+        },
+      );
 
-      _regenerateTenantReply();
+      if (response.success || response.statusCode == 201) {
+        final Map<String, dynamic> data = response.data;
 
-      Console.green('Response regenerated successfully');
+        aiResponse.value = data['generated_email_body'] ?? '';
+        subject.value = data['generated_email_subject'] ?? '';
+
+        Console.green('Response regenerated successfully');
+        CustomeSnackBar.success('Reply regenerated');
+      } else if (response.statusCode == 400) {
+        final data = response.data;
+        final String message = data['message'] ?? 'Something went wrong';
+        Console.info(message);
+        CustomeSnackBar.error(message);
+      } else {
+        CustomeSnackBar.error('Failed to regenerate reply');
+      }
     } catch (e) {
       Console.red('Error: Failed to regenerate - $e');
+      CustomeSnackBar.error('Something went wrong. Please try again.');
     } finally {
       isRegenerateLoading.value = false;
     }
-  }
-
-  Future<void> _regenerateTenantReply() async {
-    // TODO: API call with incomingEmail
-    Console.cyan('Regenerating tenant reply');
-
-    aiResponse.value =
-        'Here is an alternative reply to the tenant. This version provides more detailed explanations and additional options.';
-
-    keyHighlights.value = [
-      'Detailed acknowledgment',
-      'Multiple solutions offered',
-      'Timeline expectations',
-      'Follow-up commitment',
-    ];
   }
 }

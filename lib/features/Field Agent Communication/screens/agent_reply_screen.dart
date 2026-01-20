@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:rent2rent/core/constants/app_colors.dart';
@@ -8,11 +9,18 @@ import 'package:rent2rent/features/Field%20Agent%20Communication/controllers/age
 import 'package:rent2rent/features/auth/widgets/custom_button.dart';
 import 'package:rent2rent/features/home/screens/main_layout.dart';
 import 'package:rent2rent/features/home/widgets/custome_appbar.dart';
+import 'package:rent2rent/features/home/widgets/custome_snackbar.dart';
 
 class AgentReplyScreen extends StatelessWidget {
   AgentReplyScreen({super.key});
 
-  final AgentReplyController controller = Get.find<AgentReplyController>();
+  // safe controller access
+  AgentReplyController get controller {
+    if (Get.isRegistered<AgentReplyController>()) {
+      return Get.find<AgentReplyController>();
+    }
+    return Get.put(AgentReplyController());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,10 +28,10 @@ class AgentReplyScreen extends StatelessWidget {
       child: SingleChildScrollView(
         child: Column(
           children: [
-            // AppBar Section
+            // appbar section
             CustomAppBar(title: AppString.agentReply),
 
-            // Content Section
+            // content section
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.w),
               child: Column(
@@ -31,24 +39,18 @@ class AgentReplyScreen extends StatelessWidget {
                 children: [
                   SizedBox(height: 16.h),
 
-                  // Agent Inquiry Response Section
+                  // agent inquiry response section
                   _buildAgentInquiryResponse(),
                   SizedBox(height: 100.h),
+
+                  // generate first contract button
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    child: Obx(
-                      // () => CustomButton(
-                      //   buttonHeight: 39,
-                      //   buttonName: ,
-                      //   isloading: controller.isRegenerateLoading.value,
-                      //   onTap: () {},
-                      // ),
-                      () => SizedBox(
-                        width: double.infinity,
-                        child: OutlinedButton(
-                          onPressed: () {},
-                          child: Text(AppString.generateFirstContract),
-                        ),
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: OutlinedButton(
+                        onPressed: () {},
+                        child: Text(AppString.generateFirstContract),
                       ),
                     ),
                   ),
@@ -74,39 +76,51 @@ class AgentReplyScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Section Title
-          Text(
-            'Ai Generated Reply',
-            style: AppTextStyle.s16w4(
-              color: AppColors.neutralS,
-              fontSize: 16,
-              fontWeight: FontWeight.w700,
-            ),
+          // section title with copy button
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                controller.subject.value,
+                style: AppTextStyle.s16w4(
+                  color: AppColors.neutralS,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              // copy button
+              GestureDetector(
+                onTap: () => _copyToClipboard(),
+                child: Container(
+                  padding: EdgeInsets.all(8.r),
+                  decoration: BoxDecoration(
+                    color: AppColors.primaryLight,
+                    borderRadius: BorderRadius.circular(8.r),
+                  ),
+                  child: Icon(
+                    Icons.copy,
+                    color: AppColors.primary,
+                    size: 18.sp,
+                  ),
+                ),
+              ),
+            ],
           ),
           SizedBox(height: 8.h),
 
-          // Description
-          Text(
-            """Hello [Agent Name],
-
-I hope you’re doing well.
-
-My name is [User Name], and I represent a professional Rent2Rent operation. 
-We work with property owners to manage long-term and special-purpose rentals 
-with full compliance and reliable monthly payments.
-
-I came across your listing and would be happy to discuss whether this property 
-could be a good fit for our model.
-
-Looking forward to your reply.
-
-Kind regards,
-[User Name""",
-            style: AppTextStyle.s16w4(color: AppColors.neutralS, fontSize: 14),
+          // description with obx wrapper
+          Obx(
+            () => Text(
+              controller.aiResponse.value,
+              style: AppTextStyle.s16w4(
+                color: AppColors.neutralS,
+                fontSize: 14,
+              ),
+            ),
           ),
           SizedBox(height: 16.h),
 
-          // Regenerate Button
+          // regenerate button
           Obx(
             () => CustomButton(
               buttonHeight: 39,
@@ -118,5 +132,16 @@ Kind regards,
         ],
       ),
     );
+  }
+
+  // copy message to clipboard
+  void _copyToClipboard() {
+    if (controller.aiResponse.value.isEmpty) {
+      CustomeSnackBar.error('Nothing to copy');
+      return;
+    }
+
+    Clipboard.setData(ClipboardData(text: controller.aiResponse.value));
+    CustomeSnackBar.success('Copied to clipboard');
   }
 }

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rent2rent/core/constants/app_string.dart';
 import 'package:rent2rent/core/constants/image_const.dart';
+import 'package:rent2rent/core/services/local_storage/storage_service.dart';
 import 'package:rent2rent/routes/routes_name.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class OnboardingController extends GetxController {
   final PageController pageController = PageController();
@@ -48,8 +48,7 @@ class OnboardingController extends GetxController {
   }
 
   Future<void> finishOnboarding() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('onboarding_completed', true);
+    await StorageService.setOnboardingCompleted(true);
     Get.offAndToNamed(RoutesName.signUp);
   }
 
