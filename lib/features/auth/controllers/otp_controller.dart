@@ -103,7 +103,10 @@ class OTPController extends GetxController {
           // Forgot Password Flow: Go to Reset Password
           CustomeSnackBar.success(successMessage);
           Console.magenta(successMessage);
-          Get.offAllNamed(RoutesName.resetPasswordScreen);
+          Get.offAllNamed(
+            RoutesName.resetPasswordScreen,
+            arguments: {'email': email},
+          );
         }
       } else if (response.statusCode == 400) {
         Console.info("Response: ${response.data}");

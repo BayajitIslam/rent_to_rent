@@ -84,7 +84,6 @@ class AuthBackgroundScreen extends StatelessWidget {
           //if signup or sign in screen
           ?bottomEnable
               ? Positioned(
-                  top: 897.w,
                   bottom: 59.h,
                   child: Row(
                     children: [

@@ -8,4 +8,8 @@ class ApiEndpoints {
   static const String forgotPasswordVerify =
       "$baseUrl/api/v1/auth/forgot-password/verify/";
   static const String login = "$baseUrl/api/v1/auth/login/";
+  static const String forgetPasswordSendOtp =
+      "$baseUrl/api/v1/auth/forgot-password/";
+  static const String resetPassword =
+      "$baseUrl/api/v1/auth/forgot-password/set/password/";
 }

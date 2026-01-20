@@ -7,7 +7,6 @@ import 'package:rent2rent/core/utils/log.dart';
 import 'package:rent2rent/features/auth/models/user_model.dart';
 import 'package:rent2rent/features/home/widgets/custome_snackbar.dart';
 import 'package:rent2rent/routes/routes_name.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthController extends GetxController {
   // Sign Up Form Controllers
@@ -161,13 +160,12 @@ class AuthController extends GetxController {
         //set for only demo no incoming data from backend
         final isPremium = await StorageService.getIsPremium();
         if (!isPremium) {
-          StorageService.setIsPremium(true);
+          StorageService.setIsPremium(false);
         }
         Console.success(message);
         // Navigate to veryfy
 
         bool? isplanActive = await StorageService.getIsPremium();
-
         // Navigate to Home
         if (!isplanActive) {
           Get.offAllNamed(RoutesName.getPremiumScreen);
@@ -177,7 +175,7 @@ class AuthController extends GetxController {
       } else if (response.statusCode == 401) {
         //get data from response
         final data = response.data;
-        final String message = data['detail'];
+        final String message = data['message'];
         Console.info(message);
 
         CustomeSnackBar.success(message);
@@ -211,37 +209,33 @@ class AuthController extends GetxController {
     try {
       isLoading.value = true;
 
-      // API Call (Replace with your actual API)
-      // final response = await ApiService.forgotPassword(
-      //   email: forgotPasswordEmailController.text.trim(),
-      // );
-
-      // Mock Response
-      await Future.delayed(Duration(seconds: 2));
-
-      // Success
-      // Get.snackbar(
-      //   'Success',
-      //   'Otp has been sent to your email',
-      //   backgroundColor: Colors.green,
-      //   colorText: Colors.white,
-      //   snackPosition: SnackPosition.BOTTOM,
-      //   duration: Duration(seconds: 3),
-      // );
-      Console.yellow(
-        "Otp has been sent to your email ${forgotPasswordEmailController.text.toLowerCase()}",
+      final userData = {'email': forgotPasswordEmailController.text.trim()};
+      final response = await ApiService.post(
+        ApiEndpoints.forgetPasswordSendOtp,
+        body: userData,
       );
-      // Navigate back to login after 2 seconds
-      //TODO Forgot password
-      await Future.delayed(Duration(seconds: 2));
-      // Navigate to VerifyCode with arguments
-      Get.toNamed(
-        RoutesName.verifyCodeScreen,
-        arguments: {
-          'verificationType': 'forgot_password',
-          'email': forgotPasswordEmailController.text.trim(),
-        },
-      );
+      if (response.success || response.statusCode == 200) {
+        //get data from response
+        final Map<String, dynamic> data = response.data;
+        final String message = data['message'];
+        Console.success(message);
+        // Navigate to VerifyCode with arguments
+        Get.toNamed(
+          RoutesName.verifyCodeScreen,
+          arguments: {
+            'verificationType': 'forgot_password',
+            'email': forgotPasswordEmailController.text.trim(),
+          },
+        );
+      } else if (response.statusCode == 400) {
+        //get data from response
+        final data = response.data;
+        final String message = data['email']['message'];
+        Console.info(message);
+        CustomeSnackBar.success(message);
+      } else {
+        CustomeSnackBar.error('Something went wrong');
+      }
     } catch (e) {
       errorMessageForgotPassword.value =
           'Failed to send reset link. Please try again.';
@@ -290,32 +284,35 @@ class AuthController extends GetxController {
     try {
       isLoading.value = true;
 
-      // API Call (Replace with your actual API)
-      // final response = await ApiService.resetPassword(
-      //   password: newPasswordController.text,
-      // );
-
-      // Mock Response
-      await Future.delayed(Duration(seconds: 2));
-
-      // Success
-      // Get.snackbar(
-      //   'Success',
-      //   'Password has been reset successfully!',
-      //   backgroundColor: Colors.green,
-      //   colorText: Colors.white,
-      //   snackPosition: SnackPosition.BOTTOM,
-      // );
-      CustomeSnackBar.error('Password has been reset successfully!');
-      Console.green("Success: Password has been reset successfully!");
+      final userData = {
+        'email': Get.arguments['email'],
+        'password': newPasswordController.text,
+        'confirm_password': confirmNewPasswordController.text,
+      };
+      final response = await ApiService.post(
+        ApiEndpoints.resetPassword,
+        body: userData,
+      );
+      if (response.success || response.statusCode == 200) {
+        //get data from response
+        final Map<String, dynamic> data = response.data;
+        final String message = data['message'];
+        Console.success(message);
+        // Navigate to VerifyCode with arguments
+        Get.toNamed(RoutesName.login);
+      } else if (response.statusCode == 400) {
+        //get data from response
+        final data = response.data;
+        final String message = data['message'];
+        Console.info(message);
+        CustomeSnackBar.success(message);
+      } else {
+        CustomeSnackBar.error('Something went wrong');
+      }
 
       // Clear fields
       newPasswordController.clear();
       confirmNewPasswordController.clear();
-
-      // Navigate to login
-      await Future.delayed(Duration(seconds: 1));
-      Get.offAllNamed(RoutesName.resetSuccessfullScreen);
     } catch (e) {
       CustomeSnackBar.success('Failed to reset password. Please try again.');
       errorMessageResetPassword.value =
@@ -330,9 +327,7 @@ class AuthController extends GetxController {
 
   // Sign Out
   Future<void> signOut() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.clear();
-    currentUser.value = null;
+    StorageService.clearAll();
     Get.offAllNamed(RoutesName.login);
   }
 
