@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:rent2rent/core/constants/api_endpoints.dart';
+import 'package:rent2rent/core/services/api_service.dart';
 import 'package:rent2rent/core/utils/log.dart';
 import 'package:rent2rent/features/home/widgets/custome_snackbar.dart';
 import 'package:rent2rent/routes/routes_name.dart';
@@ -66,93 +68,67 @@ class OTPController extends GetxController {
   Future<void> verifyOTP() async {
     errorMessage.value = '';
 
-    String otp = getOTPCode();
+    String otp = getOTPCode().toString();
 
     // Validation (6 digits now)
     if (otp.length != 6) {
       errorMessage.value = 'Please enter complete 6 digit code';
-      CustomeSnackBar.error('Enter Randome 6 digit code');
-      // Get.snackbar(
-      //   'Error',
-      //   'Please enter complete 6 digit code',
-      //   backgroundColor: Colors.red,
-      //   colorText: Colors.white,
-      //   snackPosition: SnackPosition.BOTTOM,
-      // );
-      Console.red("Error: Please enter complete 6 digit code");
+      CustomeSnackBar.error(errorMessage.value);
+      Console.red(errorMessage.value);
       return;
     }
+
+    final endpoint = verificationType == 'signup'
+        ? ApiEndpoints.registerActivate
+        : ApiEndpoints.forgotPasswordVerify;
 
     try {
       isLoading.value = true;
 
-      // API Call (Replace with your actual API)
-      // final response = await ApiService.verifyOTP(
-      //   otp: otp,
-      //   email: email,
-      //   type: verificationType,
-      // );
+      final response = await ApiService.post(
+        endpoint,
+        body: {'email': email, 'code': otp},
+      );
 
-      // Mock Response
-      await Future.delayed(Duration(seconds: 2));
-
-      // Navigate based on verification type
-      if (verificationType == 'signup') {
-        // Sign Up Flow: Go to Login
-        CustomeSnackBar.success('Veryfication Succesfully Done');
-        Console.magenta("Verification Type: $verificationType");
-        Get.offAllNamed(RoutesName.login);
-      } else if (verificationType == 'forgot_password') {
-        // Forgot Password Flow: Go to Reset Password
-        CustomeSnackBar.success('Veryfication Succesfully Done');
-        Console.magenta("Verification Type: $verificationType");
-        Get.offAllNamed(RoutesName.resetPasswordScreen);
-      }
-      return;
-      // Simulate success (change this condition based on API)
-      if (otp == '123456') {
-        debugPrint("Verification Type: $verificationType");
-        // Get.snackbar(
-        //   'Success',
-        //   'OTP verified successfully!',
-        //   backgroundColor: Colors.green,
-        //   colorText: Colors.white,
-        //   snackPosition: SnackPosition.BOTTOM,
-        // );
-        Console.green("Success: OTP verified successfully!");
+      if (response.success || response.statusCode == 200) {
+        String successMessage = response.data['message'];
 
         // Navigate based on verification type
         if (verificationType == 'signup') {
           // Sign Up Flow: Go to Login
-          debugPrint("Verification Type: $verificationType");
+          CustomeSnackBar.success(successMessage);
+          Console.magenta(successMessage);
           Get.offAllNamed(RoutesName.login);
         } else if (verificationType == 'forgot_password') {
           // Forgot Password Flow: Go to Reset Password
-          debugPrint("Verification Type: $verificationType");
-          Get.offAllNamed(RoutesName.signUp);
+          CustomeSnackBar.success(successMessage);
+          Console.magenta(successMessage);
+          Get.offAllNamed(RoutesName.resetPasswordScreen);
         }
-      } else {
-        errorMessage.value = 'Invalid OTP code. Please try again.';
-        // Get.snackbar(
-        //   'Error',
-        //   'Invalid OTP code. Please try again.',
-        //   backgroundColor: Colors.red,
-        //   colorText: Colors.white,
-        //   snackPosition: SnackPosition.BOTTOM,
-        // );
-        Console.red("Error: Invalid OTP code. Please try again.");
+      } else if (response.statusCode == 400) {
+        Console.info("Response: ${response.data}");
+        final data = response.data;
+
+        // Handle both String and List types for error messages
+        String message;
+        if (data['message'] is List) {
+          // If message is a list, join all error messages
+          message = (data['message'] as List).join(', ');
+        } else if (data['message'] is String) {
+          // If message is a string, use it directly
+          message = data['message'];
+        } else {
+          // Fallback message
+          message = 'Verification failed. Please try again.';
+        }
+
+        Console.info(message);
+        CustomeSnackBar.error(message);
       }
     } catch (e) {
       errorMessage.value = 'Verification failed. Please try again.';
-      // Get.snackbar(
-      //   'Error',
-      //   'Verification failed. Please try again.',
-      //   backgroundColor: Colors.red,
-      //   colorText: Colors.white,
-      //   snackPosition: SnackPosition.BOTTOM,
-      // );
       CustomeSnackBar.error('Verification failed. Please try again.');
-      Console.red("Error: Verification failed. Please try again.");
+      Console.red(e.toString());
     } finally {
       isLoading.value = false;
     }

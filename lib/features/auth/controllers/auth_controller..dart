@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:rent2rent/core/constants/api_endpoints.dart';
+import 'package:rent2rent/core/services/api_service.dart';
+import 'package:rent2rent/core/services/local_storage/storage_service.dart';
 import 'package:rent2rent/core/utils/log.dart';
 import 'package:rent2rent/features/auth/models/user_model.dart';
 import 'package:rent2rent/features/home/widgets/custome_snackbar.dart';
@@ -65,66 +68,61 @@ class AuthController extends GetxController {
 
   // Sign Up
   Future<void> signUp() async {
-    //TODO  uncomment This Line After Api Ready
-    // if (!_validateSignUpForm()) return;
+    if (!_validateSignUpForm()) return;
 
+    final userData = {
+      'user_type': isIndividual.value ? 'individuals' : 'company',
+      'full_name': fullNameController.text.trim(),
+      'email': emailPhoneController.text.trim(),
+      'password': passwordController.text,
+    };
     try {
       isLoading.value = true;
 
-      // API Call (Replace with your actual API)
-      // final response = await ApiService.signUp(
-      //   name: nameController.text.trim(),
-      //   email: emailController.text.trim(),
-      //   password: passwordController.text,
-      //   phone: phoneController.text.trim(),
-      // );
-
-      // Mock Response (Remove this and use actual API)
-      await Future.delayed(Duration(seconds: 2));
-
-      final userData = {
-        'id': '123',
-        'name': fullNameController.text.trim(),
-        'email': emailPhoneController.text.trim(),
-        'phone': emailPhoneController.text.trim(),
-        'token': 'mock_token_12345',
-      };
-
-      final user = UserModel.fromJson(userData);
-      currentUser.value = user;
-
-      // Save to SharedPreferences
-      await _saveUserData(user);
-
-      // Get.snackbar(
-      //   'Success',
-      //   'Account created successfully!',
-      //   backgroundColor: Colors.green,
-      //   colorText: Colors.white,
-      //   snackPosition: SnackPosition.BOTTOM,
-      // );
-      Console.green("Success: Account created successfully!");
-      // Navigate to veryfy
-      Get.toNamed(
-        RoutesName.verifyCodeScreen,
-        arguments: {
-          'verificationType': 'signup',
-          'email': emailPhoneController.text.trim(),
-        },
+      final response = await ApiService.post(
+        ApiEndpoints.register,
+        body: userData,
       );
 
-      Console.magenta(
-        "User Type : ${isIndividual.value ? "individual" : "Company"}",
-      );
+      if (response.success || response.statusCode == 201) {
+        //debug info
+        Console.success("Account created successfully!");
+
+        //get data from response
+        final Map<String, dynamic> data = response.data;
+        final String message = data['message'];
+        Console.success(message);
+        // Navigate to veryfy
+        Get.toNamed(
+          RoutesName.verifyCodeScreen,
+          arguments: {
+            'verificationType': 'signup',
+            'email': emailPhoneController.text.trim(),
+          },
+        );
+      } else if (response.statusCode == 400) {
+        //get data from response
+        final data = response.data;
+        final String message = data['email']['message'];
+        Console.info(message);
+        if (data['email']['status'] == 'resend_activation') {
+          CustomeSnackBar.success(message);
+          // Navigate to veryfy
+          Get.toNamed(
+            RoutesName.verifyCodeScreen,
+            arguments: {
+              'verificationType': 'signup',
+              'email': emailPhoneController.text.trim(),
+            },
+          );
+        } else {
+          CustomeSnackBar.error(message);
+        }
+      }
     } catch (e) {
-      // Get.snackbar(
-      //   'Error',
-      //   e.toString(),
-      //   backgroundColor: Colors.red,
-      //   colorText: Colors.white,
-      //   snackPosition: SnackPosition.BOTTOM,
-      // );
+      //debug info
       Console.red("Error: ${e.toString()}");
+      CustomeSnackBar.error(e.toString());
     } finally {
       isLoading.value = false;
     }
@@ -132,63 +130,59 @@ class AuthController extends GetxController {
 
   // Sign In
   Future<void> signIn() async {
-    //TODO uncomment this line after api intregation
-    // if (!_validateSignInForm()) return;
+    if (!_validateSignInForm()) {
+      Console.red(errorMessageSignIn.value);
+      CustomeSnackBar.error(errorMessageSignIn.value);
+      return;
+    }
 
+    final userData = {
+      'email': loginEmailController.text.trim(),
+      'password': loginPasswordController.text,
+    };
     try {
       isLoading.value = true;
 
-      // API Call (Replace with your actual API)
-      // final response = await ApiService.signIn(
-      //   email: loginEmailController.text.trim(),
-      //   password: loginPasswordController.text,
-      // );
+      final response = await ApiService.post(
+        ApiEndpoints.login,
+        body: userData,
+      );
 
-      // Mock Response (Remove this and use actual API)
-      await Future.delayed(Duration(seconds: 2));
+      if (response.success || response.statusCode == 200) {
+        //get data from response
+        final Map<String, dynamic> data = response.data;
+        final String message = data['message'];
+        StorageService.setRefreshToken(data['refresh']);
+        StorageService.setAccessToken(data['access']);
+        StorageService.setUserEmail(data['user_details']['email']);
+        StorageService.setUserName(data['user_details']['full_name']);
+        StorageService.setOnboardingCompleted(true);
 
-      final userData = {
-        'id': '123',
-        'name': 'John Doe',
-        'email': loginEmailController.text.trim(),
-        'token': 'mock_token_12345',
-      };
+        //set for only demo no incoming data from backend
+        final isPremium = await StorageService.getIsPremium();
+        if (!isPremium) {
+          StorageService.setIsPremium(true);
+        }
+        Console.success(message);
+        // Navigate to veryfy
 
-      final user = UserModel.fromJson(userData);
-      currentUser.value = user;
+        bool? isplanActive = await StorageService.getIsPremium();
 
-      // Save to SharedPreferences
-      await _saveUserData(user);
+        // Navigate to Home
+        if (!isplanActive) {
+          Get.offAllNamed(RoutesName.getPremiumScreen);
+        } else {
+          Get.offAllNamed(RoutesName.home);
+        }
+      } else if (response.statusCode == 401) {
+        //get data from response
+        final data = response.data;
+        final String message = data['detail'];
+        Console.info(message);
 
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-
-      bool? isplanActive = prefs.getBool('plan_active') ?? false;
-
-      prefs.setBool('login_completed', true);
-
-      // Get.snackbar(
-      //   'Success',
-      //   'Welcome back!',
-      //   backgroundColor: Colors.green,
-      //   colorText: Colors.white,
-      //   snackPosition: SnackPosition.BOTTOM,
-      // );
-      Console.green("Success: Wellcome back!");
-      Console.green("Success: $isplanActive");
-      // Navigate to Home
-      if (!isplanActive) {
-        Get.offAllNamed(RoutesName.getPremiumScreen);
-      } else {
-        Get.offAllNamed(RoutesName.home);
+        CustomeSnackBar.success(message);
       }
     } catch (e) {
-      // Get.snackbar(
-      //   'Error',
-      //   e.toString(),
-      //   backgroundColor: Colors.red,
-      //   colorText: Colors.white,
-      //   snackPosition: SnackPosition.BOTTOM,
-      // );
       Console.red("Error: ${e.toString()}");
     } finally {
       isLoading.value = false;
@@ -344,19 +338,28 @@ class AuthController extends GetxController {
 
   // Validate Sign Up Form
   bool _validateSignUpForm() {
+    if (fullNameController.text.trim().isEmpty) {
+      errorMessageSignUp.value = 'Please enter your full name';
+      CustomeSnackBar.error(errorMessageSignUp.value);
+      Console.error(errorMessageSignUp.value);
+      return false;
+    }
     if (emailPhoneController.text.trim().isEmpty) {
       errorMessageSignUp.value = 'Please enter your email';
-      debugPrint(errorMessageSignUp.value);
+      CustomeSnackBar.error(errorMessageSignUp.value);
+      Console.error(errorMessageSignUp.value);
       return false;
     }
     if (!GetUtils.isEmail(emailPhoneController.text.trim())) {
       errorMessageSignUp.value = 'Please enter a valid email';
-      debugPrint(errorMessageSignUp.value);
+      CustomeSnackBar.error(errorMessageSignUp.value);
+      Console.error(errorMessageSignUp.value);
       return false;
     }
     if (passwordController.text.length < 6) {
       errorMessageSignUp.value = 'Password must be at least 6 characters';
-      debugPrint(errorMessageSignUp.value);
+      CustomeSnackBar.error(errorMessageSignUp.value);
+      Console.error(errorMessageSignUp.value);
       return false;
     }
 
@@ -367,7 +370,7 @@ class AuthController extends GetxController {
   bool _validateSignInForm() {
     if (loginEmailController.text.trim().isEmpty) {
       errorMessageSignIn.value = 'Please enter your email';
-      debugPrint(errorMessageSignIn.value);
+
       return false;
     }
     if (!GetUtils.isEmail(loginEmailController.text.trim())) {
@@ -377,25 +380,10 @@ class AuthController extends GetxController {
     }
     if (loginPasswordController.text.isEmpty) {
       errorMessageSignIn.value = 'Please enter your password';
-      debugPrint(errorMessageSignIn.value);
+
       return false;
     }
-    if (rememberMe.value) {
-      debugPrint('Remember Me ${rememberMe.value}');
-    }
+    if (rememberMe.value) {}
     return true;
-  }
-
-  // Save User Data to SharedPreferences
-  Future<void> _saveUserData(UserModel user) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString('user_id', user.id ?? '');
-    await prefs.setString('user_name', user.name);
-    await prefs.setString('user_email', user.email);
-    await prefs.setString('auth_token', user.token ?? '');
-    await prefs.setBool('is_logged_in', true);
-
-    //only for ui flow
-    await prefs.setBool('plan_active', false);
   }
 }
