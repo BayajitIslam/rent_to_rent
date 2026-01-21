@@ -1,10 +1,14 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:http/http.dart' as http;
 import 'package:rent2rent/core/services/local_storage/storage_service.dart';
 import 'package:rent2rent/core/utils/log.dart';
+import 'package:rent2rent/features/home/widgets/custom_dialog.dart';
 import 'package:rent2rent/features/home/widgets/custome_snackbar.dart';
+import 'package:rent2rent/routes/routes_name.dart';
 
 /// ═══════════════════════════════════════════════════════════════════════════
 /// API RESPONSE WRAPPER
@@ -339,6 +343,20 @@ class ApiService {
     // Success responses (2xx)
     if (statusCode >= 200 && statusCode < 300) {
       Console.success('API Success');
+      return ApiResponse(success: true, data: data, statusCode: statusCode);
+    }
+
+    // Unauthorized (401)
+    if (statusCode == 401) {
+      Console.info('Unauthorized');
+      Get.toNamed(RoutesName.login);
+      return ApiResponse(success: true, data: data, statusCode: statusCode);
+    }
+
+    // Payment required (402)
+    if (statusCode == 402) {
+      Console.info('Payment Required');
+      CustomDialog.showPaymentRequired();
       return ApiResponse(success: true, data: data, statusCode: statusCode);
     }
 
