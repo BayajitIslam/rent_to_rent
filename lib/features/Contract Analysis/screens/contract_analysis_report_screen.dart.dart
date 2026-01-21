@@ -22,12 +22,7 @@ class ContractAnalysisReportScreen extends StatelessWidget {
         child: Column(
           children: [
             // AppBar
-            CustomAppBar(
-              title: AppString.contractAnalysisReport,
-              type: AppBarType.withSaveDownload,
-              onDownloadTap: () => controller.downloadReport(),
-              onSaveTap: () => controller.saveReport(),
-            ),
+            CustomAppBar(title: AppString.contractAnalysisReport),
 
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.w),
@@ -70,7 +65,7 @@ class ContractAnalysisReportScreen extends StatelessWidget {
                       buttonHeight: 48,
                       buttonName: AppString.regenerateAnalysis,
                       isloading: controller.isLoading.value,
-                      onTap: () => controller.regenerateAnalysis(),
+                      onTap: () => controller.analyzeContract(),
                     ),
                   ),
                   SizedBox(height: 100.h),
@@ -109,7 +104,11 @@ class ContractAnalysisReportScreen extends StatelessWidget {
                 width: 12.w,
                 height: 12.h,
                 decoration: BoxDecoration(
-                  color: AppColors.greencheck,
+                  color: controller.overallRatingColor.value == 'green'
+                      ? AppColors.greencheck
+                      : controller.overallRatingColor.value == 'red'
+                      ? AppColors.error
+                      : AppColors.warning,
                   shape: BoxShape.circle,
                 ),
               ),

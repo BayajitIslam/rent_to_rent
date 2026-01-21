@@ -1,7 +1,11 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:file_picker/file_picker.dart';
 import 'package:get/get.dart';
+import 'package:rent2rent/core/constants/api_endpoints.dart';
+import 'package:rent2rent/core/services/api_service.dart';
 import 'package:rent2rent/core/utils/log.dart';
+import 'package:rent2rent/features/home/widgets/custome_snackbar.dart';
 import 'package:rent2rent/routes/routes_name.dart';
 
 class ContractAnalysisController extends GetxController {
@@ -14,8 +18,8 @@ class ContractAnalysisController extends GetxController {
   final RxString fileName = ''.obs;
 
   // Analysis Result
-  final RxString overallRating = 'Green'.obs;
-  final RxString overallRatingColor = 'green'.obs;
+  final RxString overallRating = ''.obs;
+  final RxString overallRatingColor = ''.obs;
 
   // Contract Summary
   final RxString contractSummary = ''.obs;
@@ -65,32 +69,69 @@ class ContractAnalysisController extends GetxController {
     }
   }
 
-  // Analyze Contract
+  //Anaylyze Contract
   Future<void> analyzeContract() async {
     if (selectedFile.value == null) {
       Console.red('Error: Please select a PDF file');
+      CustomeSnackBar.error('Please select a PDF file');
       return;
     }
 
     try {
       isLoading.value = true;
+      final response = await ApiService.uploadMultipart(
+        method: "POST",
+        url: ApiEndpoints.contractcheck,
+        files: {'contract_file': selectedFile.value!},
+      );
+      if (response.statusCode == 202 ||
+          response.statusCode == 201 ||
+          response.statusCode == 200) {
+        final data = response.data;
+        Console.info('$data');
+        // Navigate to Analyzing Screen
+        Get.toNamed(RoutesName.contractAnalyzingScreen);
 
-      // Navigate to Analyzing Screen
-      Get.toNamed(RoutesName.contractAnalyzingScreen);
+        isAnalyzing.value = true;
+        Console.blue('Analyzing contract...');
 
-      isAnalyzing.value = true;
-      Console.blue('Analyzing contract...');
+        // Timer to repeatedly check for the contract analysis result
+        Timer.periodic(Duration(seconds: 1), (timer) async {
+          try {
+            final contractCheckResponse = await ApiService.getAuth(
+              "${ApiEndpoints.contractcheck}${data['id']}/",
+            );
 
-      // TODO: Replace with actual API call
-      await Future.delayed(Duration(seconds: 3));
+            Console.info("${contractCheckResponse.statusCode}");
+            if (contractCheckResponse.statusCode == 200) {
+              final responseData = contractCheckResponse.data;
+              Console.info('$responseData');
 
-      // Mock response data
-      _loadMockAnalysisData();
+              if (responseData['contract_analysis_result'] != null &&
+                  responseData['contract_analysis_result'].isNotEmpty) {
+                final contractAnalysisResult =
+                    responseData['contract_analysis_result'];
+                Console.info('$contractAnalysisResult');
 
-      Console.green('Contract analysis completed');
+                // Stop the timer and navigate if result is available
+                timer.cancel();
+                mapContractAnalysisResult(contractAnalysisResult);
 
-      // Navigate to Report Screen
-      Get.offNamed(RoutesName.contractAnalysisReportScreen);
+                Get.toNamed(RoutesName.contractAnalysisReportScreen);
+              }
+            }
+          } catch (e) {
+            Console.red('Error analyzing contract: $e');
+            Get.back();
+            timer.cancel(); // Stop the timer on error
+          }
+        });
+      } else if (response.statusCode == 400) {
+        final data = response.data;
+        Console.info('$data');
+      } else {
+        Console.info("Something is wrong");
+      }
     } catch (e) {
       Console.red('Error analyzing contract: $e');
       Get.back();
@@ -98,98 +139,6 @@ class ContractAnalysisController extends GetxController {
       isLoading.value = false;
       isAnalyzing.value = false;
     }
-  }
-
-  // Regenerate Analysis
-  Future<void> regenerateAnalysis() async {
-    try {
-      isLoading.value = true;
-      Console.blue('Regenerating analysis...');
-
-      // TODO: Replace with actual API call
-      await Future.delayed(Duration(seconds: 2));
-
-      // Reload mock data or call API again
-      _loadMockAnalysisData();
-
-      Console.green('Analysis regenerated');
-    } catch (e) {
-      Console.red('Error regenerating analysis: $e');
-    } finally {
-      isLoading.value = false;
-    }
-  }
-
-  // Download Report
-  void downloadReport() {
-    Console.green('Downloading report...');
-    // TODO: Implement PDF download
-  }
-
-  // Save Report
-  void saveReport() {
-    Console.green('Saving report...');
-    // TODO: Implement save functionality
-  }
-
-  // Load Mock Analysis Data
-  void _loadMockAnalysisData() {
-    overallRating.value = 'Green';
-    overallRatingColor.value = 'green';
-
-    contractSummary.value =
-        'A quick overview of your contract\'s safety, risks, and missing elements — analyzed by AI.';
-
-    // Summary Insight
-    summaryInsightTitle.value = 'SUMMARY INSIGHT';
-    summaryInsightDescription.value =
-        'Your contract contains a few clauses that need final review.';
-    summaryInsightVariations.value = [
-      'Your contract is mostly safe, with a few points worth revisiting.',
-      'Several sections need clarification before signing.',
-      'Multiple risks detected — please review the red flags.',
-      'Your contract appears strong, with only minor gaps.',
-    ];
-
-    // Safe Clauses
-    safeClausesTitle.value = 'SAFE CLAUSES SECTION';
-    safeClausesDescription.value =
-        'Your contract contains a few clauses that need final review.';
-    safeClausesVariations.value = [
-      'Your contract is mostly safe, with a few points worth revisiting.',
-      'Several sections need clarification before signing.',
-      'Multiple risks detected — please review the red flags.',
-      'Your contract appears strong, with only minor gaps.',
-    ];
-
-    // Red Flags
-    redFlagsTitle.value = 'RED FLAGS SECTION';
-    redFlagsDescription.value =
-        'These are clauses that may create legal, financial, or operational risk.';
-    redFlagsVariations.value = [
-      'Unclear termination conditions — The contract does not define how either party can end the agreement.',
-      'No liability limit — You may be responsible for unlimited damages.',
-      'One-sided payment terms — The payment obligations favor the other party significantly.',
-      'Missing dispute resolution method — No process is defined if conflicts arise.',
-    ];
-
-    // Warnings
-    warningsTitle.value = 'WARNINGS SECTION';
-    warningsDescription.value =
-        'These may not be dangerous alone but require attention.';
-    warningsItems.value = [
-      'Ambiguous delivery deadlines — Timelines are mentioned but not clearly defined.',
-      'Incomplete confidentiality terms — The clause does not specify the duration of confidentiality.',
-      'Generic warranty language — Warranty coverage is unclear or too broad.',
-      'Renewal terms unclear — Automatic renewal is mentioned but conditions are missing.',
-    ];
-
-    // Admin Recommendations
-    recommendations.value = [
-      'This area is high demand for engineers.',
-      'Avoid short-term rentals in first 12 months.',
-      'Make sure contract includes noise clause.',
-    ];
   }
 
   // Clear Data
@@ -201,7 +150,69 @@ class ContractAnalysisController extends GetxController {
 
   @override
   void onClose() {
+    clearData();
     Console.yellow('ContractAnalysisController disposed');
     super.onClose();
+  }
+
+  // Mapping the contract analysis result to variables
+  void mapContractAnalysisResult(Map<String, dynamic> contractAnalysisResult) {
+    // Set overall rating and color
+    overallRating.value = contractAnalysisResult['overall_rating'];
+    overallRatingColor.value = contractAnalysisResult['overall_rating_color'];
+
+    // Set contract summary
+    contractSummary.value = contractAnalysisResult['contract_summary'];
+
+    // Set Summary Insight
+    summaryInsightTitle.value = 'SUMMARY INSIGHT';
+    summaryInsightDescription.value = contractAnalysisResult['summary_insight'];
+    summaryInsightVariations.value = List<String>.from(
+      contractAnalysisResult['possible_variations'],
+    );
+
+    // Set Safe Clauses
+    safeClausesTitle.value = 'SAFE CLAUSES SECTION';
+    safeClausesDescription.value =
+        contractAnalysisResult['safe_clauses'] != null
+        ? contractAnalysisResult['safe_clauses']
+              .map((clause) => clause['description'])
+              .join('\n')
+        : '';
+    safeClausesVariations.value = contractAnalysisResult['safe_clauses'] != null
+        ? List<String>.from(
+            contractAnalysisResult['safe_clauses'].map(
+              (clause) => clause['title'],
+            ),
+          )
+        : [];
+
+    // Set Red Flags
+    redFlagsTitle.value = 'RED FLAGS SECTION';
+    redFlagsDescription.value = contractAnalysisResult['red_flags'] != null
+        ? contractAnalysisResult['red_flags']
+              .map((flag) => flag['description'])
+              .join('\n')
+        : '';
+    redFlagsVariations.value = contractAnalysisResult['red_flags'] != null
+        ? List<String>.from(
+            contractAnalysisResult['red_flags'].map((flag) => flag['title']),
+          )
+        : [];
+
+    // Set Warnings
+    warningsTitle.value = 'WARNINGS SECTION';
+    warningsDescription.value = contractAnalysisResult['warnings'] != null
+        ? contractAnalysisResult['warnings']
+              .map((warning) => warning['description'])
+              .join('\n')
+        : '';
+    warningsItems.value = contractAnalysisResult['warnings'] != null
+        ? List<String>.from(
+            contractAnalysisResult['warnings'].map(
+              (warning) => warning['title'],
+            ),
+          )
+        : [];
   }
 }
