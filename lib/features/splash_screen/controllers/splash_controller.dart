@@ -54,7 +54,7 @@ class SplashController extends GetxController {
       if (!onboardingCompleted) {
         Get.offAllNamed(RoutesName.onboarding);
       } else if (!loginCompleted) {
-        Get.offAllNamed(RoutesName.signUp);
+        Get.offAllNamed(RoutesName.login);
       } else if (!isPlanActive) {
         Get.offAllNamed(RoutesName.getPremiumScreen);
       } else {
