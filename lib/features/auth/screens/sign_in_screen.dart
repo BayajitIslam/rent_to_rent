@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:rent2rent/core/constants/app_string.dart';
-import 'package:rent2rent/features/auth/controllers/auth_controller..dart';
+import 'package:rent2rent/features/auth/controllers/auth_controller.dart';
 import 'package:rent2rent/features/auth/screens/auth_background_screen.dart';
 import 'package:rent2rent/features/auth/widgets/signin_container.dart';
 import 'package:rent2rent/routes/routes_name.dart';

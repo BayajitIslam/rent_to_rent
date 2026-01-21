@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:rent2rent/core/constants/app_colors.dart';
 import 'package:rent2rent/core/constants/app_string.dart';
 import 'package:rent2rent/core/themes/app_text_style.dart';
-import 'package:rent2rent/features/auth/controllers/auth_controller..dart';
+import 'package:rent2rent/features/auth/controllers/auth_controller.dart';
 import 'package:rent2rent/features/auth/widgets/custom_button.dart';
 import 'package:rent2rent/features/auth/widgets/custome_textfield.dart';
 

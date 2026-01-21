@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:rent2rent/features/auth/controllers/auth_controller..dart';
+import 'package:rent2rent/features/auth/controllers/auth_controller.dart';
 import 'package:rent2rent/features/auth/screens/auth_background_screen.dart';
 import 'package:rent2rent/features/auth/widgets/reset_password_container.dart';
 

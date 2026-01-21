@@ -155,6 +155,7 @@ class AuthController extends GetxController {
         StorageService.setAccessToken(data['access']);
         StorageService.setUserEmail(data['user_details']['email']);
         StorageService.setUserName(data['user_details']['full_name']);
+        StorageService.setIsLoggedIn(true);
         StorageService.setOnboardingCompleted(true);
 
         //set for only demo no incoming data from backend
