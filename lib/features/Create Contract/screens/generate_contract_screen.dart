@@ -5,6 +5,7 @@ import 'package:rent2rent/core/constants/app_colors.dart';
 import 'package:rent2rent/core/constants/app_string.dart';
 import 'package:rent2rent/core/themes/app_text_style.dart';
 import 'package:rent2rent/features/Create%20Contract/controllers/create_contract_controller_.dart';
+import 'package:rent2rent/features/Create%20Contract/widgets/pdf_viewer.dart';
 import 'package:rent2rent/features/Create%20Contract/widgets/step_indicator.dart';
 import 'package:rent2rent/features/auth/widgets/custom_button.dart';
 import 'package:rent2rent/features/home/screens/main_layout.dart';
@@ -39,10 +40,8 @@ class GenerateContractScreen extends StatelessWidget {
 
                   // Step Indicator
                   StepIndicator(currentStep: 3),
-                  SizedBox(height: 24.h),
-
                   // Contract Preview
-                  _buildContractPreview(),
+                  PdfViewerWidget(pdfUrl: controller.resultPdfUrl.value),
                   SizedBox(height: 16.h),
 
                   // Action Buttons
@@ -58,15 +57,6 @@ class GenerateContractScreen extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-
-  // ==================== Contract Preview ====================
-  Widget _buildContractPreview() {
-    return Container(
-      width: double.infinity,
-      decoration: BoxDecoration(),
-      child: Image.asset("assets/images/contract_preview.png"),
     );
   }
 

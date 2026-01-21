@@ -16,4 +16,6 @@ class ApiEndpoints {
   //====================== services Endpoints ======================
   static const String emailReplyDraft =
       "$baseUrl/api/v1/service/email-reply-draft/";
+  static const String generateContract =
+      "$baseUrl/api/v1/service/contact-creation/";
 }

@@ -247,7 +247,7 @@ class FillContractDetailsScreen extends StatelessWidget {
 
         _buildFormField(
           label: AppString.reasonForContractLimitation,
-          controller: controller.monthlyRentController,
+          controller: controller.contractLimitationController,
           hint: AppString.typeHere,
         ),
       ],

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:rent2rent/core/constants/api_endpoints.dart';
+import 'package:rent2rent/core/services/api_service.dart';
 import 'package:rent2rent/core/utils/log.dart';
 import 'package:rent2rent/features/Create%20Contract/models/contract_type_model.dart';
 import 'package:rent2rent/features/home/widgets/custome_snackbar.dart';
@@ -56,7 +58,11 @@ class CreateContractController extends GetxController {
   //limitation
   final RxString limitationReason = ''.obs;
 
-  final TextEditingController limitationExplanationController = TextEditingController();
+  final TextEditingController limitationExplanationController =
+      TextEditingController();
+
+  //result
+  final RxString resultPdfUrl = ''.obs;
 
   // Recommendations
   final RxList<String> recommendations = <String>[
@@ -114,27 +120,67 @@ class CreateContractController extends GetxController {
   Future<void> generateContract() async {
     if (!_validateStep2()) return;
 
+    // Helper to format date as YYYY-MM-DD
+    String formatDate(DateTime? date) {
+      if (date == null) return '';
+      return "${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}";
+    }
+
+    // Helper to parse room count
+    int parseRoomCount(String value) {
+      final match = RegExp(r'\d+').firstMatch(value);
+      return match != null ? int.parse(match.group(0)!) : 0;
+    }
+
+    final data = {
+      "contact_type": selectedContractType.value,
+      "landlord_name": landlordNameController.text.trim(),
+      "landlord_address": landlordAddressController.text.trim(),
+      "landlord_email": landlordEmailController.text.trim(),
+      "tenant_name": tenantNameController.text.trim(),
+      "tenant_address": tenantAddressController.text.trim(),
+      "tenant_email": tenantEmailController.text.trim(),
+      "property_address": rentalObjectController.text.trim(),
+      "property_appartment_number": apartmentNumberController.text.trim(),
+      "property_room_count": parseRoomCount(roomCount.value),
+      "property_is_furnished": isFurnished.value,
+      "rent_type": isFlatRate.value ? "flat rate" : "plus utilities",
+      "rent_amount": double.tryParse(monthlyRentController.text) ?? 0.0,
+      "rent_contact_start_date": formatDate(contractStartDate.value),
+      "rent_contact_end_date": formatDate(contractEndDate.value),
+      "rent_reason_contract_limitations": limitationReason.value,
+      "rent_term_monthly_rent":
+          double.tryParse(monthlyRentController.text) ?? 0.0,
+      "rent_security_deposit": double.tryParse(depositController.text) ?? 0.0,
+      "rent_contract_duration_months":
+          int.tryParse(contractDurationController.text) ?? 0,
+      "rent_start_date": formatDate(startDate.value),
+      "contract_limitation_reason": limitationReason.value,
+      "contract_limitation_details": limitationExplanationController.text
+          .trim(),
+    };
+
     try {
       isLoading.value = true;
       Console.blue('Generating contract...');
 
-      // TODO: Replace with actual API call
-      await Future.delayed(Duration(seconds: 2));
+      final response = await ApiService.postAuth(
+        ApiEndpoints.generateContract,
+        body: data,
+      );
 
-      // Mock generated content
-      partiesContent.value =
-          'This Agreement (hereinafter the "Agreement") is entered into as of [Date] by and between the following parties. The Seller hereby agrees to sell and the Purchaser agrees to buy the Property described herein.';
-      propertyDescContent.value =
-          'The Property is described as follows: ${rentalObjectController.text}. The property consists of ${roomCount.value} with ${roomCount.value}.';
-      saleContent.value =
-          'The Seller agrees to sell and the Purchaser agrees to purchase herein the "Property" located at the address mentioned above, subject to the terms and conditions set forth in this Agreement.';
-      priceContent.value =
-          'The purchase price to be paid by the Purchaser for the Property shall be ${monthlyRentController.text} per month with a deposit of ${depositController.text}.';
+      if (response.statusCode == 201) {
+        final responseData = response.data;
+        Console.info('responseData: ${responseData.toString()}');
+        Console.green(responseData['message']);
+        Console.green(responseData['pdf_url']);
 
-      Console.green('Contract generated successfully');
-
-      // Navigate to Generate Contract Screen
-      Get.toNamed(RoutesName.generateContractScreen);
+        resultPdfUrl.value = responseData['pdf_url'];
+        // Navigate to Generate Contract Screen
+        Get.toNamed(RoutesName.generateContractScreen);
+      } else if (response.statusCode == 400) {
+        Console.red('Error: Failed to generate contract - ${response.data}');
+      }
     } catch (e) {
       Console.red('Error: Failed to generate contract - $e');
     } finally {
@@ -161,6 +207,26 @@ class CreateContractController extends GetxController {
     if (!confirmDetails.value) {
       CustomeSnackBar.error('Please confirm contract details');
       Console.red('Error: Please confirm contract details');
+      return false;
+    }
+    if (startDate.value == null) {
+      CustomeSnackBar.error('Please select start date');
+      Console.red('Error: Please select start date');
+      return false;
+    }
+    if (contractEndDate.value == null) {
+      CustomeSnackBar.error('Please select end date');
+      Console.red('Error: Please select end date');
+      return false;
+    }
+    if (contractStartDate.value == null) {
+      CustomeSnackBar.error('Please select start date');
+      Console.red('Error: Please select start date');
+      return false;
+    }
+    if (contractEndDate.value == null) {
+      CustomeSnackBar.error('Please select end date');
+      Console.red('Error: Please select end date');
       return false;
     }
     return true;
