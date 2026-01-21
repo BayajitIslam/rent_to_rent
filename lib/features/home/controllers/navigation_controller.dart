@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:rent2rent/routes/routes_name.dart';
 
 class NavigationController extends GetxController {
-  final RxInt currentIndex = 0.obs; // Default to 0 instead of -1
+  final RxInt currentIndex = 0.obs;
 
   // Change Page
   void changePage(int index) {
@@ -11,19 +11,19 @@ class NavigationController extends GetxController {
 
     switch (index) {
       case 0:
-        Get.toNamed(RoutesName.home);
+        Get.offAndToNamed(RoutesName.home);
         break;
       case 1:
-        Get.toNamed(RoutesName.createContractScreen);
+        Get.offAndToNamed(RoutesName.createContractScreen);
         break;
       case 2:
-        Get.toNamed(RoutesName.contractAnalysisScreen);
+        Get.offAndToNamed(RoutesName.contractAnalysisScreen);
         break;
       case 3:
-        Get.toNamed(RoutesName.locationSuitabilityScreen);
+        Get.offAndToNamed(RoutesName.locationSuitabilityScreen);
         break;
       case 4:
-        Get.toNamed(RoutesName.profile);
+        Get.offAndToNamed(RoutesName.profile);
         break;
     }
   }
@@ -35,6 +35,6 @@ class NavigationController extends GetxController {
 
   // Clear selection
   void clearSelection() {
-    currentIndex.value = -1;
+    currentIndex.value = currentIndex.value;
   }
 }

@@ -39,7 +39,6 @@ import 'package:rent2rent/features/auth/screens/sign_in_screen.dart';
 import 'package:rent2rent/features/auth/screens/sign_up_screen.dart';
 import 'package:rent2rent/features/auth/screens/verify_code_screen.dart';
 import 'package:rent2rent/features/home/bindings/home_binding.dart';
-import 'package:rent2rent/features/home/bindings/navigation_binding.dart';
 import 'package:rent2rent/features/home/screens/home_screens.dart';
 import 'package:rent2rent/features/splash_screen/bindings/onboarding_binding.dart';
 import 'package:rent2rent/features/splash_screen/bindings/splash_binding.dart';
@@ -63,32 +62,32 @@ class AppRoutes {
       transition: Transition.noTransition,
       binding: SplashBinding(),
     ),
-    
+
     //<=============================== Main Screen ==================================>
     GetPage(
       name: RoutesName.home,
       page: () => DashboardScreen(),
       transition: Transition.noTransition,
-      bindings: [HomeBinding(), NavigationBinding()],
+      bindings: [HomeBinding()],
     ),
     GetPage(
       name: RoutesName.profile,
       page: () => ProfileScreen(),
       transition: Transition.noTransition,
-      bindings: [NavigationBinding(), ProfileBinding()],
+      bindings: [ProfileBinding()],
     ),
 
     GetPage(
       name: RoutesName.fieldAgentScreen,
       page: () => FieldAgentCommunicationScreen(),
       transition: Transition.noTransition,
-      bindings: [NavigationBinding(), FieldAgentBinding()],
+      bindings: [FieldAgentBinding()],
     ),
     GetPage(
       name: RoutesName.agentReplyScreen,
       page: () => AgentReplyScreen(),
       transition: Transition.noTransition,
-      bindings: [NavigationBinding(), AgentReplyBinding()],
+      bindings: [AgentReplyBinding()],
     ),
 
     //<=============================== Auth Screen ==================================>
@@ -139,7 +138,7 @@ class AppRoutes {
       name: RoutesName.createContractScreen,
       page: () => SelectContractTypeScreen(),
       transition: Transition.noTransition,
-      bindings: [NavigationBinding(), ContractBindings()],
+      bindings: [ContractBindings()],
     ),
     GetPage(
       name: RoutesName.fillContractDetailsScreen,
@@ -160,45 +159,45 @@ class AppRoutes {
       name: RoutesName.contractAnalysisScreen,
       page: () => ContractAnalysisScreen(),
       transition: Transition.noTransition,
-      bindings: [NavigationBinding(), ContractAnalysisBinding()],
+      bindings: [ContractAnalysisBinding()],
     ),
     GetPage(
       name: RoutesName.contractAnalyzingScreen,
       page: () => ContractAnalyzingScreen(),
       transition: Transition.noTransition,
-      bindings: [NavigationBinding(), ContractAnalysisBinding()],
+      bindings: [ContractAnalysisBinding()],
     ),
     GetPage(
       name: RoutesName.contractAnalysisReportScreen,
       page: () => ContractAnalysisReportScreen(),
       transition: Transition.noTransition,
-      bindings: [NavigationBinding(), ContractAnalysisBinding()],
+      bindings: [ContractAnalysisBinding()],
     ),
-    
+
     //<=============================== Location Suitability Screen ==================================>
     GetPage(
       name: RoutesName.locationSuitabilityScreen,
       page: () => LocationSuitabilityScreen(),
       transition: Transition.noTransition,
-      bindings: [NavigationBinding(), LocationSuitabilityBinding()],
+      bindings: [LocationSuitabilityBinding()],
     ),
     GetPage(
       name: RoutesName.locationPropertyDetailsScreen,
       page: () => LocationPropertyDetailsScreen(),
       transition: Transition.noTransition,
-      bindings: [NavigationBinding(), LocationSuitabilityBinding()],
+      bindings: [LocationSuitabilityBinding()],
     ),
     GetPage(
       name: RoutesName.locationAnalyzingScreen,
       page: () => LocationAnalyzingScreen(),
       transition: Transition.noTransition,
-      bindings: [NavigationBinding(), LocationSuitabilityBinding()],
+      bindings: [LocationSuitabilityBinding()],
     ),
     GetPage(
       name: RoutesName.locationResultsScreen,
       page: () => LocationResultsScreen(),
       transition: Transition.noTransition,
-      bindings: [NavigationBinding(), LocationSuitabilityBinding()],
+      bindings: [LocationSuitabilityBinding()],
     ),
 
     //<=============================== Profile Screen ==================================>
@@ -206,61 +205,57 @@ class AppRoutes {
       name: RoutesName.savedFilesScreen,
       page: () => SavedFilesScreen(),
       transition: Transition.rightToLeft,
-      bindings: [NavigationBinding(), ProfileBinding()],
+      bindings: [ProfileBinding()],
     ),
     GetPage(
       name: RoutesName.personalInfoScreen,
       page: () => PersonalInfoScreen(),
       transition: Transition.rightToLeft,
-      bindings: [NavigationBinding(), ProfileBinding()],
+      bindings: [ProfileBinding()],
     ),
     GetPage(
       name: RoutesName.companyInfoScreen,
       page: () => CompanyInfoScreen(),
       transition: Transition.rightToLeft,
-      bindings: [NavigationBinding(), ProfileBinding()],
+      bindings: [ProfileBinding()],
     ),
     GetPage(
       name: RoutesName.helpFeedbackScreen,
       page: () => HelpFeedbackScreen(),
       transition: Transition.rightToLeft,
-      bindings: [NavigationBinding(), ProfileBinding()],
+      bindings: [ProfileBinding()],
     ),
     GetPage(
       name: RoutesName.settingsScreen,
       page: () => SettingsScreen(),
       transition: Transition.rightToLeft,
-      bindings: [NavigationBinding(), ProfileBinding()],
+      bindings: [ProfileBinding()],
     ),
     GetPage(
       name: RoutesName.changePasswordScreen,
       page: () => ChangePasswordScreen(),
       transition: Transition.rightToLeft,
-      bindings: [NavigationBinding(), ProfileBinding()],
+      bindings: [ProfileBinding()],
     ),
     GetPage(
       name: RoutesName.termsConditionScreen,
       page: () => TermsConditionScreen(),
       transition: Transition.rightToLeft,
-      binding: NavigationBinding(),
     ),
     GetPage(
       name: RoutesName.privacyPolicyScreen,
       page: () => PrivacyPolicyScreen(),
       transition: Transition.rightToLeft,
-      binding: NavigationBinding(),
     ),
     GetPage(
       name: RoutesName.guidesScreen,
       page: () => GuidesScreen(),
       transition: Transition.rightToLeft,
-      binding: NavigationBinding(),
     ),
     GetPage(
       name: RoutesName.aboutUsScreen,
       page: () => AboutUsScreen(),
       transition: Transition.rightToLeft,
-      binding: NavigationBinding(),
     ),
   ];
 }

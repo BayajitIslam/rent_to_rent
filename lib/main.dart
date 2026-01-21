@@ -2,10 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:rent2rent/core/themes/themes.dart';
+import 'package:rent2rent/features/home/controllers/navigation_controller.dart';
 import 'package:rent2rent/routes/app_routes.dart';
 import 'package:rent2rent/routes/routes_name.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  final NavigationController navigationController = Get.put(
+    NavigationController(),
+  );
   runApp(const MyApp());
 }
 
