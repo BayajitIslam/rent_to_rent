@@ -38,7 +38,7 @@ class CustomeTextfield extends StatelessWidget {
           maxLines: maxLines,
           controller: controller,
           obscureText: isPassword && obscureText,
-          style: AppTextStyle.s16w4(color: AppColors.ash),
+          style: AppTextStyle.s16w4(color: AppColors.neutralS),
           decoration: InputDecoration(
             hintText: hintText,
             hintStyle: AppTextStyle.s16w4(color: AppColors.ash),

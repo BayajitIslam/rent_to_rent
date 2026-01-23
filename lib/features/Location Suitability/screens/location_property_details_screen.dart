@@ -7,6 +7,7 @@ import 'package:rent2rent/core/themes/app_text_style.dart';
 import 'package:rent2rent/features/Location%20Suitability/controllers/location_suitability_controller.dart';
 import 'package:rent2rent/features/Location%20Suitability/widgets/location_step_indicator.dart';
 import 'package:rent2rent/features/auth/widgets/custom_button.dart';
+import 'package:rent2rent/features/auth/widgets/custome_textfield.dart';
 import 'package:rent2rent/features/home/screens/main_layout.dart';
 import 'package:rent2rent/features/home/widgets/custome_appbar.dart';
 
@@ -22,7 +23,7 @@ class LocationPropertyDetailsScreen extends StatelessWidget {
       child: SingleChildScrollView(
         child: Column(
           children: [
-            // AppBar
+            // appbar
             CustomAppBar(title: AppString.locationSuitability),
 
             Padding(
@@ -32,23 +33,23 @@ class LocationPropertyDetailsScreen extends StatelessWidget {
                 children: [
                   SizedBox(height: 20.h),
 
-                  // Step Indicator
+                  // step indicator
                   LocationStepIndicator(currentStep: 2),
                   SizedBox(height: 24.h),
 
-                  // Area Section
+                  // area section
                   _buildAreaSection(),
                   SizedBox(height: 16.h),
 
-                  // Infrastructure Section
+                  // infrastructure section
                   _buildInfrastructureSection(),
                   SizedBox(height: 16.h),
 
-                  // Rent2Rent Potential Section
+                  // rent2rent potential section
                   _buildRent2RentPotentialSection(),
                   SizedBox(height: 24.h),
 
-                  // Analyze Location Button
+                  // analyze location button
                   Obx(
                     () => CustomButton(
                       buttonHeight: 50,
@@ -67,92 +68,131 @@ class LocationPropertyDetailsScreen extends StatelessWidget {
     );
   }
 
-  // ==================== Area Section ====================
+  // area section
   Widget _buildAreaSection() {
     return _buildSection(
       title: 'Area',
       children: [
-        _buildDropdownField(
-          label: 'City size',
-          selectedValue: controller.citySize,
-          items: ['Major city', 'Medium city', 'Small city', 'Rural area'],
+        Text(
+          'City size',
+          style: AppTextStyle.s16w4(color: AppColors.neutralS, fontSize: 14),
+        ),
+        SizedBox(height: 8.h),
+        CustomeTextfield(
+          hintText: 'e.g. Large city (500k+)',
+          controller: controller.citySizeController,
         ),
         SizedBox(height: 16.h),
-        _buildDropdownField(
-          label: 'District type',
-          selectedValue: controller.districtType,
-          items: ['Central', 'Suburban', 'Outskirts', 'Industrial'],
+        Text(
+          'District type',
+          style: AppTextStyle.s16w4(color: AppColors.neutralS, fontSize: 14),
+        ),
+        SizedBox(height: 8.h),
+        CustomeTextfield(
+          hintText: 'e.g. Central / well connected',
+          controller: controller.districtTypeController,
         ),
         SizedBox(height: 16.h),
-        _buildDropdownField(
-          label: 'Demand profile',
-          selectedValue: controller.demandProfile,
-          items: ['Business', 'Tourist', 'Student', 'Residential'],
+        Text(
+          'Demand profile',
+          style: AppTextStyle.s16w4(color: AppColors.neutralS, fontSize: 14),
+        ),
+        SizedBox(height: 8.h),
+        CustomeTextfield(
+          hintText: 'e.g. High demand from students and young professionals',
+          controller: controller.demandProfileController,
         ),
       ],
     );
   }
 
-  // ==================== Infrastructure Section ====================
+  // infrastructure section
   Widget _buildInfrastructureSection() {
     return _buildSection(
       title: 'Infrastructure',
       children: [
-        _buildDropdownField(
-          label: 'Public transport within walking distance',
-          selectedValue: controller.publicTransport,
-          items: ['Yes', 'No'],
+        Text(
+          'Public transport within walking distance',
+          style: AppTextStyle.s16w4(color: AppColors.neutralS, fontSize: 14),
+        ),
+        SizedBox(height: 8.h),
+        CustomeTextfield(
+          hintText: 'e.g. U-Bahn within 5 minutes',
+          controller: controller.publicTransportController,
         ),
         SizedBox(height: 16.h),
-        _buildDropdownField(
-          label: 'Supermarkets / Restaurants nearby',
-          selectedValue: controller.supermarketsNearby,
-          items: ['Yes', 'No'],
+        Text(
+          'Supermarkets / Restaurants nearby',
+          style: AppTextStyle.s16w4(color: AppColors.neutralS, fontSize: 14),
+        ),
+        SizedBox(height: 8.h),
+        CustomeTextfield(
+          hintText: 'e.g. Many nearby',
+          controller: controller.supermarketsNearbyController,
         ),
         SizedBox(height: 16.h),
-        _buildDropdownField(
-          label:
-              'Universities, hospitals, offices, or tourist attractions nearby',
-          selectedValue: controller.attractionsNearby,
-          items: ['Yes', 'No'],
+        Text(
+          'Universities, hospitals, offices nearby',
+          style: AppTextStyle.s16w4(color: AppColors.neutralS, fontSize: 14),
+        ),
+        SizedBox(height: 8.h),
+        CustomeTextfield(
+          hintText: 'e.g. University and hospital within 15 minutes',
+          controller: controller.attractionsNearbyController,
         ),
       ],
     );
   }
 
-  // ==================== Rent2Rent Potential Section ====================
+  // rent2rent potential section
   Widget _buildRent2RentPotentialSection() {
     return _buildSection(
       title: 'Rent2Rent Potential',
       children: [
-        _buildDropdownField(
-          label: 'Local demand',
-          selectedValue: controller.localDemand,
-          items: ['Low', 'Medium', 'High'],
+        Text(
+          'Local demand',
+          style: AppTextStyle.s16w4(color: AppColors.neutralS, fontSize: 14),
+        ),
+        SizedBox(height: 8.h),
+        CustomeTextfield(
+          hintText: 'e.g. Strong year-round',
+          controller: controller.localDemandController,
         ),
         SizedBox(height: 16.h),
-        _buildDropdownField(
-          label: 'Competition level',
-          selectedValue: controller.competitionLevel,
-          items: ['Low', 'Medium', 'High'],
+        Text(
+          'Competition level',
+          style: AppTextStyle.s16w4(color: AppColors.neutralS, fontSize: 14),
+        ),
+        SizedBox(height: 8.h),
+        CustomeTextfield(
+          hintText: 'e.g. Medium',
+          controller: controller.competitionLevelController,
         ),
         SizedBox(height: 16.h),
-        _buildDropdownField(
-          label: 'Typical short-term rental prices',
-          selectedValue: controller.rentalPrices,
-          items: ['Low', 'Medium', 'High'],
+        Text(
+          'Typical short-term rental prices',
+          style: AppTextStyle.s16w4(color: AppColors.neutralS, fontSize: 14),
+        ),
+        SizedBox(height: 8.h),
+        CustomeTextfield(
+          hintText: 'e.g. 90-140 EUR/night',
+          controller: controller.rentalPricesController,
         ),
         SizedBox(height: 16.h),
-        _buildDropdownField(
-          label: 'Regulatory friendliness',
-          selectedValue: controller.regulatoryFriendliness,
-          items: ['Low', 'Medium', 'High'],
+        Text(
+          'Regulatory friendliness',
+          style: AppTextStyle.s16w4(color: AppColors.neutralS, fontSize: 14),
+        ),
+        SizedBox(height: 8.h),
+        CustomeTextfield(
+          hintText: 'e.g. Moderate',
+          controller: controller.regulatoryFriendlinessController,
         ),
       ],
     );
   }
 
-  // ==================== Helper Widgets ====================
+  // section container
   Widget _buildSection({
     required String title,
     required List<Widget> children,
@@ -185,68 +225,6 @@ class LocationPropertyDetailsScreen extends StatelessWidget {
           ...children,
         ],
       ),
-    );
-  }
-
-  Widget _buildDropdownField({
-    required String label,
-    required RxString selectedValue,
-    required List<String> items,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label,
-          style: AppTextStyle.s16w4(color: AppColors.neutralS, fontSize: 14),
-        ),
-        SizedBox(height: 8.h),
-        Obx(
-          () => Container(
-            height: 48.h,
-            padding: EdgeInsets.symmetric(horizontal: 16.w),
-            decoration: BoxDecoration(
-              color: AppColors.white,
-              borderRadius: BorderRadius.circular(24.r),
-              border: Border.all(color: const Color(0xFFE8E8E8), width: 1),
-            ),
-            child: DropdownButtonHideUnderline(
-              child: DropdownButton<String>(
-                value: selectedValue.value.isEmpty ? null : selectedValue.value,
-                hint: Text(
-                  items.first,
-                  style: AppTextStyle.s16w4(color: AppColors.ash, fontSize: 14),
-                ),
-                isExpanded: true,
-                icon: Icon(
-                  Icons.keyboard_arrow_down_rounded,
-                  color: AppColors.neutralS,
-                  size: 24.sp,
-                ),
-                dropdownColor: AppColors.white,
-                borderRadius: BorderRadius.circular(12.r),
-                items: items.map((String item) {
-                  return DropdownMenuItem<String>(
-                    value: item,
-                    child: Text(
-                      item,
-                      style: AppTextStyle.s16w4(
-                        color: AppColors.neutralS,
-                        fontSize: 14,
-                      ),
-                    ),
-                  );
-                }).toList(),
-                onChanged: (String? newValue) {
-                  if (newValue != null) {
-                    selectedValue.value = newValue;
-                  }
-                },
-              ),
-            ),
-          ),
-        ),
-      ],
     );
   }
 }

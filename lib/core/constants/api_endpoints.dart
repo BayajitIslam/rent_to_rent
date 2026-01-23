@@ -1,5 +1,5 @@
 class ApiEndpoints {
-  static const String baseUrl = "http://10.10.7.76:14050";
+  static const String baseUrl = "https://rentoapi.dsrt321.online";
 
   //====================== Auth Endpoints ======================
   static const String register = "$baseUrl/api/v1/auth/register/";
@@ -20,4 +20,6 @@ class ApiEndpoints {
       "$baseUrl/api/v1/service/contact-creation/";
   static const String contractcheck =
       "$baseUrl/api/v1/service/contract-analysis/";
+  static const String locationSuitability =
+      "$baseUrl/api/v1/service/location-suitability/";
 }
