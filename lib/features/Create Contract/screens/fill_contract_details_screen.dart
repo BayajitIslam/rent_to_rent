@@ -275,7 +275,7 @@ class FillContractDetailsScreen extends StatelessWidget {
         _buildFormField(
           label: AppString.contractDuration,
           controller: controller.contractDurationController,
-          hint: AppString.exampleEmail,
+          hint: AppString.contractDuration,
         ),
         SizedBox(height: 12.h),
         _buildDateField(

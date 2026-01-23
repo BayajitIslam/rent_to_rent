@@ -187,6 +187,17 @@ class _PdfViewerWidgetState extends State<PdfViewerWidget> {
 
     // PDF View
     return PdfViewPinch(
+      backgroundDecoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black,
+            spreadRadius: 0,
+            blurRadius: 0,
+            offset: const Offset(0, 0),
+          ),
+        ],
+      ),
       padding: 0,
       maxScale: 1,
       minScale: 1,
