@@ -21,55 +21,70 @@ class ContractAnalysisReportScreen extends StatelessWidget {
       child: SingleChildScrollView(
         child: Column(
           children: [
-            // AppBar
             CustomAppBar(title: AppString.contractAnalysisReport),
 
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.w),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(height: 16.h),
+              child: Obx(
+                () => Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 16.h),
 
-                  // Overall Rating
-                  _buildOverallRating(),
-                  SizedBox(height: 16.h),
+                    // overall rating - always show
+                    _buildOverallRating(),
+                    SizedBox(height: 16.h),
 
-                  // Contract Summary & Risk Analysis
-                  _buildContractSummarySection(),
-                  SizedBox(height: 14.h),
+                    // contract summary
+                    if (controller.contractSummary.value.isNotEmpty) ...[
+                      _buildContractSummarySection(),
+                      SizedBox(height: 14.h),
+                    ],
 
-                  // Summary Insight
-                  _buildSummaryInsightSection(),
-                  SizedBox(height: 14.h),
+                    // summary insight
+                    if (controller.summaryInsightDescription.value.isNotEmpty ||
+                        controller.summaryInsightVariations.isNotEmpty) ...[
+                      _buildSummaryInsightSection(),
+                      SizedBox(height: 14.h),
+                    ],
 
-                  // Safe Clauses Section
-                  _buildSafeClausesSection(),
-                  SizedBox(height: 14.h),
+                    // safe clauses
+                    if (controller.safeClausesDescription.value.isNotEmpty ||
+                        controller.safeClausesVariations.isNotEmpty) ...[
+                      _buildSafeClausesSection(),
+                      SizedBox(height: 14.h),
+                    ],
 
-                  // Red Flags Section
-                  _buildRedFlagsSection(),
-                  SizedBox(height: 14.h),
+                    // red flags
+                    if (controller.redFlagsDescription.value.isNotEmpty ||
+                        controller.redFlagsVariations.isNotEmpty) ...[
+                      _buildRedFlagsSection(),
+                      SizedBox(height: 14.h),
+                    ],
 
-                  // Warnings Section
-                  _buildWarningsSection(),
-                  SizedBox(height: 14.h),
+                    // warnings
+                    if (controller.warningsDescription.value.isNotEmpty ||
+                        controller.warningsItems.isNotEmpty) ...[
+                      _buildWarningsSection(),
+                      SizedBox(height: 14.h),
+                    ],
 
-                  // Admin Recommendations
-                  _buildAdminRecommendations(),
-                  SizedBox(height: 24.h),
+                    // admin recommendations
+                    if (controller.recommendations.isNotEmpty) ...[
+                      _buildAdminRecommendations(),
+                      SizedBox(height: 24.h),
+                    ],
 
-                  // Regenerate Analysis Button
-                  Obx(
-                    () => CustomButton(
+                    // regenerate button
+                    CustomButton(
                       buttonHeight: 48,
                       buttonName: AppString.regenerateAnalysis,
                       isloading: controller.isLoading.value,
                       onTap: () => controller.analyzeContract(),
                     ),
-                  ),
-                  SizedBox(height: 100.h),
-                ],
+                    SizedBox(height: 100.h),
+                  ],
+                ),
               ),
             ),
           ],
@@ -78,7 +93,6 @@ class ContractAnalysisReportScreen extends StatelessWidget {
     );
   }
 
-  // ==================== Overall Rating ====================
   Widget _buildOverallRating() {
     return Container(
       decoration: BoxDecoration(
@@ -86,7 +100,6 @@ class ContractAnalysisReportScreen extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
       ),
       padding: EdgeInsets.all(16),
-
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -94,7 +107,6 @@ class ContractAnalysisReportScreen extends StatelessWidget {
             AppString.overallRating,
             style: AppTextStyle.s16w4(
               color: AppColors.neutralS,
-
               fontWeight: FontWeight.w700,
             ),
           ),
@@ -104,23 +116,19 @@ class ContractAnalysisReportScreen extends StatelessWidget {
                 width: 12.w,
                 height: 12.h,
                 decoration: BoxDecoration(
-                  color: controller.overallRatingColor.value == 'green'
-                      ? AppColors.greencheck
-                      : controller.overallRatingColor.value == 'red'
-                      ? AppColors.error
-                      : AppColors.warning,
+                  color: _getRatingColor(controller.overallRatingColor.value),
                   shape: BoxShape.circle,
                 ),
               ),
               SizedBox(width: 6.w),
-              Obx(
-                () => Text(
-                  controller.overallRating.value,
-                  style: AppTextStyle.s16w4(
-                    color: AppColors.neutralS,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                  ),
+              Text(
+                controller.overallRating.value.isNotEmpty
+                    ? controller.overallRating.value
+                    : 'N/A',
+                style: AppTextStyle.s16w4(
+                  color: AppColors.neutralS,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
             ],
@@ -130,187 +138,179 @@ class ContractAnalysisReportScreen extends StatelessWidget {
     );
   }
 
-  // ==================== Contract Summary Section ====================
+  Color _getRatingColor(String color) {
+    switch (color.toLowerCase()) {
+      case 'green':
+        return AppColors.greencheck;
+      case 'red':
+        return AppColors.error;
+      default:
+        return AppColors.warning;
+    }
+  }
+
   Widget _buildContractSummarySection() {
     return _buildSectionCard(
       icon: Icons.check_box,
       iconColor: AppColors.greencheck,
-      // iconBgColor: AppColors.greencheck.withOpacity(0.1),
       title: AppString.contractSummaryRiskAnalysis,
-      child: Obx(
-        () => Text(
-          controller.contractSummary.value,
-          style: AppTextStyle.s16w4(color: AppColors.neutralS, fontSize: 14),
-        ),
+      child: Text(
+        controller.contractSummary.value,
+        style: AppTextStyle.s16w4(color: AppColors.neutralS, fontSize: 14),
       ),
     );
   }
 
-  // ==================== Summary Insight Section ====================
   Widget _buildSummaryInsightSection() {
     return _buildSectionCard(
       icon: Icons.lightbulb_outline,
       iconColor: Colors.amber,
-      // iconBgColor: Colors.amber.withOpacity(0.1),
       title: AppString.summaryInsight,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Obx(
-            () => Text(
+          if (controller.summaryInsightDescription.value.isNotEmpty)
+            Text(
               controller.summaryInsightDescription.value,
               style: AppTextStyle.s16w4(
                 color: AppColors.neutralS,
                 fontSize: 13,
               ),
             ),
-          ),
-          SizedBox(height: 12.h),
-          Text(
-            AppString.possibleVariations,
-            style: AppTextStyle.s16w4(
-              color: AppColors.neutralS,
-              fontSize: 13,
-              fontWeight: FontWeight.w600,
+          if (controller.summaryInsightDescription.value.isNotEmpty &&
+              controller.summaryInsightVariations.isNotEmpty)
+            SizedBox(height: 12.h),
+          if (controller.summaryInsightVariations.isNotEmpty) ...[
+            Text(
+              AppString.possibleVariations,
+              style: AppTextStyle.s16w4(
+                color: AppColors.neutralS,
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+              ),
             ),
-          ),
-          SizedBox(height: 8.h),
-          Obx(
-            () => Column(
-              children: controller.summaryInsightVariations
-                  .map((item) => _buildBulletItem(item))
-                  .toList(),
+            SizedBox(height: 8.h),
+            ...controller.summaryInsightVariations.map(
+              (item) => _buildBulletItem(item),
             ),
-          ),
+          ],
         ],
       ),
     );
   }
 
-  // ==================== Safe Clauses Section ====================
   Widget _buildSafeClausesSection() {
     return _buildSectionCard(
       icon: Icons.verified_outlined,
       iconColor: AppColors.greencheck,
-      // iconBgColor: AppColors.greencheck.withOpacity(0.1),
       title: AppString.safeClausesSection,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Obx(
-            () => Text(
+          if (controller.safeClausesDescription.value.isNotEmpty)
+            Text(
               controller.safeClausesDescription.value,
               style: AppTextStyle.s16w4(
                 color: AppColors.neutralS,
                 fontSize: 13,
               ),
             ),
-          ),
-          SizedBox(height: 12.h),
-          Text(
-            AppString.possibleVariations,
-            style: AppTextStyle.s16w4(
-              color: AppColors.neutralS,
-              fontSize: 13,
-              fontWeight: FontWeight.w600,
+          if (controller.safeClausesDescription.value.isNotEmpty &&
+              controller.safeClausesVariations.isNotEmpty)
+            SizedBox(height: 12.h),
+          if (controller.safeClausesVariations.isNotEmpty) ...[
+            Text(
+              AppString.possibleVariations,
+              style: AppTextStyle.s16w4(
+                color: AppColors.neutralS,
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+              ),
             ),
-          ),
-          SizedBox(height: 8.h),
-          Obx(
-            () => Column(
-              children: controller.safeClausesVariations
-                  .map((item) => _buildBulletItem(item))
-                  .toList(),
+            SizedBox(height: 8.h),
+            ...controller.safeClausesVariations.map(
+              (item) => _buildBulletItem(item),
             ),
-          ),
+          ],
         ],
       ),
     );
   }
 
-  // ==================== Red Flags Section ====================
   Widget _buildRedFlagsSection() {
     return _buildSectionCard(
       icon: Icons.flag_outlined,
       iconColor: Colors.red,
-      // iconBgColor: Colors.red.withOpacity(0.1),
       title: AppString.redFlagsSection,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Obx(
-            () => Text(
+          if (controller.redFlagsDescription.value.isNotEmpty)
+            Text(
               controller.redFlagsDescription.value,
               style: AppTextStyle.s16w4(
                 color: AppColors.neutralS,
                 fontSize: 13,
               ),
             ),
-          ),
-          SizedBox(height: 12.h),
-          Text(
-            AppString.possibleVariations,
-            style: AppTextStyle.s16w4(
-              color: AppColors.neutralS,
-              fontSize: 13,
-              fontWeight: FontWeight.w600,
+          if (controller.redFlagsDescription.value.isNotEmpty &&
+              controller.redFlagsVariations.isNotEmpty)
+            SizedBox(height: 12.h),
+          if (controller.redFlagsVariations.isNotEmpty) ...[
+            Text(
+              AppString.possibleVariations,
+              style: AppTextStyle.s16w4(
+                color: AppColors.neutralS,
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+              ),
             ),
-          ),
-          SizedBox(height: 8.h),
-          Obx(
-            () => Column(
-              children: controller.redFlagsVariations
-                  .map((item) => _buildBulletItem(item))
-                  .toList(),
+            SizedBox(height: 8.h),
+            ...controller.redFlagsVariations.map(
+              (item) => _buildBulletItem(item),
             ),
-          ),
+          ],
         ],
       ),
     );
   }
 
-  // ==================== Warnings Section ====================
   Widget _buildWarningsSection() {
     return _buildSectionCard(
       icon: Icons.warning_amber_outlined,
       iconColor: Colors.orange,
-      // iconBgColor: Colors.orange.withOpacity(0.1),
       title: AppString.warningsSection,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Obx(
-            () => Text(
+          if (controller.warningsDescription.value.isNotEmpty)
+            Text(
               controller.warningsDescription.value,
               style: AppTextStyle.s16w4(
                 color: AppColors.neutralS,
                 fontSize: 13,
               ),
             ),
-          ),
-          SizedBox(height: 12.h),
-          Text(
-            AppString.exampleItems,
-            style: AppTextStyle.s16w4(
-              color: AppColors.neutralS,
-              fontSize: 13,
-              fontWeight: FontWeight.w600,
+          if (controller.warningsDescription.value.isNotEmpty &&
+              controller.warningsItems.isNotEmpty)
+            SizedBox(height: 12.h),
+          if (controller.warningsItems.isNotEmpty) ...[
+            Text(
+              AppString.exampleItems,
+              style: AppTextStyle.s16w4(
+                color: AppColors.neutralS,
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+              ),
             ),
-          ),
-          SizedBox(height: 8.h),
-          Obx(
-            () => Column(
-              children: controller.warningsItems
-                  .map((item) => _buildBulletItem(item))
-                  .toList(),
-            ),
-          ),
+            SizedBox(height: 8.h),
+            ...controller.warningsItems.map((item) => _buildBulletItem(item)),
+          ],
         ],
       ),
     );
   }
 
-  // ==================== Admin Recommendations ====================
   Widget _buildAdminRecommendations() {
     return Container(
       width: double.infinity,
@@ -344,23 +344,15 @@ class ContractAnalysisReportScreen extends StatelessWidget {
             ],
           ),
           SizedBox(height: 12.h),
-          Obx(
-            () => Column(
-              children: controller.recommendations
-                  .map((rec) => _buildBulletItem(rec))
-                  .toList(),
-            ),
-          ),
+          ...controller.recommendations.map((rec) => _buildBulletItem(rec)),
         ],
       ),
     );
   }
 
-  // ==================== Helper Widgets ====================
   Widget _buildSectionCard({
     required IconData icon,
     required Color iconColor,
-    // required Color iconBgColor,
     required String title,
     required Widget child,
   }) {
@@ -375,14 +367,12 @@ class ContractAnalysisReportScreen extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Header
           Row(
             children: [
               Container(
                 width: 28.w,
                 height: 28.h,
                 decoration: BoxDecoration(
-                  // color: iconBgColor,
                   borderRadius: BorderRadius.circular(6.r),
                 ),
                 child: Icon(icon, color: iconColor, size: 22.sp),
@@ -393,7 +383,6 @@ class ContractAnalysisReportScreen extends StatelessWidget {
                   title,
                   style: AppTextStyle.s16w4(
                     color: AppColors.neutralS,
-
                     fontWeight: FontWeight.w700,
                   ),
                 ),

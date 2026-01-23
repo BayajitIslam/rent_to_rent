@@ -38,8 +38,13 @@ class CustomButton extends StatelessWidget {
           ),
         ),
         child: isloading
-            ? CircularProgressIndicator.adaptive(
-                backgroundColor: AppColors.loadingProgress,
+            ? SizedBox(
+                width: 20,
+                height: 20,
+                child: CircularProgressIndicator(
+                  color: AppColors.white,
+                  strokeWidth: 2,
+                ),
               )
             : Text(
                 buttonName,
