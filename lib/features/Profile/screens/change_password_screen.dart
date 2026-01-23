@@ -39,6 +39,15 @@ class ChangePasswordScreen extends StatelessWidget {
                 ),
                 SizedBox(height: 20.h),
 
+                // Current Password Field
+                _buildPasswordField(
+                  controller: controller.oldPasswordController,
+                  hint: AppString.oldPassword,
+                  obscureValue: controller.obscureOldPassword,
+                  onToggle: controller.toggleOldPasswordVisibility,
+                ),
+                SizedBox(height: 16.h),
+
                 // New Password Field
                 _buildPasswordField(
                   controller: controller.newPasswordController,

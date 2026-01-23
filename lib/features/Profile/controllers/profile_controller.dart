@@ -2,17 +2,21 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:rent2rent/core/constants/api_endpoints.dart';
+import 'package:rent2rent/core/services/local_storage/storage_service.dart';
 import 'package:rent2rent/core/utils/log.dart';
+import 'package:rent2rent/features/home/widgets/custome_snackbar.dart';
 import 'package:rent2rent/routes/routes_name.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../../core/services/api_service.dart';
 
 class ProfileController extends GetxController {
   // Loading State
   final RxBool isLoading = false.obs;
 
   // User Info
-  final RxString userName = 'Eleanor Pena'.obs;
-  final RxString userEmail = 'eleanorpena34@gmail.com'.obs;
+  final RxString userName = ''.obs;
+  final RxString userEmail = ''.obs;
   final RxString userImage = ''.obs;
 
   // ==================== Personal Information ====================
@@ -31,9 +35,11 @@ class ProfileController extends GetxController {
   final TextEditingController vatNumberController = TextEditingController();
 
   // ==================== Change Password ====================
+  final TextEditingController oldPasswordController = TextEditingController();
   final TextEditingController newPasswordController = TextEditingController();
   final TextEditingController retypePasswordController =
       TextEditingController();
+  final RxBool obscureOldPassword = true.obs;
   final RxBool obscureNewPassword = true.obs;
   final RxBool obscureRetypePassword = true.obs;
 
@@ -50,17 +56,39 @@ class ProfileController extends GetxController {
   void onInit() {
     super.onInit();
     _loadUserData();
-    _loadSavedFiles();
     Console.green('ProfileController initialized');
   }
 
   // ==================== Load User Data ====================
-  void _loadUserData() {
-    // TODO: Load from API/Storage
-    fullNameController.text = userName.value;
-    emailController.text = userEmail.value;
-    userImage.value =
-        'https://dreamz-wordpress.technowebstore.com/wp-content/uploads/2024/07/t-2-1.png';
+  void _loadUserData() async {
+    final email = await StorageService.getUserEmail();
+    userEmail.value = email;
+    final name = await StorageService.getUserName();
+    userName.value = name;
+    try {
+      isLoading.value = true;
+      final response = await ApiService.getAuth(ApiEndpoints.profile);
+      if (response.statusCode == 200) {
+        final data = response.data;
+        Console.green('$data');
+        userName.value = data['full_name'] ?? '';
+        userEmail.value = data['email'] ?? '';
+        userImage.value = data['profile_image'] ?? '';
+
+        // Fix: Use .text instead of .value
+        phoneController.text = data['phone_number'] ?? '';
+        fullNameController.text = data['full_name'] ?? '';
+        emailController.text = data['email'] ?? '';
+        addressController.text = data['address'] ?? '';
+      } else if (response.statusCode == 400) {
+        Console.red('Error loading user data: ${response.data['message']}');
+        CustomeSnackBar.error(response.data['message']);
+      }
+    } catch (e) {
+      Console.red('Error loading user data: $e');
+    } finally {
+      isLoading.value = false;
+    }
   }
 
   // Delete File
@@ -140,28 +168,81 @@ class ProfileController extends GetxController {
     }
   }
 
+  // ==================== Save Personal Information ====================
   Future<void> savePersonalInfo() async {
     if (!agreeToTerms.value) {
-      Console.red('Error: Please agree to terms');
+      CustomeSnackBar.error('Please agree to terms');
       return;
     }
 
     try {
       isLoading.value = true;
-      Console.blue('Saving personal info...');
 
-      // TODO: API call
-      await Future.delayed(Duration(seconds: 2));
+      // If profile photo selected, use multipart
+      if (profilePhoto.value != null) {
+        final response = await ApiService.uploadMultipart(
+          url: ApiEndpoints.updateProfile,
+          method: "PATCH",
+          fields: {
+            'full_name': fullNameController.value.text,
+            'phone_number': phoneController.value.text,
+            'email': emailController.value.text,
+            'address': addressController.value.text,
+          },
+          files: {'profile_image': profilePhoto.value!},
+        );
 
-      userName.value = fullNameController.text;
-      userEmail.value = emailController.text;
+        if (response.statusCode == 200) {
+          Console.green('Personal info saved with photo');
+          Console.green('$response');
+          _updateLocalUserData(response.data);
+          Get.back();
+          CustomeSnackBar.success('Profile updated successfully');
+        } else if (response.statusCode == 400) {
+          Console.red(
+            'Error saving personal info: ${response.data['message']}',
+          );
+          CustomeSnackBar.error(response.data['message']);
+        }
+      } else {
+        // Without photo
+        final response = await ApiService.patchAuth(
+          ApiEndpoints.updateProfile,
+          body: {
+            'full_name': fullNameController.value.text,
+            'phone_number': phoneController.value.text,
+            'email': emailController.value.text,
+            'address': addressController.value.text,
+          },
+        );
 
-      Console.green('Personal info saved');
-      Get.back();
+        if (response.statusCode == 200) {
+          Console.green('Personal info saved');
+          Console.green('$response');
+          _updateLocalUserData(response.data);
+          Get.back();
+          CustomeSnackBar.success('Profile updated successfully');
+        } else if (response.statusCode == 400) {
+          Console.red(
+            'Error saving personal info: ${response.data['message']}',
+          );
+          CustomeSnackBar.error(response.data['message']);
+        }
+      }
     } catch (e) {
       Console.red('Error saving personal info: $e');
+      CustomeSnackBar.error('Failed to update profile');
     } finally {
       isLoading.value = false;
+    }
+  }
+
+  // Helper to update local data after save
+  void _updateLocalUserData(dynamic data) {
+    if (data != null) {
+      userName.value = data['full_name'] ?? userName.value;
+      userEmail.value = data['email'] ?? userEmail.value;
+      userImage.value = data['profile_image'] ?? userImage.value;
     }
   }
 
@@ -184,6 +265,11 @@ class ProfileController extends GetxController {
   }
 
   // ==================== Change Password ====================
+
+  void toggleOldPasswordVisibility() {
+    obscureOldPassword.value = !obscureOldPassword.value;
+  }
+
   void toggleNewPasswordVisibility() {
     obscureNewPassword.value = !obscureNewPassword.value;
   }
@@ -193,28 +279,45 @@ class ProfileController extends GetxController {
   }
 
   Future<void> changePassword() async {
+    if (oldPasswordController.text.isEmpty) {
+      Get.snackbar('Error', 'Please enter old password');
+      return;
+    }
     if (newPasswordController.text.isEmpty) {
-      Console.red('Error: Please enter new password');
+      Get.snackbar('Error', 'Please enter new password');
       return;
     }
     if (newPasswordController.text != retypePasswordController.text) {
-      Console.red('Error: Passwords do not match');
+      Get.snackbar('Error', 'Passwords do not match');
       return;
     }
 
     try {
       isLoading.value = true;
-      Console.blue('Changing password...');
 
-      // TODO: API call
-      await Future.delayed(Duration(seconds: 2));
+      final response = await ApiService.postAuth(
+        ApiEndpoints.changePassword, // Add this endpoint
+        body: {
+          'old_password': oldPasswordController.text,
+          'new_password': newPasswordController.text,
+          'confirm_new_password': retypePasswordController.text,
+        },
+      );
 
-      Console.green('Password changed successfully');
-      newPasswordController.clear();
-      retypePasswordController.clear();
-      Get.back();
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        Console.green('Password changed successfully');
+        oldPasswordController.clear();
+        newPasswordController.clear();
+        retypePasswordController.clear();
+        Get.back();
+        CustomeSnackBar.success('Password changed successfully');
+      } else if (response.statusCode == 400) {
+        Console.red('Error changing password: ${response.data['message']}');
+        CustomeSnackBar.error(response.data['message']);
+      }
     } catch (e) {
       Console.red('Error changing password: $e');
+      CustomeSnackBar.error('Failed to change password');
     } finally {
       isLoading.value = false;
     }
@@ -223,22 +326,27 @@ class ProfileController extends GetxController {
   // ==================== Help & Feedback ====================
   Future<void> submitFeedback() async {
     if (feedbackDescriptionController.text.isEmpty) {
-      Console.red('Error: Please describe your issue');
+      CustomeSnackBar.error('Please enter feedback description');
       return;
     }
 
     try {
       isLoading.value = true;
-      Console.blue('Submitting feedback...');
 
-      // TODO: API call
-      await Future.delayed(Duration(seconds: 2));
+      final response = await ApiService.postAuth(
+        ApiEndpoints.feedback,
+        body: {'description': feedbackDescriptionController.text},
+      );
 
-      Console.green('Feedback submitted');
-      feedbackDescriptionController.clear();
-      Get.back();
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        Console.green('Feedback submitted');
+        feedbackDescriptionController.clear();
+        Get.back();
+        CustomeSnackBar.success('Feedback submitted successfully');
+      }
     } catch (e) {
       Console.red('Error submitting feedback: $e');
+      CustomeSnackBar.error('Failed to submit feedback');
     } finally {
       isLoading.value = false;
     }
@@ -248,18 +356,21 @@ class ProfileController extends GetxController {
   Future<void> deleteAccount() async {
     try {
       isLoading.value = true;
-      final SharedPreferences prefs = await SharedPreferences.getInstance();
 
-      Console.blue('Deleting account...');
+      final response = await ApiService.deleteAuth(ApiEndpoints.deleteAccount);
 
-      // TODO: API call
-      await Future.delayed(Duration(seconds: 2));
-      prefs.clear();
-      Console.green('Account deleted');
-      // Navigate to login
-      Get.offAllNamed(RoutesName.login);
+      if (response.statusCode == 200 || response.statusCode == 204) {
+        StorageService.clearAll();
+        Console.green('Account deleted');
+        Get.offAllNamed(RoutesName.login);
+        CustomeSnackBar.success('Account deleted successfully');
+      } else if (response.statusCode == 400) {
+        Console.red('Error deleting account: ${response.data['message']}');
+        CustomeSnackBar.error(response.data['message']);
+      }
     } catch (e) {
       Console.red('Error deleting account: $e');
+      CustomeSnackBar.error('Failed to delete account');
     } finally {
       isLoading.value = false;
     }
@@ -269,10 +380,9 @@ class ProfileController extends GetxController {
   Future<void> logout() async {
     try {
       Console.blue('Logging out...');
-      // TODO: Clear session
-      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      StorageService.clearAll();
+      StorageService.clearUserSession();
       Get.offAllNamed(RoutesName.login);
-      prefs.clear();
     } catch (e) {
       Console.red('Error logging out: $e');
     }
@@ -294,6 +404,7 @@ class ProfileController extends GetxController {
     companyAddressController.dispose();
     companyEmailController.dispose();
     vatNumberController.dispose();
+    oldPasswordController.dispose();
     newPasswordController.dispose();
     retypePasswordController.dispose();
     feedbackDescriptionController.dispose();

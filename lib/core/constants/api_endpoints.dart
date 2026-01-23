@@ -22,4 +22,17 @@ class ApiEndpoints {
       "$baseUrl/api/v1/service/contract-analysis/";
   static const String locationSuitability =
       "$baseUrl/api/v1/service/location-suitability/";
+
+  //====================== Profile Endpoints ======================
+  static const String profile = "$baseUrl/api/v1/user/profile/details/";
+  static const String updateProfile = "$baseUrl/api/v1/user/profile/update/";
+  static const String feedback = "$baseUrl/api/v1/user/feedback/";
+  static const String changePassword =
+      "$baseUrl/api/v1/user/profile/change-password/";
+  static const String deleteAccount = "$baseUrl/api/v1/user/profile/delete/";
+
+  //====================== Subscription Endpoints ======================
+  static const String subscription = "$baseUrl/api/v1/payment/plans/";
+  static const String createPaymentIntent =
+      "$baseUrl/api/v1/payment/subscriptions/create/";
 }

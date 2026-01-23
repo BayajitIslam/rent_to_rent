@@ -21,18 +21,18 @@ class ProfileScreen extends GetView<ProfileController> {
           children: [
             // AppBar
             CustomAppBar(title: AppString.theBrain),
-        
+
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.w),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(height: 20.h),
-        
+
                   // Profile Avatar & Info
                   _buildProfileHeader(ctrl),
                   SizedBox(height: 30.h),
-        
+
                   // Files Section
                   _buildSectionTitle(AppString.files),
                   SizedBox(height: 12.h),
@@ -43,7 +43,7 @@ class ProfileScreen extends GetView<ProfileController> {
                     onTap: () => ctrl.goToSavedFiles(),
                   ),
                   SizedBox(height: 20.h),
-        
+
                   // Settings and Privacy Section
                   _buildSectionTitle(AppString.settingsAndPrivacy),
                   SizedBox(height: 12.h),
@@ -89,7 +89,7 @@ class ProfileScreen extends GetView<ProfileController> {
                     ),
                   ),
                   SizedBox(height: 20.h),
-        
+
                   // More Section
                   _buildSectionTitle(AppString.more),
                   SizedBox(height: 12.h),
@@ -158,15 +158,14 @@ class ProfileScreen extends GetView<ProfileController> {
                 () => ctrl.userImage.value.isNotEmpty
                     ? Image.network(ctrl.userImage.value, fit: BoxFit.cover)
                     : Image.asset(
-                        'assets/images/avatar.png',
+                        'assets/images/profile.jpg',
                         fit: BoxFit.cover,
                         errorBuilder: (context, error, stackTrace) {
                           return Container(
                             color: AppColors.primaryLight,
-                            child: Icon(
-                              Icons.person,
-                              size: 50.sp,
-                              color: AppColors.primary,
+                            child: Image.asset(
+                              'assets/images/profile.jpg',
+                              fit: BoxFit.cover,
                             ),
                           );
                         },

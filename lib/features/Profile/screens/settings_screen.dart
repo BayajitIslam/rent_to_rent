@@ -6,6 +6,7 @@ import 'package:rent2rent/core/constants/app_string.dart';
 import 'package:rent2rent/core/themes/app_text_style.dart';
 import 'package:rent2rent/features/Profile/controllers/profile_controller.dart';
 import 'package:rent2rent/features/home/screens/main_layout.dart';
+import 'package:rent2rent/features/home/widgets/custom_dialog.dart';
 import 'package:rent2rent/features/home/widgets/custome_appbar.dart';
 
 class SettingsScreen extends StatelessWidget {
@@ -92,24 +93,15 @@ class SettingsScreen extends StatelessWidget {
   }
 
   void _showDeleteDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Delete Account'),
-        content: Text(
+    CustomDialog.showWarning(
+      title: 'Delete Account',
+      message:
           'Are you sure you want to delete your account? This action cannot be undone.',
-        ),
-        actions: [
-          TextButton(onPressed: () => Get.back(), child: Text('Cancel')),
-          TextButton(
-            onPressed: () {
-              Get.back();
-              controller.deleteAccount();
-            },
-            child: Text('Delete', style: TextStyle(color: Colors.red)),
-          ),
-        ],
-      ),
+      onConfirm: () {
+        Get.back();
+        controller.deleteAccount();
+      },
+      confirmText: 'Delete',
     );
   }
 }

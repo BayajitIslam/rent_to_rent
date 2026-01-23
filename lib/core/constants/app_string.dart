@@ -20,6 +20,7 @@ class AppString {
   static const String signUpToGetStarted = "Sign up to get started";
   static const String emailPhoneNumber = "Email/Phone Number";
   static const String password = "Password";
+  static const String oldPassword = "Old Password";
   static const String email = "Email";
   static const String signup = "Sign up";
   static const String signIn = "Sign in";
