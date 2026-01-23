@@ -18,6 +18,7 @@ class ProfileController extends GetxController {
   final RxString userName = ''.obs;
   final RxString userEmail = ''.obs;
   final RxString userImage = ''.obs;
+  final RxString userType = ''.obs;
 
   // ==================== Personal Information ====================
   final TextEditingController fullNameController = TextEditingController();
@@ -80,6 +81,7 @@ class ProfileController extends GetxController {
         fullNameController.text = data['full_name'] ?? '';
         emailController.text = data['email'] ?? '';
         addressController.text = data['address'] ?? '';
+        userType.value = data['user_type'] ?? '';
       } else if (response.statusCode == 400) {
         Console.red('Error loading user data: ${response.data['message']}');
         CustomeSnackBar.error(response.data['message']);
@@ -246,19 +248,35 @@ class ProfileController extends GetxController {
     }
   }
 
-  // ==================== Company Information ====================
+  // ==================== Save Company Information ====================
   Future<void> saveCompanyInfo() async {
     try {
       isLoading.value = true;
       Console.blue('Saving company info...');
 
-      // TODO: API call
-      await Future.delayed(Duration(seconds: 2));
+      final response = await ApiService.patchAuth(
+        ApiEndpoints.updateProfile,
+        body: {
+          'company_name': companyNameController.value.text,
+          'company_address': companyAddressController.value.text,
+          'company_vat_number': vatNumberController.value.text,
+          'email': emailController.value.text,
+        },
+      );
 
-      Console.green('Company info saved');
-      Get.back();
+      if (response.statusCode == 200) {
+        Console.green('Company info saved');
+        Console.green('$response');
+        _updateLocalUserData(response.data);
+        Get.back();
+        CustomeSnackBar.success('Company information updated successfully');
+      } else if (response.statusCode == 400) {
+        Console.red('Error saving company info: ${response.data['message']}');
+        CustomeSnackBar.error(response.data['message']);
+      }
     } catch (e) {
       Console.red('Error saving company info: $e');
+      CustomeSnackBar.error('Failed to update company information');
     } finally {
       isLoading.value = false;
     }
