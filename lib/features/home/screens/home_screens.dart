@@ -78,7 +78,9 @@ class DashboardScreen extends StatelessWidget {
               border: Border.all(color: AppColors.white, width: 2),
             ),
             child: ClipOval(
-              child: Obx(() => _buildProfileImage(profileController.userImage.value)),
+              child: Obx(
+                () => _buildProfileImage(profileController.userImage.value),
+              ),
             ),
           ),
           SizedBox(width: 12.w),
@@ -156,11 +158,7 @@ class DashboardScreen extends StatelessWidget {
       errorBuilder: (context, error, stackTrace) {
         return Container(
           color: AppColors.primaryLight,
-          child: Icon(
-            Icons.person,
-            color: AppColors.white,
-            size: 24.sp,
-          ),
+          child: Icon(Icons.person, color: AppColors.white, size: 24.sp),
         );
       },
     );
@@ -338,21 +336,35 @@ class DashboardScreen extends StatelessWidget {
 
         // Activity Cards Grid
         Obx(
-          () => GridView.builder(
-            shrinkWrap: true,
-            physics: NeverScrollableScrollPhysics(),
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
-              crossAxisSpacing: 12.w,
-              mainAxisSpacing: 12.h,
-              childAspectRatio: 1.8,
-            ),
-            itemCount: controller.recentActivities.length,
-            itemBuilder: (context, index) {
-              final activity = controller.recentActivities[index];
-              return _buildActivityCard(activity);
-            },
-          ),
+          () => controller.isLoading.value
+              ? Center(
+                  child: CircularProgressIndicator(color: AppColors.primary),
+                )
+              : controller.recentActivities.isEmpty
+              ? Center(
+                  child: Text(
+                    AppString.noRecentActivity,
+                    style: AppTextStyle.s16w4(
+                      color: AppColors.neutralS,
+                      fontSize: 12,
+                    ),
+                  ),
+                )
+              : GridView.builder(
+                  shrinkWrap: true,
+                  physics: NeverScrollableScrollPhysics(),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
+                    crossAxisSpacing: 12.w,
+                    mainAxisSpacing: 12.h,
+                    childAspectRatio: 1.8,
+                  ),
+                  itemCount: controller.recentActivities.length,
+                  itemBuilder: (context, index) {
+                    final activity = controller.recentActivities[index];
+                    return _buildActivityCard(activity);
+                  },
+                ),
         ),
       ],
     );
@@ -369,8 +381,8 @@ class DashboardScreen extends StatelessWidget {
             color: activity.status == 'OK'
                 ? AppColors.primary
                 : activity.status == 'Draft'
-                    ? AppColors.ash
-                    : AppColors.greencheck,
+                ? AppColors.ash
+                : AppColors.greencheck,
             width: 3,
           ),
         ),
@@ -419,8 +431,8 @@ class DashboardScreen extends StatelessWidget {
                   color: activity.status == 'OK'
                       ? const Color(0XffECF9F3)
                       : activity.status == 'Draft'
-                          ? const Color(0XffF3F4F6)
-                          : AppColors.primaryLight,
+                      ? const Color(0XffF3F4F6)
+                      : AppColors.primaryLight,
                   borderRadius: BorderRadius.circular(12.r),
                 ),
                 child: Text(
@@ -429,8 +441,8 @@ class DashboardScreen extends StatelessWidget {
                     color: activity.status == 'OK'
                         ? AppColors.greencheck
                         : activity.status == 'Draft'
-                            ? AppColors.ash
-                            : AppColors.primary,
+                        ? AppColors.ash
+                        : AppColors.primary,
                     fontSize: 8.5,
                     fontWeight: FontWeight.w500,
                   ),

@@ -83,6 +83,7 @@ class AppString {
   static const String fieldAgentCommunicationDesc =
       'Generate replies to agents';
   static const String recentActivity = 'Recent Activity';
+  static const String noRecentActivity = 'No Recent Activity';
 
   // Field Agent Communication Screen
   static const String fieldAgentCommunicationTitle =
@@ -112,7 +113,8 @@ class AppString {
 
   // Agent Reply Screen
   static const String generateFirstContract = 'Generate First Contract';
-  static const String createAProfessionalMessage = 'Create a professional first-contact message for property agents';
+  static const String createAProfessionalMessage =
+      'Create a professional first-contact message for property agents';
   static const String enterYourText = 'Enter Your Text here';
   static const String pasteEmail = 'Paste the email you received here…';
   static const String replyInstructions = 'Reply Instructions / Guidance';
@@ -178,7 +180,8 @@ class AppString {
 
   //Contract Limitation
   static const String contractLimitation = 'Contract Limitation';
-  static const String contractLimitationDesc = 'Please provide a detailed explanation.';
+  static const String contractLimitationDesc =
+      'Please provide a detailed explanation.';
   static const String reason = 'Reason';
 
   // Step 3 - Generate Contract

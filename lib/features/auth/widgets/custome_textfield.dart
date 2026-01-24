@@ -12,6 +12,7 @@ class CustomeTextfield extends StatelessWidget {
   final int maxLines;
   final double? height;
   final double? radius;
+  
   const CustomeTextfield({
     super.key,
     required this.controller,
@@ -27,40 +28,42 @@ class CustomeTextfield extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: height ?? 50.h,
+      height: height ?? 52.h,
+      padding: EdgeInsets.symmetric(horizontal: 16.w),
       decoration: BoxDecoration(
         border: Border.all(color: AppColors.border, width: 0.5),
         borderRadius: BorderRadius.circular(radius ?? 48.r),
       ),
-
-      child: Center(
-        child: TextField(
-          maxLines: maxLines,
-          controller: controller,
-          obscureText: isPassword && obscureText,
-          style: AppTextStyle.s16w4(color: AppColors.neutralS),
-          decoration: InputDecoration(
-            hintText: hintText,
-            hintStyle: AppTextStyle.s16w4(color: AppColors.ash),
-            border: InputBorder.none,
-            contentPadding: EdgeInsets.symmetric(
-              horizontal: 16.w,
-              vertical: 15,
+      child: Row(
+        children: [
+          Expanded(
+            child: TextField(
+              maxLines: maxLines,
+              controller: controller,
+              obscureText: isPassword && obscureText,
+              style: AppTextStyle.s16w4(color: AppColors.neutralS),
+              decoration: InputDecoration(
+                hintText: hintText,
+                hintStyle: AppTextStyle.s16w4(color: AppColors.ash),
+                border: InputBorder.none,
+                isCollapsed: true,
+              ),
             ),
-            suffixIcon: isPassword
-                ? IconButton(
-                    onPressed: onToggleVisibility,
-                    icon: Icon(
-                      obscureText
-                          ? Icons.visibility_off_outlined
-                          : Icons.visibility_outlined,
-                      color: obscureText ? AppColors.primary : AppColors.ash,
-                      size: 20.sp,
-                    ),
-                  )
-                : null,
           ),
-        ),
+          if (isPassword)
+            IconButton(
+              onPressed: onToggleVisibility,
+              padding: EdgeInsets.zero,
+              constraints: BoxConstraints(),
+              icon: Icon(
+                obscureText
+                    ? Icons.visibility_off_outlined
+                    : Icons.visibility_outlined,
+                color: obscureText ? AppColors.primary : AppColors.ash,
+                size: 20.sp,
+              ),
+            ),
+        ],
       ),
     );
   }
