@@ -22,6 +22,8 @@ class ApiEndpoints {
       "$baseUrl/api/v1/service/contract-analysis/";
   static const String locationSuitability =
       "$baseUrl/api/v1/service/location-suitability/";
+  static const String recentActivities =
+      "$baseUrl/api/v1/service/recent-activities/";
 
   //====================== Profile Endpoints ======================
   static const String profile = "$baseUrl/api/v1/user/profile/details/";
