@@ -18,7 +18,7 @@ class SplashController extends GetxController {
 
   void _startAnimation() {
     // Fade in animation
-    Timer.periodic(Duration(milliseconds: 500), (Timer t) {
+    Timer.periodic(Duration(milliseconds: 0), (Timer t) {
       if (opacity.value < 1) {
         opacity.value += 0.25;
       } else {
@@ -27,7 +27,7 @@ class SplashController extends GetxController {
     });
 
     // Navigate after 3 seconds
-    Future.delayed(Duration(seconds: 3), () {
+    Future.delayed(Duration(seconds: 1), () {
       _checkAndNavigate();
     });
   }

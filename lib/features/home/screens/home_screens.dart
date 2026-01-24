@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -332,7 +331,6 @@ class DashboardScreen extends StatelessWidget {
             ),
           ],
         ),
-        SizedBox(height: 10.h),
 
         // Activity Cards Grid
         Obx(
@@ -372,7 +370,7 @@ class DashboardScreen extends StatelessWidget {
 
   Widget _buildActivityCard(ActivityModel activity) {
     return Container(
-      padding: EdgeInsets.all(14.r),
+      padding: EdgeInsets.symmetric(horizontal: 14.r, vertical: 12.r),
       decoration: BoxDecoration(
         color: AppColors.white,
         borderRadius: BorderRadius.circular(4.r),

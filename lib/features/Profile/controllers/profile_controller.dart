@@ -160,26 +160,89 @@ class ProfileController extends GetxController {
   }
 
   // Delete File
-  void deleteFile(String category, int index) {
+  Future<void> deleteFile(String category, int index) async {
+    int fileId = 0;
+
+    // get file id based on category
     switch (category) {
       case 'contracts':
         if (index < contracts.length) {
-          contracts.removeAt(index);
-          Console.green('Contract deleted');
+          fileId = contracts[index].id;
         }
         break;
       case 'inquiries':
         if (index < inquiries.length) {
-          inquiries.removeAt(index);
-          Console.green('Inquiry deleted');
+          fileId = inquiries[index].id;
         }
         break;
       case 'documents':
         if (index < uploadedDocuments.length) {
-          uploadedDocuments.removeAt(index);
-          Console.green('Document deleted');
+          fileId = uploadedDocuments[index].id;
         }
         break;
+    }
+
+    if (fileId == 0) {
+      CustomeSnackBar.error('File not found');
+      return;
+    }
+
+    // show confirmation dialog
+    final confirm = await Get.dialog<bool>(
+      AlertDialog(
+        title: Text('Delete File'),
+        content: Text('Are you sure you want to delete this file?'),
+        actions: [
+          TextButton(
+            onPressed: () => Get.back(result: false),
+            child: Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Get.back(result: true),
+            child: Text('Delete', style: TextStyle(color: Colors.red)),
+          ),
+        ],
+      ),
+    );
+
+    if (confirm != true) return;
+
+    try {
+      isLoading.value = true;
+      Console.blue('Deleting file id: $fileId');
+
+      final response = await ApiService.deleteAuth(
+        '${ApiEndpoints.savedFiles}$fileId/',
+      );
+
+      if (response.statusCode == 200 || response.statusCode == 204) {
+        // remove from local list
+        switch (category) {
+          case 'contracts':
+            contracts.removeAt(index);
+            break;
+          case 'inquiries':
+            inquiries.removeAt(index);
+            break;
+          case 'documents':
+            uploadedDocuments.removeAt(index);
+            break;
+        }
+
+        Console.green('File deleted successfully');
+        CustomeSnackBar.success('File deleted');
+      } else if (response.statusCode == 400) {
+        Console.red('Error deleting file: ${response.data}');
+        CustomeSnackBar.error(response.message ?? 'Failed to delete file');
+      } else {
+        Console.red('Error deleting file: ${response.statusCode}');
+        CustomeSnackBar.error('Failed to delete file');
+      }
+    } catch (e) {
+      Console.red('Error deleting file: $e');
+      CustomeSnackBar.error('Something went wrong');
+    } finally {
+      isLoading.value = false;
     }
   }
 
