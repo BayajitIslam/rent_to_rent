@@ -30,6 +30,8 @@ class ApiEndpoints {
   static const String changePassword =
       "$baseUrl/api/v1/user/profile/change-password/";
   static const String deleteAccount = "$baseUrl/api/v1/user/profile/delete/";
+  static const String savedFiles =
+      "$baseUrl/api/v1/service/contact-creation/files/";
 
   //====================== Subscription Endpoints ======================
   static const String subscription = "$baseUrl/api/v1/payment/plans/";

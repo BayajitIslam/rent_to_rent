@@ -35,22 +35,22 @@ class SavedFilesScreen extends StatelessWidget {
                   Obx(() => _buildFileGrid(controller.contracts, 'contracts')),
                   SizedBox(height: 24.h),
 
-                  // Inquiries Section
-                  _buildSectionTitle(AppString.inquiries),
-                  SizedBox(height: 12.h),
-                  Obx(() => _buildFileGrid(controller.inquiries, 'inquiries')),
-                  SizedBox(height: 24.h),
+                  // // Inquiries Section
+                  // _buildSectionTitle(AppString.inquiries),
+                  // SizedBox(height: 12.h),
+                  // Obx(() => _buildFileGrid(controller.inquiries, 'inquiries')),
+                  // SizedBox(height: 24.h),
 
-                  // Uploaded Documents Section
-                  _buildSectionTitle(AppString.uploadedDocuments),
-                  SizedBox(height: 12.h),
-                  Obx(
-                    () => _buildFileGrid(
-                      controller.uploadedDocuments,
-                      'documents',
-                    ),
-                  ),
-                  SizedBox(height: 100.h),
+                  // // Uploaded Documents Section
+                  // _buildSectionTitle(AppString.uploadedDocuments),
+                  // SizedBox(height: 12.h),
+                  // Obx(
+                  //   () => _buildFileGrid(
+                  //     controller.uploadedDocuments,
+                  //     'documents',
+                  //   ),
+                  // ),
+                  // SizedBox(height: 100.h),
                 ],
               ),
             ),

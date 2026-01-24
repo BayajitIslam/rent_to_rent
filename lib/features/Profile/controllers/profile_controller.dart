@@ -1,7 +1,10 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
+import 'package:open_filex/open_filex.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:rent2rent/core/constants/api_endpoints.dart';
 import 'package:rent2rent/core/services/local_storage/storage_service.dart';
 import 'package:rent2rent/core/utils/log.dart';
@@ -13,6 +16,7 @@ import '../../../core/services/api_service.dart';
 class ProfileController extends GetxController {
   // Loading State
   final RxBool isLoading = false.obs;
+  final RxBool isDownloading = false.obs;
 
   // User Info
   final RxString userName = ''.obs;
@@ -20,7 +24,7 @@ class ProfileController extends GetxController {
   final RxString userImage = ''.obs;
   final RxString userType = ''.obs;
 
-  // ==================== Personal Information ====================
+  // Personal Information
   final TextEditingController fullNameController = TextEditingController();
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
@@ -28,14 +32,14 @@ class ProfileController extends GetxController {
   final Rx<File?> profilePhoto = Rx<File?>(null);
   final RxBool agreeToTerms = false.obs;
 
-  // ==================== Company Information ====================
+  // Company Information
   final TextEditingController companyNameController = TextEditingController();
   final TextEditingController companyAddressController =
       TextEditingController();
   final TextEditingController companyEmailController = TextEditingController();
   final TextEditingController vatNumberController = TextEditingController();
 
-  // ==================== Change Password ====================
+  // Change Password
   final TextEditingController oldPasswordController = TextEditingController();
   final TextEditingController newPasswordController = TextEditingController();
   final TextEditingController retypePasswordController =
@@ -44,11 +48,11 @@ class ProfileController extends GetxController {
   final RxBool obscureNewPassword = true.obs;
   final RxBool obscureRetypePassword = true.obs;
 
-  // ==================== Help & Feedback ====================
+  // Help & Feedback
   final TextEditingController feedbackDescriptionController =
       TextEditingController();
 
-  // ==================== Saved Files ====================
+  // Saved Files
   final RxList<SavedFile> contracts = <SavedFile>[].obs;
   final RxList<SavedFile> inquiries = <SavedFile>[].obs;
   final RxList<SavedFile> uploadedDocuments = <SavedFile>[].obs;
@@ -57,10 +61,11 @@ class ProfileController extends GetxController {
   void onInit() {
     super.onInit();
     _loadUserData();
+    _loadSavedFiles();
     Console.green('ProfileController initialized');
   }
 
-  // ==================== Load User Data ====================
+  // Load User Data
   void _loadUserData() async {
     final email = await StorageService.getUserEmail();
     userEmail.value = email;
@@ -76,7 +81,6 @@ class ProfileController extends GetxController {
         userEmail.value = data['email'] ?? '';
         userImage.value = data['profile_image'] ?? '';
 
-        // Fix: Use .text instead of .value
         phoneController.text = data['phone_number'] ?? '';
         fullNameController.text = data['full_name'] ?? '';
         emailController.text = data['email'] ?? '';
@@ -90,6 +94,62 @@ class ProfileController extends GetxController {
       Console.red('Error loading user data: $e');
     } finally {
       isLoading.value = false;
+    }
+  }
+
+  // Load Saved Files
+  Future<void> _loadSavedFiles() async {
+    try {
+      isLoading.value = true;
+      final response = await ApiService.getAuth(ApiEndpoints.savedFiles);
+      if (response.statusCode == 200 && response.data != null) {
+        final data = response.data as List;
+        Console.green('Saved files loaded: ${data.length}');
+
+        contracts.value = data.map((item) {
+          return SavedFile(
+            id: item['id'] ?? 0,
+            name: item['title'] ?? '',
+            fileUrl: item['file'] ?? '',
+            date: _formatDate(item['created_at']),
+            type: 'pdf',
+          );
+        }).toList();
+
+        Console.green('Contracts parsed: ${contracts.length}');
+      } else if (response.statusCode == 400) {
+        Console.red('Error loading saved files: ${response.data['message']}');
+        CustomeSnackBar.error(response.data['message']);
+      }
+    } catch (e) {
+      Console.red('Error loading saved files: $e');
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  // Format date from API
+  String _formatDate(String? dateStr) {
+    if (dateStr == null || dateStr.isEmpty) return '';
+    try {
+      final date = DateTime.parse(dateStr);
+      final months = [
+        'Jan',
+        'Feb',
+        'Mar',
+        'Apr',
+        'May',
+        'Jun',
+        'Jul',
+        'Aug',
+        'Sep',
+        'Oct',
+        'Nov',
+        'Dec',
+      ];
+      return '${date.day} ${months[date.month - 1]}, ${date.year}';
+    } catch (e) {
+      return dateStr;
     }
   }
 
@@ -117,32 +177,49 @@ class ProfileController extends GetxController {
     }
   }
 
-  // ==================== Load Saved Files ====================
-  void _loadSavedFiles() {
-    // Mock data - unlimited items
-    contracts.value = [
-      SavedFile(name: 'contrats1.pdf', date: "21 May, 2023", type: 'pdf'),
-      SavedFile(name: 'contrats2.pdf', date: "21 May, 2023", type: 'pdf'),
-      SavedFile(name: 'contrats3.pdf', date: "21 May, 2023", type: 'pdf'),
-      SavedFile(name: 'contrats4.pdf', date: "21 May, 2023", type: 'pdf'),
-      SavedFile(name: 'contrats5.pdf', date: "21 May, 2023", type: 'pdf'),
-    ];
+  // Download File
+  Future<void> downloadFile(SavedFile file) async {
+    if (file.fileUrl.isEmpty) {
+      CustomeSnackBar.error('File URL not available');
+      return;
+    }
 
-    inquiries.value = [
-      SavedFile(name: 'contrats1.pdf', date: "21 May, 2023", type: 'pdf'),
-      SavedFile(name: 'contrats2.pdf', date: "21 May, 2023", type: 'pdf'),
-      SavedFile(name: 'contrats3.pdf', date: "21 May, 2023", type: 'pdf'),
-    ];
+    try {
+      isDownloading.value = true;
+      CustomeSnackBar.info('Downloading...');
+      Console.blue('Downloading: ${file.fileUrl}');
 
-    uploadedDocuments.value = [
-      SavedFile(name: 'contrats1.pdf', date: "21 May, 2023", type: 'pdf'),
-      SavedFile(name: 'contrats2.pdf', date: "21 May, 2023", type: 'pdf'),
-      SavedFile(name: 'contrats3.pdf', date: "21 May, 2023", type: 'pdf'),
-      SavedFile(name: 'contrats4.pdf', date: "21 May, 2023", type: 'pdf'),
-    ];
+      // download file
+      final response = await http.get(Uri.parse(file.fileUrl));
+
+      if (response.statusCode == 200) {
+        // get directory
+        final dir = await getApplicationDocumentsDirectory();
+        final fileName = '${file.name.replaceAll(' ', '_')}.pdf';
+        final savePath = '${dir.path}/$fileName';
+
+        // write file
+        final localFile = File(savePath);
+        await localFile.writeAsBytes(response.bodyBytes);
+
+        Console.green('File downloaded: $savePath');
+        CustomeSnackBar.success('Download complete');
+
+        // open file
+        await OpenFilex.open(savePath);
+      } else {
+        Console.red('Download failed: ${response.statusCode}');
+        CustomeSnackBar.error('Download failed');
+      }
+    } catch (e) {
+      Console.red('Error downloading: $e');
+      CustomeSnackBar.error('Failed to download file');
+    } finally {
+      isDownloading.value = false;
+    }
   }
 
-  // ==================== Navigation ====================
+  // Navigation
   void goToSavedFiles() => Get.toNamed(RoutesName.savedFilesScreen);
   void goToPersonalInfo() => Get.toNamed(RoutesName.personalInfoScreen);
   void goToCompanyInfo() => Get.toNamed(RoutesName.companyInfoScreen);
@@ -156,7 +233,7 @@ class ProfileController extends GetxController {
   void goToGuides() => Get.toNamed(RoutesName.guidesScreen);
   void goToAboutUs() => Get.toNamed(RoutesName.aboutUsScreen);
 
-  // ==================== Personal Information ====================
+  // Pick Profile Photo
   Future<void> pickProfilePhoto() async {
     try {
       final ImagePicker picker = ImagePicker();
@@ -170,7 +247,7 @@ class ProfileController extends GetxController {
     }
   }
 
-  // ==================== Save Personal Information ====================
+  // Save Personal Information
   Future<void> savePersonalInfo() async {
     if (!agreeToTerms.value) {
       CustomeSnackBar.error('Please agree to terms');
@@ -180,7 +257,6 @@ class ProfileController extends GetxController {
     try {
       isLoading.value = true;
 
-      // If profile photo selected, use multipart
       if (profilePhoto.value != null) {
         final response = await ApiService.uploadMultipart(
           url: ApiEndpoints.updateProfile,
@@ -207,7 +283,6 @@ class ProfileController extends GetxController {
           CustomeSnackBar.error(response.data['message']);
         }
       } else {
-        // Without photo
         final response = await ApiService.patchAuth(
           ApiEndpoints.updateProfile,
           body: {
@@ -239,7 +314,6 @@ class ProfileController extends GetxController {
     }
   }
 
-  // Helper to update local data after save
   void _updateLocalUserData(dynamic data) {
     if (data != null) {
       userName.value = data['full_name'] ?? userName.value;
@@ -248,7 +322,7 @@ class ProfileController extends GetxController {
     }
   }
 
-  // ==================== Save Company Information ====================
+  // Save Company Information
   Future<void> saveCompanyInfo() async {
     try {
       isLoading.value = true;
@@ -282,8 +356,7 @@ class ProfileController extends GetxController {
     }
   }
 
-  // ==================== Change Password ====================
-
+  // Change Password
   void toggleOldPasswordVisibility() {
     obscureOldPassword.value = !obscureOldPassword.value;
   }
@@ -314,7 +387,7 @@ class ProfileController extends GetxController {
       isLoading.value = true;
 
       final response = await ApiService.postAuth(
-        ApiEndpoints.changePassword, // Add this endpoint
+        ApiEndpoints.changePassword,
         body: {
           'old_password': oldPasswordController.text,
           'new_password': newPasswordController.text,
@@ -341,7 +414,7 @@ class ProfileController extends GetxController {
     }
   }
 
-  // ==================== Help & Feedback ====================
+  // Help & Feedback
   Future<void> submitFeedback() async {
     if (feedbackDescriptionController.text.isEmpty) {
       CustomeSnackBar.error('Please enter feedback description');
@@ -370,7 +443,7 @@ class ProfileController extends GetxController {
     }
   }
 
-  // ==================== Delete Account ====================
+  // Delete Account
   Future<void> deleteAccount() async {
     try {
       isLoading.value = true;
@@ -394,7 +467,7 @@ class ProfileController extends GetxController {
     }
   }
 
-  // ==================== Logout ====================
+  // Logout
   Future<void> logout() async {
     try {
       Console.blue('Logging out...');
@@ -404,12 +477,6 @@ class ProfileController extends GetxController {
     } catch (e) {
       Console.red('Error logging out: $e');
     }
-  }
-
-  // ==================== Download File ====================
-  void downloadFile(SavedFile file) {
-    Console.green('Downloading ${file.name}');
-    // TODO: Implement download
   }
 
   @override
@@ -431,11 +498,19 @@ class ProfileController extends GetxController {
   }
 }
 
-// ==================== Model ====================
+// Model
 class SavedFile {
+  final int id;
   final String name;
+  final String fileUrl;
   final String date;
   final String type;
 
-  SavedFile({required this.name, required this.type, required this.date});
+  SavedFile({
+    required this.id,
+    required this.name,
+    required this.fileUrl,
+    required this.date,
+    required this.type,
+  });
 }
