@@ -130,14 +130,39 @@ class StorageService {
   // ═══════════════════════════════════════════════════════════════════════
   // User Info Methods
   // ═══════════════════════════════════════════════════════════════════════
-  /// Save profile image URL
-  static Future<void> setProfileImageUrl(String url) async {
-    await _prefs?.setString(keyProfileImageUrl, url);
+  // profile image keys
+  static const String _profileImageUrlKey = 'profile_image_url';
+  static const String _profileImagePathKey = 'profile_image_path';
+
+  // save profile image url
+  static Future<void> saveProfileImageUrl(String url) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_profileImageUrlKey, url);
   }
 
-  /// Get profile image URL
-  static Future<String?> getProfileImageUrl() async {
-    return _prefs?.getString(keyProfileImageUrl);
+  // get profile image url
+  static Future<String> getProfileImageUrl() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString(_profileImageUrlKey) ?? '';
+  }
+
+  // save local profile image path
+  static Future<void> saveProfileImagePath(String path) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString(_profileImagePathKey, path);
+  }
+
+  // get local profile image path
+  static Future<String> getProfileImagePath() async {
+    final prefs = await SharedPreferences.getInstance();
+    return prefs.getString(_profileImagePathKey) ?? '';
+  }
+
+  // clear profile image
+  static Future<void> clearProfileImage() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove(_profileImageUrlKey);
+    await prefs.remove(_profileImagePathKey);
   }
 
   static Future<void> setUserName(String value) async =>

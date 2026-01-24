@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
@@ -6,6 +8,7 @@ import 'package:rent2rent/core/constants/app_colors.dart';
 import 'package:rent2rent/core/constants/app_string.dart';
 import 'package:rent2rent/core/constants/image_const.dart';
 import 'package:rent2rent/core/themes/app_text_style.dart';
+import 'package:rent2rent/features/Profile/controllers/profile_controller.dart';
 import 'package:rent2rent/features/home/controllers/home_controller.dart';
 import 'package:rent2rent/features/home/screens/main_layout.dart';
 
@@ -13,6 +16,7 @@ class DashboardScreen extends StatelessWidget {
   DashboardScreen({super.key});
 
   final HomeController controller = Get.find<HomeController>();
+  final ProfileController profileController = Get.find<ProfileController>();
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +41,7 @@ class DashboardScreen extends StatelessWidget {
 
                   // Recent Activity Section
                   _buildRecentActivitySection(),
-                  SizedBox(height: 100.h), // Bottom padding for navbar
+                  SizedBox(height: 100.h),
                 ],
               ),
             ),
@@ -72,10 +76,9 @@ class DashboardScreen extends StatelessWidget {
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               border: Border.all(color: AppColors.white, width: 2),
-              image: DecorationImage(
-                image: AssetImage(AppImage.profilePlaceholder),
-                fit: BoxFit.cover,
-              ),
+            ),
+            child: ClipOval(
+              child: Obx(() => _buildProfileImage(profileController.userImage.value)),
             ),
           ),
           SizedBox(width: 12.w),
@@ -103,45 +106,63 @@ class DashboardScreen extends StatelessWidget {
               ],
             ),
           ),
-
-          // // Notification Icon
-          // GestureDetector(
-          //   onTap: () => controller.goToNotifications(),
-          //   child: Container(
-          //     width: 44.w,
-          //     height: 44.h,
-          //     decoration: BoxDecoration(
-          //       color: AppColors.white,
-          //       shape: BoxShape.circle,
-          //     ),
-          //     child: Stack(
-          //       children: [
-          //         Center(
-          //           child: Icon(
-          //             Icons.notifications_outlined,
-          //             color: AppColors.primary,
-          //             size: 30.sp,
-          //           ),
-          //         ),
-          //         // Notification Badge
-          //         Positioned(
-          //           top: 8.h,
-          //           right: 10.w,
-          //           child: Container(
-          //             width: 8.w,
-          //             height: 8.h,
-          //             decoration: BoxDecoration(
-          //               color: Colors.red,
-          //               shape: BoxShape.circle,
-          //             ),
-          //           ),
-          //         ),
-          //       ],
-          //     ),
-          //   ),
-          // ),
         ],
       ),
+    );
+  }
+
+  // profile image widget
+  Widget _buildProfileImage(String imagePath) {
+    // local file path
+    if (imagePath.isNotEmpty && !imagePath.startsWith('http')) {
+      final file = File(imagePath);
+      return Image.file(
+        file,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) {
+          return _buildDefaultAvatar();
+        },
+      );
+    }
+
+    // network url
+    if (imagePath.isNotEmpty && imagePath.startsWith('http')) {
+      return Image.network(
+        imagePath,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) {
+          return _buildDefaultAvatar();
+        },
+        loadingBuilder: (context, child, loadingProgress) {
+          if (loadingProgress == null) return child;
+          return Center(
+            child: CircularProgressIndicator(
+              strokeWidth: 2,
+              color: AppColors.white,
+            ),
+          );
+        },
+      );
+    }
+
+    // default
+    return _buildDefaultAvatar();
+  }
+
+  Widget _buildDefaultAvatar() {
+    return Image.asset(
+      AppImage.profilePlaceholder,
+      fit: BoxFit.cover,
+      errorBuilder: (context, error, stackTrace) {
+        return Container(
+          color: AppColors.primaryLight,
+          child: Icon(
+            Icons.person,
+            color: AppColors.white,
+            size: 24.sp,
+          ),
+        );
+      },
     );
   }
 
@@ -289,7 +310,6 @@ class DashboardScreen extends StatelessWidget {
                 decoration: BoxDecoration(
                   color: AppColors.white,
                   borderRadius: BorderRadius.circular(9999.r),
-                  // border: Border.all(color: AppColors.ash),
                 ),
                 child: Row(
                   children: [
@@ -349,18 +369,11 @@ class DashboardScreen extends StatelessWidget {
             color: activity.status == 'OK'
                 ? AppColors.primary
                 : activity.status == 'Draft'
-                ? AppColors.ash
-                : AppColors.greencheck,
+                    ? AppColors.ash
+                    : AppColors.greencheck,
             width: 3,
           ),
         ),
-        // boxShadow: [
-        //   BoxShadow(
-        //     color: Colors.black.withOpacity(0.04),
-        //     blurRadius: 8,
-        //     offset: Offset(0, 2),
-        //   ),
-        // ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -406,8 +419,8 @@ class DashboardScreen extends StatelessWidget {
                   color: activity.status == 'OK'
                       ? const Color(0XffECF9F3)
                       : activity.status == 'Draft'
-                      ? const Color(0XffF3F4F6)
-                      : AppColors.primaryLight,
+                          ? const Color(0XffF3F4F6)
+                          : AppColors.primaryLight,
                   borderRadius: BorderRadius.circular(12.r),
                 ),
                 child: Text(
@@ -416,8 +429,8 @@ class DashboardScreen extends StatelessWidget {
                     color: activity.status == 'OK'
                         ? AppColors.greencheck
                         : activity.status == 'Draft'
-                        ? AppColors.ash
-                        : AppColors.primary,
+                            ? AppColors.ash
+                            : AppColors.primary,
                     fontSize: 8.5,
                     fontWeight: FontWeight.w500,
                   ),

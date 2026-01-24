@@ -68,7 +68,7 @@ class AppRoutes {
       name: RoutesName.home,
       page: () => DashboardScreen(),
       transition: Transition.noTransition,
-      bindings: [HomeBinding()],
+      bindings: [HomeBinding(), ProfileBinding()],
     ),
     GetPage(
       name: RoutesName.profile,

@@ -63,6 +63,7 @@ class ProfileController extends GetxController {
     _loadUserData();
     _loadSavedFiles();
     Console.green('ProfileController initialized');
+    _loadCachedProfileImage();
   }
 
   // Load User Data
@@ -71,6 +72,7 @@ class ProfileController extends GetxController {
     userEmail.value = email;
     final name = await StorageService.getUserName();
     userName.value = name;
+    _loadCachedProfileImage();
     try {
       isLoading.value = true;
       final response = await ApiService.getAuth(ApiEndpoints.profile);
@@ -79,13 +81,17 @@ class ProfileController extends GetxController {
         Console.green('$data');
         userName.value = data['full_name'] ?? '';
         userEmail.value = data['email'] ?? '';
-        userImage.value = data['profile_image'] ?? '';
 
         phoneController.text = data['phone_number'] ?? '';
         fullNameController.text = data['full_name'] ?? '';
         emailController.text = data['email'] ?? '';
         addressController.text = data['address'] ?? '';
         userType.value = data['user_type'] ?? '';
+        // handle profile image
+        final imageUrl = data['profile_image'] ?? '';
+        if (imageUrl.isNotEmpty) {
+          await _cacheProfileImage(imageUrl);
+        }
       } else if (response.statusCode == 400) {
         Console.red('Error loading user data: ${response.data['message']}');
         CustomeSnackBar.error(response.data['message']);
@@ -314,11 +320,17 @@ class ProfileController extends GetxController {
     }
   }
 
-  void _updateLocalUserData(dynamic data) {
+  void _updateLocalUserData(dynamic data) async {
     if (data != null) {
       userName.value = data['full_name'] ?? userName.value;
       userEmail.value = data['email'] ?? userEmail.value;
       userImage.value = data['profile_image'] ?? userImage.value;
+
+      // cache new profile image if changed
+      final newImageUrl = data['profile_image'] ?? '';
+      if (newImageUrl.isNotEmpty) {
+        await _cacheProfileImage(newImageUrl);
+      }
     }
   }
 
@@ -464,6 +476,74 @@ class ProfileController extends GetxController {
       CustomeSnackBar.error('Failed to delete account');
     } finally {
       isLoading.value = false;
+    }
+  }
+
+  // load cached profile image
+  Future<void> _loadCachedProfileImage() async {
+    try {
+      final cachedPath = await StorageService.getProfileImagePath();
+      if (cachedPath.isNotEmpty) {
+        final file = File(cachedPath);
+        if (await file.exists()) {
+          userImage.value = cachedPath;
+          Console.green('Loaded cached profile image');
+        }
+      }
+    } catch (e) {
+      Console.red('Error loading cached image: $e');
+    }
+  }
+
+  // cache profile image from url
+  Future<void> _cacheProfileImage(String imageUrl) async {
+    try {
+      // check if same url already cached
+      final savedUrl = await StorageService.getProfileImageUrl();
+      final savedPath = await StorageService.getProfileImagePath();
+
+      if (savedUrl == imageUrl && savedPath.isNotEmpty) {
+        final file = File(savedPath);
+        if (await file.exists()) {
+          userImage.value = savedPath;
+          Console.green('Using cached image');
+          return;
+        }
+      }
+
+      // download and cache new image
+      Console.blue('Downloading profile image...');
+      final response = await http.get(Uri.parse(imageUrl));
+
+      if (response.statusCode == 200) {
+        final dir = await getApplicationDocumentsDirectory();
+        final fileName =
+            'profile_image_${DateTime.now().millisecondsSinceEpoch}.jpg';
+        final filePath = '${dir.path}/$fileName';
+
+        // delete old cached image
+        if (savedPath.isNotEmpty) {
+          final oldFile = File(savedPath);
+          if (await oldFile.exists()) {
+            await oldFile.delete();
+          }
+        }
+
+        // save new image
+        final file = File(filePath);
+        await file.writeAsBytes(response.bodyBytes);
+
+        // save to storage
+        await StorageService.saveProfileImageUrl(imageUrl);
+        await StorageService.saveProfileImagePath(filePath);
+
+        userImage.value = filePath;
+        Console.green('Profile image cached: $filePath');
+      }
+    } catch (e) {
+      Console.red('Error caching profile image: $e');
+      // fallback to url
+      userImage.value = imageUrl;
     }
   }
 

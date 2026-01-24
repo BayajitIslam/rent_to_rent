@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
@@ -148,7 +150,6 @@ class ProfileScreen extends GetView<ProfileController> {
             height: 130.h,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              // border: Border.all(color: AppColors.primary, width: 2),
               boxShadow: [
                 BoxShadow(
                   color: const Color(0x4D402A0C),
@@ -158,23 +159,7 @@ class ProfileScreen extends GetView<ProfileController> {
               ],
             ),
             child: ClipOval(
-              child: Obx(
-                () => ctrl.userImage.value.isNotEmpty
-                    ? Image.network(ctrl.userImage.value, fit: BoxFit.cover)
-                    : Image.asset(
-                        'assets/images/profile.jpg',
-                        fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) {
-                          return Container(
-                            color: AppColors.primaryLight,
-                            child: Image.asset(
-                              'assets/images/profile.jpg',
-                              fit: BoxFit.cover,
-                            ),
-                          );
-                        },
-                      ),
-              ),
+              child: Obx(() => _buildProfileImage(ctrl.userImage.value)),
             ),
           ),
           SizedBox(height: 12.h),
@@ -200,6 +185,56 @@ class ProfileScreen extends GetView<ProfileController> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildProfileImage(String imagePath) {
+    // local file path
+    if (imagePath.isNotEmpty && !imagePath.startsWith('http')) {
+      final file = File(imagePath);
+      return Image.file(
+        file,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) {
+          return _buildDefaultAvatar();
+        },
+      );
+    }
+
+    // network url
+    if (imagePath.isNotEmpty && imagePath.startsWith('http')) {
+      return Image.network(
+        imagePath,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) {
+          return _buildDefaultAvatar();
+        },
+        loadingBuilder: (context, child, loadingProgress) {
+          if (loadingProgress == null) return child;
+          return Center(
+            child: CircularProgressIndicator(
+              strokeWidth: 2,
+              color: AppColors.primary,
+            ),
+          );
+        },
+      );
+    }
+
+    // default
+    return _buildDefaultAvatar();
+  }
+
+  Widget _buildDefaultAvatar() {
+    return Image.asset(
+      'assets/images/profile.jpg',
+      fit: BoxFit.cover,
+      errorBuilder: (context, error, stackTrace) {
+        return Container(
+          color: AppColors.primaryLight,
+          child: Icon(Icons.person, color: AppColors.primary, size: 50.sp),
+        );
+      },
     );
   }
 
