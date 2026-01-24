@@ -13,6 +13,7 @@ class AgentReplyController extends GetxController {
   final RxString aiResponse = ''.obs;
   final RxString subject = ''.obs;
   final RxString incomingEmail = ''.obs;
+  final RxString notesController = ''.obs;
 
   @override
   void onInit() {
@@ -36,6 +37,7 @@ class AgentReplyController extends GetxController {
     aiResponse.value = args['aiResponse'] ?? 'No response available';
     subject.value = args['subject'] ?? '';
     incomingEmail.value = args['incomingEmail'] ?? '';
+    notesController.value = args['notesController'] ?? '';
 
     Console.cyan('AI Response loaded');
   }
@@ -55,7 +57,7 @@ class AgentReplyController extends GetxController {
         ApiEndpoints.emailReplyDraft,
         body: {
           'original_email_body': incomingEmail.value,
-          'reply_guidance': '',
+          'reply_guidance': notesController.value,
         },
       );
 

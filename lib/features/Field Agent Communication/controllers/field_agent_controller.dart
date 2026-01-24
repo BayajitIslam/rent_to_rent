@@ -60,6 +60,7 @@ class FieldAgentController extends GetxController {
             'subject': data['generated_email_subject'] ?? '',
             'aiResponse': data['generated_email_body'] ?? '',
             'incomingEmail': incomingEmailController.text,
+            'notesController': notesController.text,
           },
         );
       } else if (response.statusCode == 400) {
