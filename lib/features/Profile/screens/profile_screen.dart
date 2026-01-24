@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:rent2rent/core/constants/app_colors.dart';
 import 'package:rent2rent/core/constants/app_string.dart';
+
 import 'package:rent2rent/core/themes/app_text_style.dart';
 import 'package:rent2rent/features/Profile/controllers/profile_controller.dart';
 import 'package:rent2rent/features/home/screens/main_layout.dart';
@@ -60,15 +61,18 @@ class ProfileScreen extends GetView<ProfileController> {
                     ),
                     child: Column(
                       children: [
-                        _buildMenuItem(
-                          icon: Icons.person_outline,
-                          title: AppString.personalInformation,
-                          onTap: () => ctrl.goToPersonalInfo(),
-                        ),
-                        _buildMenuItem(
-                          icon: Icons.business_outlined,
-                          title: AppString.companyInformation,
-                          onTap: () => ctrl.goToCompanyInfo(),
+                        Obx(
+                          () => ctrl.userType.value == 'company'
+                              ? _buildMenuItem(
+                                  icon: Icons.business_outlined,
+                                  title: AppString.companyInformation,
+                                  onTap: () => ctrl.goToCompanyInfo(),
+                                )
+                              : _buildMenuItem(
+                                  icon: Icons.person_outline,
+                                  title: AppString.personalInformation,
+                                  onTap: () => ctrl.goToPersonalInfo(),
+                                ),
                         ),
                         _buildMenuItem(
                           icon: Icons.tune_outlined,

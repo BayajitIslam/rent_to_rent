@@ -10,7 +10,7 @@ import 'package:rent2rent/routes/routes_name.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-    // Initialize deep link service
+  // Initialize deep link service
   await DeepLinkService.init();
 
   final NavigationController navigationController = Get.put(

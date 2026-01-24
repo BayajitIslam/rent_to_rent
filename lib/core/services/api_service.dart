@@ -348,7 +348,11 @@ class ApiService {
 
     // Unauthorized (401)
     if (statusCode == 401) {
-      Console.info('Unauthorized');
+      CustomeSnackBar.error(
+        'No active account found with the given credentials',
+      );
+      Console.info('No active account found with the given credentials');
+      StorageService.setIsLoggedIn(false);
       Get.toNamed(RoutesName.login);
       return ApiResponse(success: true, data: data, statusCode: statusCode);
     }

@@ -1,6 +1,7 @@
 import 'package:get/get.dart';
 import 'package:rent2rent/core/constants/api_endpoints.dart';
 import 'package:rent2rent/core/services/api_service.dart';
+import 'package:rent2rent/core/services/local_storage/storage_service.dart';
 import 'package:rent2rent/core/utils/log.dart';
 import 'package:rent2rent/features/home/widgets/custome_snackbar.dart';
 import 'package:rent2rent/routes/routes_name.dart';
@@ -198,12 +199,10 @@ class SubscriptionController extends GetxController {
 
   // ==================== Activate Subscription ====================
   Future<void> _activateSubscription() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('plan_active', true);
-
+    StorageService.setIsPremium(true);
     Console.green('Subscription activated!');
-    Get.offAllNamed(RoutesName.home);
-    CustomeSnackBar.success('Subscription activated successfully!');
+    Get.offNamedUntil(RoutesName.home, (route) => false);
+    CustomeSnackBar.success('Subscription activated!');
   }
 }
 

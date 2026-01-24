@@ -155,6 +155,7 @@ class AuthController extends GetxController {
         StorageService.setAccessToken(data['access']);
         StorageService.setUserEmail(data['user_details']['email']);
         StorageService.setUserName(data['user_details']['full_name']);
+        StorageService.setUserType(data['user_details']['user_type']);
         StorageService.setIsLoggedIn(true);
         StorageService.setOnboardingCompleted(true);
 
@@ -175,11 +176,7 @@ class AuthController extends GetxController {
         }
       } else if (response.statusCode == 401) {
         //get data from response
-        final data = response.data;
-        final String message = data['message'];
-        Console.info(message);
-
-        CustomeSnackBar.success(message);
+        CustomeSnackBar.error(response.data['message']);
       }
     } catch (e) {
       Console.red("Error: ${e.toString()}");

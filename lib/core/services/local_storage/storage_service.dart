@@ -31,6 +31,7 @@ class StorageService {
   static const String keyUserName = 'userName';
   static const String keyUserEmail = 'userEmail';
   static const String keyUserPhone = 'userPhone';
+  static const String keyUserType = 'userType';
   static const String keyUserId = 'userId';
   static const String keyProfileImageUrl = 'profileImageUrl';
 
@@ -141,6 +142,11 @@ class StorageService {
 
   static Future<void> setUserName(String value) async =>
       await setString(keyUserName, value);
+
+  static Future<void> setUserType(String value) async =>
+      await setString(keyUserType, value);
+
+  static Future<String> getUserType() async => await getString(keyUserType);
 
   static Future<String> getUserName() async => await getString(keyUserName);
 
