@@ -7,7 +7,6 @@ import 'package:rent2rent/core/themes/app_text_style.dart';
 import 'package:rent2rent/features/Create%20Contract/controllers/create_contract_controller_.dart';
 import 'package:rent2rent/features/Create%20Contract/widgets/pdf_viewer.dart';
 import 'package:rent2rent/features/Create%20Contract/widgets/step_indicator.dart';
-import 'package:rent2rent/features/auth/widgets/custom_button.dart';
 import 'package:rent2rent/features/home/screens/main_layout.dart';
 import 'package:rent2rent/features/home/widgets/custome_appbar.dart';
 
@@ -24,12 +23,7 @@ class GenerateContractScreen extends StatelessWidget {
         child: Column(
           children: [
             // AppBar
-            CustomAppBar(
-              title: AppString.createContract,
-              type: AppBarType.withSaveDownload,
-              onDownloadTap: () => controller.downloadContract(),
-              onSaveTap: () => controller.saveContract(),
-            ),
+            CustomAppBar(title: AppString.createContract),
 
             Padding(
               padding: EdgeInsets.symmetric(horizontal: 16.w),
@@ -110,9 +104,9 @@ class GenerateContractScreen extends StatelessWidget {
               child: _buildOutlineButton(
                 icon: Icons.picture_as_pdf_outlined,
                 label: AppString.downloadPdf,
-                onTap: () => controller.downloadPdf(),
+                onTap: () => controller.downloadFile(),
               ),
-            ),
+            ),    
             SizedBox(width: 12.w),
             Expanded(
               child: _buildOutlineButton(
@@ -126,14 +120,14 @@ class GenerateContractScreen extends StatelessWidget {
         SizedBox(height: 12.h),
 
         // Send for E-Signature Button
-        Obx(
-          () => CustomButton(
-            buttonHeight: 48,
-            buttonName: AppString.sendForESignature,
-            isloading: controller.isLoading.value,
-            onTap: () => controller.sendForESignature(),
-          ),
-        ),
+        // Obx(
+        //   () => CustomButton(
+        //     buttonHeight: 48,
+        //     buttonName: AppString.sendForESignature,
+        //     isloading: controller.isLoading.value,
+        //     onTap: () => controller.sendForESignature(),
+        //   ),
+        // ),
       ],
     );
   }

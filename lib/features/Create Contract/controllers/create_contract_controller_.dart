@@ -1,9 +1,13 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
+import 'package:open_filex/open_filex.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:rent2rent/core/constants/api_endpoints.dart';
 import 'package:rent2rent/core/services/api_service.dart';
 import 'package:rent2rent/core/utils/log.dart';
-import 'package:rent2rent/features/Create%20Contract/models/contract_type_model.dart';
+import '../models/contract_type_model.dart';
 import 'package:rent2rent/features/home/widgets/custome_snackbar.dart';
 import 'package:rent2rent/routes/routes_name.dart';
 
@@ -39,6 +43,7 @@ class CreateContractController extends GetxController {
   final RxBool isPlusUtilities = false.obs;
   final RxBool isFlatRate = false.obs;
   final RxBool confirmDetails = false.obs;
+  final RxBool isDownloading = false.obs;
   final RxString limitationReason = ''.obs;
 
   // dates
@@ -169,7 +174,7 @@ class CreateContractController extends GetxController {
       if (response.statusCode == 201 && response.data != null) {
         final responseData = response.data;
 
-        resultPdfUrl.value = _getString(responseData['pdf_url']);
+        resultPdfUrl.value = _getString(responseData['file_url']);
 
         Console.green('Contract generated successfully');
         Console.green('PDF URL: ${resultPdfUrl.value}');
@@ -300,14 +305,48 @@ class CreateContractController extends GetxController {
     CustomeSnackBar.success('Draft saved');
   }
 
-  // download pdf
-  void downloadPdf() {
+  // Download File
+  Future<void> downloadFile() async {
     if (resultPdfUrl.value.isEmpty) {
-      CustomeSnackBar.error('No PDF available');
+      CustomeSnackBar.error('File URL not available');
       return;
     }
-    Console.green('Downloading PDF: ${resultPdfUrl.value}');
-    // todo: implement pdf download
+
+    try {
+      isDownloading.value = true;
+      CustomeSnackBar.info('Downloading...');
+      Console.blue('Downloading: ${resultPdfUrl.value}');
+
+      // download file
+      final response = await http.get(Uri.parse(resultPdfUrl.value));
+
+      if (response.statusCode == 200) {
+        // get directory
+        final dir = await getApplicationDocumentsDirectory();
+
+        // extract filename from url
+        final fileName = resultPdfUrl.value.split('/').last;
+        final savePath = '${dir.path}/$fileName';
+
+        // write file
+        final localFile = File(savePath);
+        await localFile.writeAsBytes(response.bodyBytes);
+
+        Console.green('File downloaded: $savePath');
+        CustomeSnackBar.success('Download complete');
+
+        // open file
+        await OpenFilex.open(savePath);
+      } else {
+        Console.red('Download failed: ${response.statusCode}');
+        CustomeSnackBar.error('Download failed');
+      }
+    } catch (e) {
+      Console.red('Error downloading: $e');
+      CustomeSnackBar.error('Failed to download file');
+    } finally {
+      isDownloading.value = false;
+    }
   }
 
   // download word
